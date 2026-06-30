@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vignesheng</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1A1A2E;--accent:#E8B400;--orange:#FF6B35;
+  --teal:#00B4B4;--teal-dark:#007F7F;--teal-light:#E0F7F7;
+  --bg:#F2F5FA;--white:#fff;--mid:#555577;--muted:#8888AA;
+  --shadow:0 4px 20px rgba(0,0,0,0.10);--r:14px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+nav{background:var(--dark);height:60px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
+.logo{font-size:1.4rem;font-weight:900;color:#fff;}
+.logo span{color:var(--accent);}
+#homePage{display:block;}
+#productsPage{display:none;}
+.home-hero{background:linear-gradient(135deg,var(--dark) 0%,#2D2D5E 100%);
+  padding:36px 20px 44px;text-align:center;}
+.home-hero h1{color:#fff;font-size:1.8rem;font-weight:900;margin-bottom:6px;}
+.home-hero p{color:rgba(255,255,255,.6);font-size:.9rem;}
+.home-hero .ac{color:var(--accent);}
+.cat-grid{display:grid;grid-template-columns:1fr;gap:16px;padding:24px 16px;max-width:600px;margin:0 auto;}
+.cat-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s;}
+.cat-card:hover{transform:translateY(-4px);}
+.cat-img{width:100%;aspect-ratio:1/1;position:relative;overflow:hidden;background:linear-gradient(135deg,#e8e8f0,#d0d0e8);display:flex;align-items:center;justify-content:center;font-size:4rem;}
+.cat-img img{width:100%;height:100%;object-fit:cover;object-position:center;position:absolute;inset:0;}
+.cat-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%);}
+.cat-label{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;
+  color:#fff;font-size:1.3rem;font-weight:900;}
+.cat-label small{display:block;font-size:.76rem;font-weight:500;opacity:.8;margin-top:2px;}
+.cat-badge{position:absolute;top:12px;right:12px;background:var(--accent);
+  color:var(--dark);font-size:.72rem;font-weight:800;padding:4px 10px;border-radius:20px;}
+.cat-footer{padding:12px 14px;}
+.cat-count{font-size:.8rem;color:#666;font-weight:600;}
+.page-hdr{padding:18px 16px 0;display:flex;align-items:center;gap:10px;}
+.page-hdr h2{font-size:1.3rem;font-weight:900;}
+.page-badge{background:var(--teal-light);color:var(--teal-dark);font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:16px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);
+  border:none;color:#fff;padding:8px 14px;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif;}
+.search-row{padding:12px 16px 0;}
+.search-row input{width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;}
+.search-row input:focus{border-color:var(--teal);}
+.chips-row{padding:10px 16px 0;display:flex;gap:6px;flex-wrap:wrap;}
+.chip{padding:6px 13px;border-radius:20px;font-size:.76rem;font-weight:600;border:1.5px solid #ddd;background:#fff;cursor:pointer;transition:all .2s;}
+.chip.active,.chip:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+.mini-stats{display:flex;gap:10px;padding:10px 16px 0;flex-wrap:wrap;}
+.ms{background:#fff;border-radius:10px;padding:8px 14px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center;}
+.ms-n{font-size:1.2rem;font-weight:800;color:var(--teal-dark);}
+.ms-l{font-size:.66rem;color:var(--muted);font-weight:500;}
+.p-section{padding:14px 16px 48px;}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.card{background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;border:2px solid transparent;}
+.card:hover{transform:translateY(-3px);border-color:var(--teal);}
+.sl-wrap{position:relative;height:220px;overflow:hidden;background:#fff;}
+.sl-track{display:flex;height:100%;transition:transform .3s ease;}
+.sl-slide{min-width:100%;height:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.sl-slide img{width:100%;height:100%;object-fit:contain;background:#fff;}
+.sl-prev,.sl-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.38);color:#fff;border:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;}
+.sl-prev{left:5px;}.sl-next{right:5px;}
+.sl-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);}
+.sl-dot.on{background:#fff;}
+.pic-n{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sold-cover{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;}
+.sold-stamp{background:#e53935;color:#fff;font-size:.9rem;font-weight:900;padding:6px 16px;border-radius:4px;transform:rotate(-14deg);border:2px solid #fff;letter-spacing:2px;}
+.card-body{padding:10px;}
+.c-price{font-size:1.05rem;font-weight:800;color:var(--teal-dark);}
+.c-title{font-size:.8rem;font-weight:600;margin:3px 0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.c-meta{font-size:.68rem;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap;}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.overlay.open{display:flex;}
+.det-wrap{background:#fff;border-radius:16px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;position:relative;}
+.det-sl{position:relative;height:260px;overflow:hidden;background:linear-gradient(135deg,#e0f0ff,#d0e8ff);border-radius:16px 16px 0 0;}
+.det-track{display:flex;height:100%;transition:transform .3s ease;}
+.det-slide{min-width:100%;height:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:4.5rem;}
+.det-slide img{width:100%;height:100%;object-fit:cover;}
+.det-prev,.det-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;width:34px;height:34px;border-radius:50%;font-size:.9rem;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;}
+.det-prev{left:10px;}.det-next{right:10px;}
+.det-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;}
+.det-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);}
+.det-dot.on{background:#fff;}
+.det-picn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:10px;}
+.close-x{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:.9rem;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;}
+.det-body{padding:18px;}
+.det-price{font-size:1.6rem;font-weight:900;color:var(--teal-dark);}
+.det-title{font-size:1rem;font-weight:800;margin:5px 0 8px;}
+.det-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.det-tag{background:var(--teal-light);color:var(--teal-dark);font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:16px;}
+.det-desc{font-size:.85rem;color:var(--mid);line-height:1.6;margin-bottom:14px;}
+.cta-row{display:flex;gap:8px;}
+.cta-call{flex:1;padding:10px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer;}
+.cta-wa{flex:1;padding:10px;background:#25D366;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer;}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:.9rem;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 22px;border-radius:28px;font-weight:700;font-size:.85rem;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;}
+.toast.show{opacity:1;}
+.img-fs-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;align-items:center;justify-content:center;}
+.img-fs-overlay.open{display:flex;}
+.img-fs-overlay img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;}
+.img-fs-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.img-fs-prev,.img-fs-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.img-fs-prev{left:16px;}.img-fs-next{right:16px;}
+.img-fs-counter{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:.85rem;font-weight:600;}
+footer{background:var(--dark);color:rgba(255,255,255,.4);text-align:center;padding:16px;font-size:.76rem;}
+footer strong{color:var(--accent);}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Vignesh<span>eng</span></div>
+  <button class="back-btn" id="backBtn" style="display:none" onclick="goHome()">← Back</button>
+</nav>
+
+<div id="homePage">
+  <div class="home-hero">
+    <h1>Welcome to <span class="ac">Vignesheng</span> 🚛</h1>
+    <p>Browse our products by category</p>
+  </div>
+  <div class="cat-grid" id="catGrid"><div class="loading">Loading...</div></div>
+</div>
+
+<div id="productsPage">
+  <div class="page-hdr">
+    <h2 id="pageTitle">Products</h2>
+    <span class="page-badge" id="pageCount">0</span>
+  </div>
+  <div class="search-row"><input type="text" id="searchQ" placeholder="Search..." oninput="filterProducts()"/></div>
+  <div class="chips-row" id="chipsRow"></div>
+  <div class="mini-stats" id="miniStats"></div>
+  <div class="p-section">
+    <div class="grid" id="grid"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <p style="font-size:3rem">📦</p>
+      <p style="font-weight:700;color:var(--mid);margin-top:10px">No products yet</p>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="detOverlay">
+  <div class="det-wrap" id="detContent"><button class="close-x" onclick="closeDet()">✕</button></div>
+</div>
+
+<div class="img-fs-overlay" id="fsOverlay">
+  <button class="img-fs-close" onclick="closeFs()">✕</button>
+  <button class="img-fs-prev" id="fsPrev" onclick="fsNav(-1)">&#8249;</button>
+  <img id="fsImg" src="" alt=""/>
+  <button class="img-fs-next" id="fsNext" onclick="fsNav(1)">&#8250;</button>
+  <div class="img-fs-counter" id="fsCounter"></div>
+</div>
+<div class="toast" id="toast"></div>
+<footer><strong>Vignesheng</strong> — All rights reserved</footer>
+
+<script>
+const API = 'http://localhost:5000/api';
+var cats=[], prods=[], currentCatId=null, activeFilter='all', slIdx={}, detIdx=0, productImagesMap={};
+
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+function norm(s){return s?s.trim().toLowerCase():'';}
+
+// LOAD CATEGORIES
+async function loadCategories(){
+  try{
+    const res = await fetch(API+'/categories');
+    cats = await res.json();
+    renderHome();
+  }catch(e){
+    document.getElementById('catGrid').innerHTML='<div class="loading">Server connection failed. Make sure server is running!</div>';
+  }
+}
+
+function renderHome(){
+  var g=document.getElementById('catGrid');
+  if(!cats.length){g.innerHTML='<div class="loading">No categories yet</div>';return;}
+  var html='';
+  cats.forEach(function(c){
+    var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:5rem">'+c.emoji+'</span>';
+    html+='<div class="cat-card" data-id="'+c.id+'" onclick="goCategory('+c.id+')">'
+      +'<div class="cat-img">'+cov+'<div class="cat-overlay"></div>'
+      +'<div class="cat-label">'+c.name+'<small>'+c.description+'</small></div>'
+      +'</div><div class="cat-footer"><span class="cat-count">Click to browse</span></div></div>';
+  });
+  g.innerHTML=html;
+}
+
+// LOAD PRODUCTS
+async function goCategory(catId){
+  currentCatId=catId; activeFilter='all';
+  document.getElementById('searchQ').value='';
+  var cat=cats.find(function(c){return c.id===catId;});
+  document.getElementById('pageTitle').textContent=cat.emoji+' '+cat.name;
+  document.getElementById('homePage').style.display='none';
+  document.getElementById('productsPage').style.display='block';
+  document.getElementById('backBtn').style.display='flex';
+  document.getElementById('grid').innerHTML='<div class="loading" style="grid-column:1/-1">Loading...</div>';
+  try{
+    const res=await fetch(API+'/products/'+catId);
+    prods=await res.json();
+    renderChips(); renderGrid();
+  }catch(e){showToast('Error loading products');}
+}
+
+function goHome(){
+  document.getElementById('homePage').style.display='block';
+  document.getElementById('productsPage').style.display='none';
+  document.getElementById('backBtn').style.display='none';
+  currentCatId=null; prods=[];
+}
+
+// CHIPS
+function getSubs(){
+  var s=[];
+  prods.forEach(function(p){var n=norm(p.sub_category);if(n&&s.indexOf(n)===-1)s.push(n);});
+  return s;
+}
+function renderChips(){
+  var subs=getSubs(),html='';
+  ['all'].concat(subs).forEach(function(s){
+    html+='<div class="chip'+(activeFilter===s?' active':'')+'" data-s="'+s+'" onclick="setFilter(this.dataset.s)">'+(s==='all'?'All':cap(s))+'</div>';
+  });
+  document.getElementById('chipsRow').innerHTML=html;
+}
+function setFilter(s){activeFilter=norm(s)||'all';renderChips();renderGrid();}
+
+// GRID
+function filterProducts(){renderGrid();}
+function renderGrid(){
+  var q=norm(document.getElementById('searchQ').value),list=[];
+  productImagesMap={};
+  prods.forEach(function(p){
+    if(activeFilter!=='all'&&norm(p.sub_category)!==activeFilter)return;
+    if(q&&p.title.toLowerCase().indexOf(q)===-1&&(p.description||'').toLowerCase().indexOf(q)===-1)return;
+    list.push(p);
+  });
+  var total=prods.length,avail=prods.filter(function(p){return!p.sold;}).length,sold=prods.filter(function(p){return p.sold;}).length;
+  document.getElementById('pageCount').textContent=list.length+' item'+(list.length!==1?'s':'');
+  document.getElementById('miniStats').innerHTML=
+    '<div class="ms"><div class="ms-n">'+total+'</div><div class="ms-l">Total</div></div>'
+    +'<div class="ms"><div class="ms-n" style="color:var(--teal)">'+avail+'</div><div class="ms-l">Available</div></div>'
+    +'<div class="ms"><div class="ms-n" style="color:#e53935">'+sold+'</div><div class="ms-l">Sold</div></div>';
+  var empty=document.getElementById('emptyState'),grid=document.getElementById('grid');
+  if(!list.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  var html='';
+  list.forEach(function(p){
+    if(!slIdx[p.id])slIdx[p.id]=0;
+    var imgs=p.images||[];
+    var slides='';
+    imgs.forEach(function(img){
+      slides+='<div class="sl-slide">'+(img&&(img.indexOf('data:')===0||img.indexOf('http')===0)?'<img src="'+img+'" alt=""/>':'<span>'+p.emoji+'</span>')+'</div>';
+    });
+    if(!imgs.length) slides='<div class="sl-slide"><span style="font-size:3rem">📦</span></div>';
+    var dots='';
+    imgs.forEach(function(_,k){dots+='<div class="sl-dot'+(k===0?' on':'')+'" id="sd-'+p.id+'-'+k+'"></div>';});
+    var arrows=imgs.length>1
+      ?'<button class="sl-prev" data-pid="'+p.id+'" onclick="event.stopPropagation();sPrev(event,+this.dataset.pid)">&#8249;</button>'
+       +'<button class="sl-next" data-pid="'+p.id+'" onclick="event.stopPropagation();sNext(event,+this.dataset.pid)">&#8250;</button>'
+       +'<div class="sl-dots">'+dots+'</div>':'';
+    productImagesMap[p.id]=imgs;
+    html+='<div class="card" data-pid="'+p.id+'" onclick="openDet(+this.dataset.pid)">'
+      +'<div class="sl-wrap" onclick="event.stopPropagation();openFsById('+p.id+')" style="cursor:zoom-in"><div class="sl-track" id="sl-'+p.id+'">'+slides+'</div>'
+      +arrows+'<div class="pic-n">📷 '+imgs.length+'</div>'
+      +(p.sold?'<div class="sold-cover"><div class="sold-stamp">SOLD</div></div>':'')+'</div>'
+      +'<div class="card-body"><div class="c-price">₹'+Number(p.price).toLocaleString('en-IN')+'</div>'
+      +'<div class="c-title">'+p.title+'</div>'
+      +'<div class="c-meta">'+(p.location?'<span>📍'+p.location+'</span>':'')+'<span>✅'+p.condition_type+'</span>'+(p.sub_category?'<span>🏷️'+cap(p.sub_category)+'</span>':'')+'</div>'
+      +'</div></div>';
+  });
+  grid.innerHTML=html;
+}
+
+// SLIDER
+function goSlide(pid,idx){
+  var p=prods.find(function(x){return x.id===pid;});if(!p)return;
+  var imgs=p.images||[];
+  idx=(idx+imgs.length)%imgs.length; slIdx[pid]=idx;
+  var el=document.getElementById('sl-'+pid);
+  if(el)el.style.transform='translateX(-'+(idx*100)+'%)';
+  imgs.forEach(function(_,k){var d=document.getElementById('sd-'+pid+'-'+k);if(d)d.className='sl-dot'+(k===idx?' on':'');});
+}
+function sPrev(e,pid){e.stopPropagation();goSlide(pid,(slIdx[pid]||0)-1);}
+function sNext(e,pid){e.stopPropagation();goSlide(pid,(slIdx[pid]||0)+1);}
+
+// DETAIL
+function openDet(id){
+  var p=prods.find(function(x){return x.id===id;});if(!p)return;
+  detIdx=0;var imgs=p.images||[];
+  var slides='';
+  imgs.forEach(function(img){slides+='<div class="det-slide">'+(img&&(img.indexOf('data:')===0||img.indexOf('http')===0)?'<img src="'+img+'" alt=""/>':'<span>📦</span>')+'</div>';});
+  if(!imgs.length)slides='<div class="det-slide"><span style="font-size:4rem">📦</span></div>';
+  var dots='';imgs.forEach(function(_,k){dots+='<div class="det-dot'+(k===0?' on':'')+'" id="dd'+k+'"></div>';});
+  var arrows=imgs.length>1
+    ?'<button class="det-prev" data-len="'+imgs.length+'" onclick="dGo(-1,+this.dataset.len)">&#8249;</button>'
+     +'<button class="det-next" data-len="'+imgs.length+'" onclick="dGo(1,+this.dataset.len)">&#8250;</button>'
+     +'<div class="det-dots">'+dots+'</div>':'';
+  document.getElementById('detContent').innerHTML=
+    '<button class="close-x" onclick="closeDet()">✕</button>'
+    +'<div class="det-sl"><div class="det-track" id="detTrack">'+slides+'</div>'
+    +arrows+'<div class="det-picn">📷 '+imgs.length+'</div>'
+    +(p.sold?'<div class="sold-cover"><div class="sold-stamp">SOLD</div></div>':'')+'</div>'
+    +'<div class="det-body"><div class="det-price">₹'+Number(p.price).toLocaleString('en-IN')+'</div>'
+    +'<div class="det-title">'+p.title+'</div>'
+    +'<div class="det-tags">'+(p.sub_category?'<span class="det-tag">🏷️ '+cap(p.sub_category)+'</span>':'')
+    +'<span class="det-tag">✅ '+p.condition_type+'</span>'+(p.location?'<span class="det-tag">📍 '+p.location+'</span>':'')
+    +(p.sold?'<span class="det-tag" style="background:#fde8e8;color:#e53935">SOLD</span>':'')+'</div>'
+    +'<div class="det-desc">'+(p.description||'No description.')+'</div>'
+    +(!p.sold
+      ?'<div class="cta-row">'
+        +'<button class="cta-call" onclick="window.location.href=\'tel:'+p.phone+'\'">📞 Call</button>'
+        +'<button class="cta-wa" onclick="window.open(\'https://wa.me/91'+p.phone+'\',\'_blank\')">💬 WhatsApp</button>'
+        +'</div>'
+      :'<button class="cta-call" style="width:100%;opacity:.5;cursor:default">Item Sold</button>')
+    +'</div>';
+  document.getElementById('detOverlay').classList.add('open');
+}
+function dGo(dir,len){
+  detIdx=(detIdx+dir+len)%len;
+  var el=document.getElementById('detTrack');if(el)el.style.transform='translateX(-'+(detIdx*100)+'%)';
+  document.querySelectorAll('.det-dot').forEach(function(d,i){d.className='det-dot'+(i===detIdx?' on':'');});
+}
+function closeDet(){document.getElementById('detOverlay').classList.remove('open');}
+
+document.getElementById('detOverlay').addEventListener('click',function(e){if(e.target.id==='detOverlay')closeDet();});
+
+// FULLSCREEN
+var fsImgs=[],fsIdx=0;
+function openFsById(pid){
+  var imgs=productImagesMap[pid]||[];
+  if(!imgs.length)return;
+  openFs(imgs,slIdx[pid]||0);
+}
+function openFs(imgs,idx){
+  fsImgs=imgs;fsIdx=idx;
+  document.getElementById('fsImg').src=imgs[idx];
+  document.getElementById('fsCounter').textContent=(idx+1)+' / '+imgs.length;
+  document.getElementById('fsPrev').style.display=imgs.length>1?'flex':'none';
+  document.getElementById('fsNext').style.display=imgs.length>1?'flex':'none';
+  document.getElementById('fsOverlay').classList.add('open');
+}
+function closeFs(){document.getElementById('fsOverlay').classList.remove('open');}
+function fsNav(dir){
+  fsIdx=(fsIdx+dir+fsImgs.length)%fsImgs.length;
+  document.getElementById('fsImg').src=fsImgs[fsIdx];
+  document.getElementById('fsCounter').textContent=(fsIdx+1)+' / '+fsImgs.length;
+}
+document.getElementById('fsOverlay').addEventListener('click',function(e){if(e.target.id==='fsOverlay'||e.target.id==='fsImg')closeFs();});
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('fsOverlay').classList.contains('open'))return;
+  if(e.key==='Escape')closeFs();
+  if(e.key==='ArrowLeft')fsNav(-1);
+  if(e.key==='ArrowRight')fsNav(1);
+});
+
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.className='toast show';
+  setTimeout(function(){t.className='toast';},2500);
+}
+
+// INIT
+loadCategories();
+</script>
+</body>
+</html>

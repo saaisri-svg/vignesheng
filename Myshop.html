@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sri's Shop</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1A1A2E;--accent:#E8B400;--orange:#FF6B35;
+  --teal:#00B4B4;--teal-dark:#007F7F;--teal-light:#E0F7F7;
+  --bg:#F2F5FA;--white:#fff;--mid:#555577;--muted:#8888AA;
+  --shadow:0 4px 20px rgba(0,0,0,0.10);--r:14px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+
+/* NAV */
+nav{background:var(--dark);height:60px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
+.logo{font-size:1.4rem;font-weight:900;color:#fff;user-select:none;cursor:pointer;}
+.logo span{color:var(--accent);}
+.nav-right{display:flex;gap:8px;align-items:center;}
+
+/* THESE BUTTONS — ALWAYS HIDDEN BY DEFAULT, JS shows them */
+.nav-btn{display:none;align-items:center;gap:6px;
+  border:none;padding:8px 14px;border-radius:8px;
+  font-weight:700;font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif;}
+.nav-btn.back{background:rgba(255,255,255,0.12);color:#fff;}
+.nav-btn.add{background:var(--orange);color:#fff;}
+
+/* PAGES */
+#homePage{display:block;}
+#productsPage{display:none;}
+
+/* HOME */
+.home-hero{background:linear-gradient(135deg,var(--dark) 0%,#2D2D5E 100%);
+  padding:36px 20px 44px;text-align:center;}
+.home-hero h1{color:#fff;font-size:1.8rem;font-weight:900;margin-bottom:6px;}
+.home-hero p{color:rgba(255,255,255,.6);font-size:.9rem;}
+.home-hero .ac{color:var(--accent);}
+
+.cat-grid{display:grid;grid-template-columns:1fr;
+  gap:16px;padding:24px 16px;max-width:600px;margin:0 auto;}
+
+.cat-card{background:#fff;border-radius:16px;overflow:hidden;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.cat-card:hover{transform:translateY(-4px);}
+.cat-img{width:100%;height:200px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#e8e8f0,#d0d0e8);
+  display:flex;align-items:center;justify-content:center;font-size:5rem;}
+.cat-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.cat-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%);}
+.cat-label{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;
+  color:#fff;font-size:1.3rem;font-weight:900;text-shadow:0 2px 6px rgba(0,0,0,.5);}
+.cat-label small{display:block;font-size:.76rem;font-weight:500;opacity:.8;margin-top:2px;}
+.cat-badge{position:absolute;top:12px;right:12px;background:var(--accent);
+  color:var(--dark);font-size:.72rem;font-weight:800;padding:4px 10px;border-radius:20px;}
+.cat-footer{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;}
+.cat-count{font-size:.8rem;color:#666;font-weight:600;}
+
+/* ADMIN BUTTONS — hidden by default, shown via JS */
+.cat-admin-btns{display:none;gap:6px;}
+.cat-admin-btns button{font-size:.72rem;font-weight:700;padding:5px 10px;
+  border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;border:none;}
+.btn-cov{background:#f0f8ff;color:#0066cc;}
+.btn-edt{background:#f0fff0;color:#007700;}
+.btn-del{background:#fff0f0;color:#c62828;}
+
+.cat-add-card{display:none;background:#fff;border-radius:16px;
+  border:3px dashed #ccc;min-height:100px;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;color:var(--muted);transition:all .2s;}
+.cat-add-card:hover{border-color:var(--teal);color:var(--teal);}
+.cat-add-card .plus{font-size:2.5rem;}
+.cat-add-card span{font-size:.88rem;font-weight:700;}
+
+/* PRODUCTS PAGE */
+.page-hdr{padding:18px 16px 0;display:flex;align-items:center;gap:10px;}
+.page-hdr h2{font-size:1.3rem;font-weight:900;}
+.page-badge{background:var(--teal-light);color:var(--teal-dark);
+  font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:16px;}
+.search-row{padding:12px 16px 0;}
+.search-row input{width:100%;padding:10px 14px;border:1.5px solid #ddd;
+  border-radius:8px;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;}
+.search-row input:focus{border-color:var(--teal);}
+.chips-row{padding:10px 16px 0;display:flex;gap:6px;flex-wrap:wrap;}
+.chip{padding:6px 13px;border-radius:20px;font-size:.76rem;font-weight:600;
+  border:1.5px solid #ddd;background:#fff;cursor:pointer;transition:all .2s;}
+.chip.active,.chip:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+.mini-stats{display:flex;gap:10px;padding:10px 16px 0;flex-wrap:wrap;}
+.ms{background:#fff;border-radius:10px;padding:8px 14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center;}
+.ms-n{font-size:1.2rem;font-weight:800;color:var(--teal-dark);}
+.ms-l{font-size:.66rem;color:var(--muted);font-weight:500;}
+
+.p-section{padding:14px 16px 48px;}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.card{background:#fff;border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow);cursor:pointer;transition:all .2s;border:2px solid transparent;}
+.card:hover{transform:translateY(-3px);border-color:var(--teal);}
+
+.sl-wrap{position:relative;height:160px;overflow:hidden;
+  background:linear-gradient(135deg,#e0f0ff,#d0e8ff);}
+.sl-track{display:flex;height:100%;transition:transform .3s ease;}
+.sl-slide{min-width:100%;height:100%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.sl-slide img{width:100%;height:100%;object-fit:cover;}
+.sl-prev,.sl-next{position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.38);color:#fff;border:none;
+  width:26px;height:26px;border-radius:50%;font-size:.8rem;
+  cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;}
+.sl-prev{left:5px;}.sl-next{right:5px;}
+.sl-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);}
+.sl-dot.on{background:#fff;}
+.pic-n{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);
+  color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sold-cover{position:absolute;inset:0;background:rgba(0,0,0,.42);
+  display:flex;align-items:center;justify-content:center;}
+.sold-stamp{background:#e53935;color:#fff;font-size:.9rem;font-weight:900;
+  padding:6px 16px;border-radius:4px;transform:rotate(-14deg);
+  border:2px solid #fff;letter-spacing:2px;}
+
+.card-body{padding:10px;}
+.c-price{font-size:1.05rem;font-weight:800;color:var(--teal-dark);}
+.c-title{font-size:.8rem;font-weight:600;margin:3px 0 5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.c-meta{font-size:.68rem;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap;}
+.c-actions{display:none;gap:5px;margin-top:8px;}
+.ca{flex:1;padding:6px 2px;border-radius:6px;font-size:.7rem;font-weight:700;
+  border:none;cursor:pointer;font-family:'Inter',sans-serif;}
+.ca-e{background:var(--teal-light);color:var(--teal-dark);}
+.ca-s{background:#ffeaea;color:#e53935;}
+.ca-d{background:#f5f5f5;color:#999;}
+
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
+.empty-state .ei{font-size:3rem;margin-bottom:10px;}
+
+/* OVERLAYS */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+  z-index:200;align-items:center;justify-content:center;padding:16px;}
+.overlay.open{display:flex;}
+
+.modal{background:#fff;border-radius:16px;padding:22px;width:100%;
+  max-width:500px;max-height:92vh;overflow-y:auto;}
+.modal h2{font-size:1.05rem;font-weight:800;margin-bottom:16px;}
+.fg{margin-bottom:12px;}
+.fg label{display:block;font-size:.78rem;font-weight:600;color:var(--mid);margin-bottom:4px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;
+  border:1.5px solid #ddd;border-radius:8px;
+  font-family:'Inter',sans-serif;font-size:.85rem;outline:none;background:#fff;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--teal);}
+.fg textarea{resize:vertical;min-height:64px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sub-row{display:flex;gap:6px;}
+.sub-row select{flex:1;}
+.sub-row input{flex:1;display:none;}
+.sub-toggle{padding:9px 12px;background:var(--teal-light);color:var(--teal-dark);
+  border:1.5px solid var(--teal);border-radius:8px;font-weight:700;
+  font-size:.76rem;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;}
+.img-zone{border:2px dashed #ccc;border-radius:8px;padding:16px;
+  text-align:center;cursor:pointer;transition:all .2s;position:relative;}
+.img-zone:hover{border-color:var(--teal);background:var(--teal-light);}
+.img-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.img-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.img-th{position:relative;width:60px;height:60px;border-radius:7px;overflow:hidden;border:2px solid var(--teal-light);}
+.img-th img{width:100%;height:100%;object-fit:cover;}
+.img-th .rm{position:absolute;top:1px;right:1px;background:rgba(0,0,0,.6);
+  color:#fff;border:none;border-radius:50%;width:16px;height:16px;
+  font-size:.58rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.img-max{font-size:.72rem;color:var(--orange);font-weight:600;margin-top:4px;display:none;}
+.m-actions{display:flex;gap:8px;margin-top:14px;}
+.m-cancel{flex:1;padding:10px;border-radius:8px;border:1.5px solid #ddd;
+  background:#fff;cursor:pointer;font-weight:600;font-size:.85rem;font-family:'Inter',sans-serif;}
+.m-save{flex:2;padding:10px;border-radius:8px;border:none;
+  background:var(--teal);color:#fff;font-weight:700;font-size:.88rem;
+  cursor:pointer;font-family:'Inter',sans-serif;}
+.m-save:hover{background:var(--teal-dark);}
+
+.det-wrap{background:#fff;border-radius:16px;width:100%;
+  max-width:580px;max-height:92vh;overflow-y:auto;position:relative;}
+.det-sl{position:relative;height:260px;overflow:hidden;
+  background:linear-gradient(135deg,#e0f0ff,#d0e8ff);border-radius:16px 16px 0 0;}
+.det-track{display:flex;height:100%;transition:transform .3s ease;}
+.det-slide{min-width:100%;height:100%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:4.5rem;}
+.det-slide img{width:100%;height:100%;object-fit:cover;}
+.det-prev,.det-next{position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.4);color:#fff;border:none;width:34px;height:34px;
+  border-radius:50%;font-size:.9rem;cursor:pointer;z-index:5;
+  display:flex;align-items:center;justify-content:center;}
+.det-prev{left:10px;}.det-next{right:10px;}
+.det-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;}
+.det-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);}
+.det-dot.on{background:#fff;}
+.det-picn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);
+  color:#fff;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:10px;}
+.close-x{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.4);
+  color:#fff;border:none;border-radius:50%;width:32px;height:32px;
+  font-size:.9rem;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;}
+.det-body{padding:18px;}
+.det-price{font-size:1.6rem;font-weight:900;color:var(--teal-dark);}
+.det-title{font-size:1rem;font-weight:800;margin:5px 0 8px;}
+.det-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.det-tag{background:var(--teal-light);color:var(--teal-dark);
+  font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:16px;}
+.det-desc{font-size:.85rem;color:var(--mid);line-height:1.6;margin-bottom:14px;}
+.seller-row{display:flex;align-items:center;gap:10px;
+  background:#f8f8ff;border-radius:10px;padding:12px;margin-bottom:12px;}
+.s-av{width:40px;height:40px;border-radius:50%;background:var(--teal);
+  color:#fff;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.s-name{font-weight:700;font-size:.86rem;}
+.s-sub{font-size:.7rem;color:var(--muted);}
+.cta-row{display:flex;gap:8px;}
+.cta-call{flex:1;padding:10px;background:var(--teal);color:#fff;
+  border:none;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer;}
+.cta-wa{flex:1;padding:10px;background:#25D366;color:#fff;
+  border:none;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer;}
+
+.sm-modal{background:#fff;border-radius:16px;padding:24px;width:90%;max-width:340px;text-align:center;}
+.sm-modal .si{font-size:2rem;margin-bottom:8px;}
+.sm-modal h3{font-size:.95rem;font-weight:800;margin-bottom:4px;}
+.sm-modal p{font-size:.78rem;color:var(--muted);margin-bottom:14px;}
+
+.admin-modal{background:#fff;border-radius:16px;padding:24px;
+  width:90%;max-width:320px;text-align:center;}
+.admin-modal .ai{font-size:2rem;margin-bottom:8px;}
+.admin-modal h3{font-size:.95rem;font-weight:800;margin-bottom:4px;}
+.admin-modal p{font-size:.78rem;color:var(--muted);margin-bottom:14px;}
+#adminPwd{width:100%;padding:10px;border:1.5px solid #ddd;border-radius:8px;
+  font-family:'Inter',sans-serif;font-size:1rem;outline:none;
+  text-align:center;letter-spacing:4px;margin-bottom:6px;}
+#adminPwd:focus{border-color:var(--teal);}
+#adminErr{color:#e53935;font-size:.75rem;margin-bottom:8px;display:none;}
+
+.cat-modal{background:#fff;border-radius:16px;padding:22px;width:90%;max-width:380px;}
+.cat-modal h2{font-size:1rem;font-weight:800;margin-bottom:14px;}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.em-opt{width:36px;height:36px;border-radius:7px;border:1.5px solid #ddd;
+  background:#f9f9f9;font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.em-opt.sel{border-color:var(--teal);background:var(--teal-light);}
+.cov-zone{border:2px dashed #ccc;border-radius:8px;padding:18px;
+  text-align:center;cursor:pointer;position:relative;transition:all .2s;}
+.cov-zone:hover{border-color:var(--teal);}
+.cov-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+#covPreview{width:100%;height:120px;border-radius:8px;object-fit:cover;display:none;margin-bottom:8px;}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--dark);color:#fff;padding:10px 22px;border-radius:28px;
+  font-weight:700;font-size:.85rem;opacity:0;transition:opacity .3s;
+  z-index:999;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+footer{background:var(--dark);color:rgba(255,255,255,.4);
+  text-align:center;padding:16px;font-size:.76rem;}
+footer strong{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" id="logoEl">Sri's<span>Shop</span></div>
+  <div class="nav-right">
+    <button class="nav-btn back" id="backBtn" onclick="goHome()">← Back</button>
+    <button class="nav-btn add" id="addBtn" onclick="openAdd()">+ Add Product</button>
+  </div>
+</nav>
+
+<div id="homePage">
+  <div class="home-hero">
+    <h1>Welcome to <span class="ac">Sri's Shop</span> 🛒</h1>
+    <p>Choose a category to browse products</p>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+
+<div id="productsPage">
+  <div class="page-hdr">
+    <h2 id="pageTitle">Products</h2>
+    <span class="page-badge" id="pageCount">0</span>
+  </div>
+  <div class="search-row"><input type="text" id="searchQ" placeholder="Search..." oninput="renderGrid()"/></div>
+  <div class="chips-row" id="chipsRow"></div>
+  <div class="mini-stats" id="miniStats"></div>
+  <div class="p-section">
+    <div class="grid" id="grid"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div class="ei">📦</div>
+      <p style="font-weight:700;color:var(--mid)">No products yet</p>
+      <p style="font-size:.82rem;margin-top:4px">Admin login → Add pannunga!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT -->
+<div class="overlay" id="addOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">Add Product</h2>
+    <div class="fg"><label>Title *</label><input id="f-title" type="text" placeholder="e.g. Honda City 2020"/></div>
+    <div class="row2">
+      <div class="fg"><label>Price (₹) *</label><input id="f-price" type="number" placeholder="450000"/></div>
+      <div class="fg"><label>Condition</label>
+        <select id="f-cond"><option>Brand New</option><option>Like New</option><option>Good</option><option>Fair</option></select>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Sub Category</label>
+      <div class="sub-row">
+        <select id="f-sub-sel" onchange="onSubSelChange()"></select>
+        <input id="f-sub-new" type="text" placeholder="New sub category..."/>
+        <button class="sub-toggle" id="subToggle" onclick="toggleSub()">+ New</button>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Location</label><input id="f-loc" type="text" placeholder="e.g. Chennai"/></div>
+      <div class="fg"><label>Phone</label><input id="f-phone" type="tel" placeholder="+91 98765"/></div>
+    </div>
+    <div class="fg"><label>Description</label><textarea id="f-desc" placeholder="Key features, why selling..."></textarea></div>
+    <div class="fg">
+      <label>Photos (max 10)</label>
+      <div class="img-zone">
+        <div style="font-size:1.8rem">📷</div>
+        <p style="font-size:.78rem;color:var(--muted);margin-top:4px">Click to upload</p>
+        <input id="imgInput" type="file" accept="image/*" multiple onchange="handleImgs(event)"/>
+      </div>
+      <div class="img-thumbs" id="imgThumbs"></div>
+      <div class="img-max" id="imgMax">⚠️ Max 10 photos!</div>
+    </div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeAdd()">Cancel</button>
+      <button class="m-save" onclick="saveProduct()">Save ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="overlay" id="detOverlay">
+  <div class="det-wrap" id="detContent"><button class="close-x" onclick="closeDet()">✕</button></div>
+</div>
+
+<!-- DELETE PRODUCT -->
+<div class="overlay" id="delOverlay">
+  <div class="sm-modal">
+    <div class="si">🗑️</div><h3>Delete Product?</h3><p>Cannot be undone.</p>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeDel()">Cancel</button>
+      <button class="m-save" style="background:#e53935" onclick="confirmDel()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CATEGORY -->
+<div class="overlay" id="delCatOverlay">
+  <div class="sm-modal">
+    <div class="si">🗑️</div>
+    <h3>Delete "<span id="delCatName"></span>"?</h3>
+    <p>All products inside will also be deleted.</p>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeDelCat()">Cancel</button>
+      <button class="m-save" style="background:#e53935" onclick="confirmDelCat()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- COVER -->
+<div class="overlay" id="covOverlay">
+  <div class="cat-modal">
+    <h2 id="covTitle">Change Cover</h2>
+    <div class="cov-zone">
+      <img id="covPreview"/><div style="font-size:1.8rem">🖼️</div>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:4px">Click to upload</p>
+      <input id="covInput" type="file" accept="image/*" onchange="handleCover(event)"/>
+    </div>
+    <div class="m-actions" style="margin-top:12px">
+      <button class="m-cancel" onclick="closeCov()">Cancel</button>
+      <button class="m-save" onclick="saveCover()">Save ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CATEGORY -->
+<div class="overlay" id="editCatOverlay">
+  <div class="cat-modal">
+    <h2>✏️ Edit Category</h2>
+    <div class="fg"><label>Name *</label><input id="ec-name" type="text"/></div>
+    <div class="fg"><label>Description</label><input id="ec-desc" type="text"/></div>
+    <div class="fg"><label>Emoji</label><div class="emoji-grid" id="editEG"></div></div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeEditCat()">Cancel</button>
+      <button class="m-save" onclick="saveEditCat()">Save ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CATEGORY -->
+<div class="overlay" id="newCatOverlay">
+  <div class="cat-modal">
+    <h2>➕ Add Category</h2>
+    <div class="fg"><label>Name *</label><input id="nc-name" type="text" placeholder="e.g. Cosmetics"/></div>
+    <div class="fg"><label>Description</label><input id="nc-desc" type="text" placeholder="e.g. Skincare & Beauty"/></div>
+    <div class="fg"><label>Emoji</label><div class="emoji-grid" id="newEG"></div></div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeNewCat()">Cancel</button>
+      <button class="m-save" onclick="saveNewCat()">Add ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="overlay" id="adminOverlay">
+  <div class="admin-modal">
+    <div class="ai">🔐</div><h3>Admin Access</h3><p>Enter password</p>
+    <input id="adminPwd" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+    <div id="adminErr">❌ Wrong password</div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeAdmin()">Cancel</button>
+      <button class="m-save" onclick="checkPwd()">Login 🔓</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer><strong>Sri's Shop</strong> — My Personal Listings · All rights reserved</footer>
+
+<script>
+// DATA
+var CATS=[
+  {id:'Bodybuilding',label:'Bodybuilding',desc:'Supplements, Equipment & Fitness',emoji:'💪',cover:null},
+  {id:'Restoration',label:'Restoration',desc:'Repair, Refurbish & Antiques',emoji:'🔧',cover:null},
+  {id:'Vehicles',label:'Vehicles',desc:'Cars, Bikes, Trucks & More',emoji:'🚛',cover:null},
+  {id:'Cosmetics',label:'Cosmetics',desc:'Skincare, Makeup & Beauty',emoji:'💄',cover:null}
+];
+var products=[
+  {id:1,cat:'Bodybuilding',title:'Whey Protein 5kg',price:4200,sub:'supplement',cond:'Brand New',loc:'Chennai',sold:false,desc:'Sealed. 60 servings.',phone:'9876543210',imgs:['💪']},
+  {id:2,cat:'Bodybuilding',title:'Adjustable Dumbbell 20kg',price:3500,sub:'equipment',cond:'Good',loc:'Pondicherry',sold:false,desc:'Solid iron.',phone:'9876543210',imgs:['🏋️']},
+  {id:3,cat:'Restoration',title:'Teak Wood Chair 1960s',price:8000,sub:'antique',cond:'Fair',loc:'Trichy',sold:false,desc:'Genuine teak.',phone:'9876543210',imgs:['🪑']},
+  {id:4,cat:'Vehicles',title:'Tata Ace HT 2021',price:480000,sub:'truck',cond:'Good',loc:'Trichy',sold:false,desc:'68k km. Docs clear.',phone:'9876543210',imgs:['🚛','🚛']},
+  {id:5,cat:'Vehicles',title:'Royal Enfield Classic 350',price:130000,sub:'bike',cond:'Good',loc:'Pondicherry',sold:true,desc:'2020. 22k km.',phone:'9876543210',imgs:['🏍️']}
+];
+var nextId=6,currentCat='',editId=null,deleteId=null,pendingImgs=[];
+var activeFilter='all',isAdmin=false,coverCat='',pendingCover=null;
+var editCatId='',deleteCatId='',editEmoji='',newEmoji='💪',subNewMode=false;
+var slIdx={},detIdx=0;
+var EMOJIS=['💪','🔧','🚛','💄','👗','📱','🏠','📚','🎵','🌿','🍽️','🖥️','🎮','👟','🧴','🚗','🏍️','🚲','🧸','🎨'];
+var SELLER={name:'Srima',sub:'⭐ 5.0 · Member since 2024'};
+
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+function norm(s){return s?s.trim().toLowerCase():'';}
+function getCat(id){for(var i=0;i<CATS.length;i++)if(CATS[i].id===id)return CATS[i];return null;}
+function getSubs(catId){
+  var s=[];
+  for(var i=0;i<products.length;i++){
+    var n=norm(products[i].sub);
+    if(products[i].cat===catId&&n&&s.indexOf(n)===-1)s.push(n);
+  }
+  return s;
+}
+
+// SHOW/HIDE helpers
+function show(id){document.getElementById(id).style.display='block';}
+function hide(id){document.getElementById(id).style.display='none';}
+function showFlex(id){document.getElementById(id).style.display='flex';}
+
+// HOME
+function renderHome(){
+  var g=document.getElementById('catGrid'),html='';
+  for(var i=0;i<CATS.length;i++){
+    var c=CATS[i],count=0,avail=0;
+    for(var j=0;j<products.length;j++)
+      if(products[j].cat===c.id){count++;if(!products[j].sold)avail++;}
+    var cov=c.cover?'<img src="'+c.cover+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"/>':'<span style="font-size:5rem">'+c.emoji+'</span>';
+    var bdg=count?'<div class="cat-badge">'+avail+' Available</div>':'';
+    // admin buttons — inline style controlled by isAdmin
+    var abtn=isAdmin
+      ?'<div class="cat-admin-btns" style="display:flex">'
+        +'<button class="btn-cov" data-id="'+c.id+'" onclick="event.stopPropagation();openCov(this.dataset.id)">🖼️</button>'
+        +'<button class="btn-edt" data-id="'+c.id+'" onclick="event.stopPropagation();openEditCat(this.dataset.id)">✏️</button>'
+        +'<button class="btn-del" data-id="'+c.id+'" onclick="event.stopPropagation();openDelCat(this.dataset.id)">🗑️</button>'
+        +'</div>'
+      :'';
+    html+='<div class="cat-card" data-id="'+c.id+'" onclick="goCategory(this.dataset.id)">'
+      +'<div class="cat-img">'+cov+'<div class="cat-overlay"></div>'
+      +'<div class="cat-label">'+c.label+'<small>'+c.desc+'</small></div>'+bdg+'</div>'
+      +'<div class="cat-footer"><span class="cat-count">'+count+' product'+(count!==1?'s':'')+'</span>'+abtn+'</div>'
+      +'</div>';
+  }
+  if(isAdmin)
+    html+='<div class="cat-add-card" style="display:flex" onclick="openNewCat()"><div class="plus">＋</div><span>Add Category</span></div>';
+  g.innerHTML=html;
+}
+
+function goCategory(catId){
+  currentCat=catId;activeFilter='all';
+  document.getElementById('searchQ').value='';
+  var cat=getCat(catId);
+  document.getElementById('pageTitle').textContent=cat.emoji+' '+cat.label;
+  hide('homePage');show('productsPage');
+  showFlex('backBtn');
+  // Add button only if admin
+  if(isAdmin) show('addBtn'); else hide('addBtn');
+  renderChips();renderGrid();
+}
+
+function goHome(){
+  show('homePage');hide('productsPage');
+  hide('backBtn');hide('addBtn');
+  currentCat='';
+  renderHome();
+}
+
+// CHIPS
+function renderChips(){
+  var subs=getSubs(currentCat),html='';
+  var all=['all'].concat(subs);
+  for(var i=0;i<all.length;i++){
+    var s=all[i];
+    html+='<div class="chip'+(activeFilter===s?' active':'')+'" data-s="'+s+'" onclick="setFilter(this.dataset.s)">'+(s==='all'?'All':cap(s))+'</div>';
+  }
+  document.getElementById('chipsRow').innerHTML=html;
+}
+function setFilter(s){activeFilter=norm(s)||'all';renderChips();renderGrid();}
+
+// GRID
+function renderGrid(){
+  var q=document.getElementById('searchQ').value.toLowerCase(),list=[];
+  for(var i=0;i<products.length;i++){
+    var p=products[i];
+    if(p.cat!==currentCat)continue;
+    if(activeFilter!=='all'&&norm(p.sub)!==activeFilter)continue;
+    if(q&&p.title.toLowerCase().indexOf(q)===-1&&(p.desc||'').toLowerCase().indexOf(q)===-1)continue;
+    list.push(p);
+  }
+  var total=0,avail=0,sold=0;
+  for(var i=0;i<products.length;i++)
+    if(products[i].cat===currentCat){total++;if(products[i].sold)sold++;else avail++;}
+  document.getElementById('pageCount').textContent=list.length+' item'+(list.length!==1?'s':'');
+  document.getElementById('miniStats').innerHTML=
+    '<div class="ms"><div class="ms-n">'+total+'</div><div class="ms-l">Total</div></div>'
+    +'<div class="ms"><div class="ms-n" style="color:var(--teal)">'+avail+'</div><div class="ms-l">Available</div></div>'
+    +'<div class="ms"><div class="ms-n" style="color:#e53935">'+sold+'</div><div class="ms-l">Sold</div></div>';
+  var empty=document.getElementById('emptyState'),grid=document.getElementById('grid');
+  if(!list.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  var html='';
+  for(var i=0;i<list.length;i++){
+    var p=list[i];
+    if(!slIdx[p.id])slIdx[p.id]=0;
+    var slides='';
+    for(var k=0;k<p.imgs.length;k++){
+      var img=p.imgs[k];
+      slides+='<div class="sl-slide">'+(img.indexOf('data:')===0||img.indexOf('http')===0?'<img src="'+img+'" alt=""/>':img)+'</div>';
+    }
+    var dots='';
+    for(var k=0;k<p.imgs.length;k++)dots+='<div class="sl-dot'+(k===0?' on':'')+'" id="sd-'+p.id+'-'+k+'"></div>';
+    var arrows=p.imgs.length>1
+      ?'<button class="sl-prev" data-pid="'+p.id+'" onclick="sPrev(event,+this.dataset.pid)">&#8249;</button>'
+       +'<button class="sl-next" data-pid="'+p.id+'" onclick="sNext(event,+this.dataset.pid)">&#8250;</button>'
+       +'<div class="sl-dots">'+dots+'</div>':'';
+    var aact=isAdmin
+      ?'<div class="c-actions" style="display:flex">'
+        +'<button class="ca ca-e" data-pid="'+p.id+'" onclick="openEdit(+this.dataset.pid)">✏️</button>'
+        +'<button class="ca ca-s" data-pid="'+p.id+'" onclick="toggleSold(+this.dataset.pid)">'+(p.sold?'↩️':'✅')+'</button>'
+        +'<button class="ca ca-d" data-pid="'+p.id+'" onclick="openDel(+this.dataset.pid)">🗑️</button>'
+        +'</div>':'';
+    html+='<div class="card" data-pid="'+p.id+'" onclick="openDet(+this.dataset.pid)">'
+      +'<div class="sl-wrap"><div class="sl-track" id="sl-'+p.id+'">'+slides+'</div>'
+      +arrows+'<div class="pic-n">📷 '+p.imgs.length+'</div>'
+      +(p.sold?'<div class="sold-cover"><div class="sold-stamp">SOLD</div></div>':'')+'</div>'
+      +'<div class="card-body"><div class="c-price">₹'+Number(p.price).toLocaleString('en-IN')+'</div>'
+      +'<div class="c-title">'+p.title+'</div>'
+      +'<div class="c-meta">'+(p.loc?'<span>📍'+p.loc+'</span>':'')+'<span>✅'+p.cond+'</span>'+(p.sub?'<span>🏷️'+cap(p.sub)+'</span>':'')+'</div>'
+      +aact+'</div></div>';
+  }
+  grid.innerHTML=html;
+}
+
+// SLIDER
+function goSlide(pid,idx){
+  var p=null;for(var i=0;i<products.length;i++)if(products[i].id===pid){p=products[i];break;}
+  if(!p)return;
+  idx=(idx+p.imgs.length)%p.imgs.length;slIdx[pid]=idx;
+  var el=document.getElementById('sl-'+pid);
+  if(el)el.style.transform='translateX(-'+(idx*100)+'%)';
+  for(var k=0;k<p.imgs.length;k++){
+    var d=document.getElementById('sd-'+pid+'-'+k);
+    if(d)d.className='sl-dot'+(k===idx?' on':'');
+  }
+}
+function sPrev(e,pid){e.stopPropagation();goSlide(pid,(slIdx[pid]||0)-1);}
+function sNext(e,pid){e.stopPropagation();goSlide(pid,(slIdx[pid]||0)+1);}
+
+// DETAIL
+function openDet(id){
+  var p=null;for(var i=0;i<products.length;i++)if(products[i].id===id){p=products[i];break;}
+  if(!p)return;detIdx=0;
+  var slides='';
+  for(var k=0;k<p.imgs.length;k++){
+    var img=p.imgs[k];
+    slides+='<div class="det-slide">'+(img.indexOf('data:')===0||img.indexOf('http')===0?'<img src="'+img+'" alt=""/>':img)+'</div>';
+  }
+  var dots='';for(var k=0;k<p.imgs.length;k++)dots+='<div class="det-dot'+(k===0?' on':'')+'" id="dd'+k+'"></div>';
+  var arrows=p.imgs.length>1
+    ?'<button class="det-prev" data-len="'+p.imgs.length+'" onclick="dGo(-1,+this.dataset.len)">&#8249;</button>'
+     +'<button class="det-next" data-len="'+p.imgs.length+'" onclick="dGo(1,+this.dataset.len)">&#8250;</button>'
+     +'<div class="det-dots">'+dots+'</div>':'';
+  document.getElementById('detContent').innerHTML=
+    '<button class="close-x" onclick="closeDet()">✕</button>'
+    +'<div class="det-sl"><div class="det-track" id="detTrack">'+slides+'</div>'
+    +arrows+'<div class="det-picn">📷 '+p.imgs.length+'</div>'
+    +(p.sold?'<div class="sold-cover"><div class="sold-stamp">SOLD</div></div>':'')+'</div>'
+    +'<div class="det-body"><div class="det-price">₹'+Number(p.price).toLocaleString('en-IN')+'</div>'
+    +'<div class="det-title">'+p.title+'</div>'
+    +'<div class="det-tags">'+(p.sub?'<span class="det-tag">🏷️ '+cap(p.sub)+'</span>':'')
+    +'<span class="det-tag">✅ '+p.cond+'</span>'+(p.loc?'<span class="det-tag">📍 '+p.loc+'</span>':'')
+    +(p.sold?'<span class="det-tag" style="background:#fde8e8;color:#e53935">SOLD</span>':'')+'</div>'
+    +'<div class="det-desc">'+(p.desc||'No description.')+'</div>'
+    +'<div class="seller-row"><div class="s-av">'+SELLER.name.charAt(0)+'</div>'
+    +'<div><div class="s-name">'+SELLER.name+'</div><div class="s-sub">'+SELLER.sub+'</div></div></div>'
+    +(!p.sold
+      ?'<div class="cta-row"><button class="cta-call" onclick="showToast(\'📞 Calling...\')">📞 Call</button>'
+        +'<button class="cta-wa" onclick="showToast(\'💬 WhatsApp!\')">💬 WhatsApp</button></div>'
+      :'<button class="cta-call" style="width:100%;opacity:.5;cursor:default">Item Sold</button>')
+    +'</div>';
+  document.getElementById('detOverlay').classList.add('open');
+}
+function dGo(dir,len){
+  detIdx=(detIdx+dir+len)%len;
+  var el=document.getElementById('detTrack');
+  if(el)el.style.transform='translateX(-'+(detIdx*100)+'%)';
+  var dots=document.querySelectorAll('.det-dot');
+  for(var i=0;i<dots.length;i++)dots[i].className='det-dot'+(i===detIdx?' on':'');
+}
+function closeDet(){document.getElementById('detOverlay').classList.remove('open');}
+
+// SUB CATEGORY
+function buildSubSel(curSub){
+  var subs=getSubs(currentCat),sel=document.getElementById('f-sub-sel');
+  sel.innerHTML='<option value="">-- None --</option>';
+  for(var i=0;i<subs.length;i++){
+    var o=document.createElement('option');
+    o.value=subs[i];o.textContent=cap(subs[i]);
+    if(norm(curSub)===subs[i])o.selected=true;
+    sel.appendChild(o);
+  }
+  var add=document.createElement('option');
+  add.value='__new__';add.textContent='+ Add New';
+  sel.appendChild(add);
+}
+function onSubSelChange(){
+  if(document.getElementById('f-sub-sel').value==='__new__'){
+    document.getElementById('f-sub-sel').style.display='none';
+    document.getElementById('f-sub-new').style.display='block';
+    document.getElementById('subToggle').textContent='← Back';
+    document.getElementById('f-sub-new').focus();
+    subNewMode=true;
+  }
+}
+function toggleSub(){
+  subNewMode=!subNewMode;
+  document.getElementById('f-sub-sel').style.display=subNewMode?'none':'block';
+  document.getElementById('f-sub-new').style.display=subNewMode?'block':'none';
+  document.getElementById('subToggle').textContent=subNewMode?'← Back':'+ New';
+  if(subNewMode)document.getElementById('f-sub-new').focus();
+  else{document.getElementById('f-sub-new').value='';document.getElementById('f-sub-sel').value='';}
+}
+function getSubVal(){
+  if(subNewMode)return norm(document.getElementById('f-sub-new').value);
+  var v=document.getElementById('f-sub-sel').value;
+  return v==='__new__'?'':norm(v);
+}
+
+// ADD/EDIT PRODUCT
+function openAdd(){
+  editId=null;pendingImgs=[];subNewMode=false;
+  document.getElementById('modalTitle').textContent='➕ Add Product';
+  ['f-title','f-price','f-loc','f-phone','f-desc','f-sub-new'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('f-cond').value='Brand New';
+  document.getElementById('f-sub-sel').style.display='block';
+  document.getElementById('f-sub-new').style.display='none';
+  document.getElementById('subToggle').textContent='+ New';
+  buildSubSel('');
+  document.getElementById('imgThumbs').innerHTML='';
+  document.getElementById('imgMax').style.display='none';
+  document.getElementById('addOverlay').classList.add('open');
+}
+function openEdit(id){
+  var p=null;for(var i=0;i<products.length;i++)if(products[i].id===id){p=products[i];break;}
+  if(!p)return;
+  editId=id;pendingImgs=[];subNewMode=false;
+  for(var i=0;i<p.imgs.length;i++)pendingImgs.push({url:p.imgs[i]});
+  document.getElementById('modalTitle').textContent='✏️ Edit Product';
+  document.getElementById('f-title').value=p.title;
+  document.getElementById('f-price').value=p.price;
+  document.getElementById('f-loc').value=p.loc||'';
+  document.getElementById('f-phone').value=p.phone||'';
+  document.getElementById('f-desc').value=p.desc||'';
+  document.getElementById('f-cond').value=p.cond;
+  document.getElementById('f-sub-new').value='';
+  document.getElementById('f-sub-sel').style.display='block';
+  document.getElementById('f-sub-new').style.display='none';
+  document.getElementById('subToggle').textContent='+ New';
+  buildSubSel(p.sub);
+  renderThumbs();
+  document.getElementById('addOverlay').classList.add('open');
+}
+function closeAdd(){document.getElementById('addOverlay').classList.remove('open');}
+function handleImgs(e){
+  var files=Array.prototype.slice.call(e.target.files),rem=10-pendingImgs.length;
+  if(rem<=0){showToast('⚠️ Max 10 photos!');return;}
+  if(files.length>rem){showToast('⚠️ Only '+rem+' more');files=files.slice(0,rem);}
+  files.forEach(function(f){
+    var r=new FileReader();
+    r.onload=function(ev){pendingImgs.push({url:ev.target.result});renderThumbs();};
+    r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+function renderThumbs(){
+  var html='';
+  for(var i=0;i<pendingImgs.length;i++){
+    var url=pendingImgs[i].url;
+    var t=(url.indexOf('data:')===0||url.indexOf('http')===0)?'<img src="'+url+'" alt=""/>':'<div style="font-size:1.6rem;display:flex;align-items:center;justify-content:center;height:100%">'+url+'</div>';
+    html+='<div class="img-th">'+t+'<button class="rm" data-i="'+i+'" onclick="rmImg(+this.dataset.i)">✕</button></div>';
+  }
+  document.getElementById('imgThumbs').innerHTML=html;
+  document.getElementById('imgMax').style.display=pendingImgs.length>=10?'block':'none';
+}
+function rmImg(i){pendingImgs.splice(i,1);renderThumbs();}
+function saveProduct(){
+  var title=document.getElementById('f-title').value.trim();
+  var price=document.getElementById('f-price').value.trim();
+  if(!title||!price){showToast('⚠️ Title & Price required!');return;}
+  var cat=getCat(currentCat);
+  var imgs=pendingImgs.length?pendingImgs.map(function(x){return x.url;}):[cat?cat.emoji:'📦'];
+  var sub=getSubVal();
+  if(editId){
+    for(var i=0;i<products.length;i++){
+      if(products[i].id===editId){
+        products[i].title=title;products[i].price=+price;products[i].sub=sub;
+        products[i].cond=document.getElementById('f-cond').value;
+        products[i].loc=document.getElementById('f-loc').value.trim();
+        products[i].phone=document.getElementById('f-phone').value.trim();
+        products[i].desc=document.getElementById('f-desc').value.trim();
+        products[i].imgs=imgs;break;
+      }
+    }
+    showToast('✅ Updated!');
+  }else{
+    products.unshift({id:nextId++,cat:currentCat,title:title,price:+price,sub:sub,
+      cond:document.getElementById('f-cond').value,
+      loc:document.getElementById('f-loc').value.trim(),
+      phone:document.getElementById('f-phone').value.trim(),
+      desc:document.getElementById('f-desc').value.trim(),
+      sold:false,imgs:imgs});
+    showToast('🎉 Added!');
+  }
+  closeAdd();renderChips();renderGrid();
+}
+
+// SOLD / DELETE
+function toggleSold(id){
+  for(var i=0;i<products.length;i++)
+    if(products[i].id===id){products[i].sold=!products[i].sold;showToast(products[i].sold?'🔴 Sold':'✅ Available');break;}
+  renderGrid();
+}
+function openDel(id){deleteId=id;document.getElementById('delOverlay').classList.add('open');}
+function closeDel(){document.getElementById('delOverlay').classList.remove('open');}
+function confirmDel(){
+  products=products.filter(function(p){return p.id!==deleteId;});
+  closeDel();renderChips();renderGrid();showToast('🗑️ Deleted');
+}
+
+// COVER
+function openCov(catId){
+  coverCat=catId;pendingCover=null;
+  var cat=getCat(catId);
+  document.getElementById('covTitle').textContent='🖼️ Cover – '+cat.label;
+  var prev=document.getElementById('covPreview');
+  if(cat.cover){prev.src=cat.cover;prev.style.display='block';}else prev.style.display='none';
+  document.getElementById('covOverlay').classList.add('open');
+}
+function handleCover(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){pendingCover=ev.target.result;var p=document.getElementById('covPreview');p.src=pendingCover;p.style.display='block';};
+  r.readAsDataURL(f);e.target.value='';
+}
+function saveCover(){
+  if(!pendingCover){showToast('⚠️ Upload image!');return;}
+  var cat=getCat(coverCat);if(cat)cat.cover=pendingCover;
+  closeCov();renderHome();showToast('✅ Cover saved!');
+}
+function closeCov(){document.getElementById('covOverlay').classList.remove('open');}
+
+// CATEGORY EDIT/DELETE/NEW
+function buildEG(gId,selEm,pickFn){
+  var html='';
+  for(var i=0;i<EMOJIS.length;i++)
+    html+='<div class="em-opt'+(EMOJIS[i]===selEm?' sel':'')+'" data-em="'+EMOJIS[i]+'" onclick="'+pickFn+'(this.dataset.em)">'+EMOJIS[i]+'</div>';
+  document.getElementById(gId).innerHTML=html;
+}
+function openEditCat(catId){
+  editCatId=catId;var cat=getCat(catId);if(!cat)return;
+  editEmoji=cat.emoji;
+  document.getElementById('ec-name').value=cat.label;
+  document.getElementById('ec-desc').value=cat.desc;
+  buildEG('editEG',editEmoji,'pickEE');
+  document.getElementById('editCatOverlay').classList.add('open');
+}
+function pickEE(e){editEmoji=e;var o=document.querySelectorAll('#editEG .em-opt');for(var i=0;i<o.length;i++)o[i].className='em-opt'+(o[i].dataset.em===e?' sel':'');}
+function closeEditCat(){document.getElementById('editCatOverlay').classList.remove('open');}
+function saveEditCat(){
+  var name=document.getElementById('ec-name').value.trim();
+  if(!name){showToast('⚠️ Name required!');return;}
+  for(var i=0;i<CATS.length;i++)
+    if(CATS[i].id===editCatId){CATS[i].label=name;CATS[i].desc=document.getElementById('ec-desc').value.trim()||CATS[i].desc;CATS[i].emoji=editEmoji;break;}
+  closeEditCat();renderHome();showToast('✅ Updated!');
+}
+function openDelCat(catId){
+  deleteCatId=catId;var cat=getCat(catId);
+  document.getElementById('delCatName').textContent=cat?cat.label:catId;
+  document.getElementById('delCatOverlay').classList.add('open');
+}
+function closeDelCat(){document.getElementById('delCatOverlay').classList.remove('open');}
+function confirmDelCat(){
+  products=products.filter(function(p){return p.cat!==deleteCatId;});
+  CATS=CATS.filter(function(c){return c.id!==deleteCatId;});
+  closeDelCat();renderHome();showToast('🗑️ Category deleted');
+}
+function openNewCat(){
+  newEmoji='💪';
+  document.getElementById('nc-name').value='';
+  document.getElementById('nc-desc').value='';
+  buildEG('newEG',newEmoji,'pickNE');
+  document.getElementById('newCatOverlay').classList.add('open');
+}
+function pickNE(e){newEmoji=e;var o=document.querySelectorAll('#newEG .em-opt');for(var i=0;i<o.length;i++)o[i].className='em-opt'+(o[i].dataset.em===e?' sel':'');}
+function closeNewCat(){document.getElementById('newCatOverlay').classList.remove('open');}
+function saveNewCat(){
+  var name=document.getElementById('nc-name').value.trim();
+  if(!name){showToast('⚠️ Name required!');return;}
+  for(var i=0;i<CATS.length;i++)if(CATS[i].id===name){showToast('⚠️ Already exists!');return;}
+  CATS.push({id:name,label:name,desc:document.getElementById('nc-desc').value.trim()||name,emoji:newEmoji,cover:null});
+  closeNewCat();renderHome();showToast('🎉 Added!');
+}
+
+// ADMIN — logo 5x tap
+var tapC=0,tapT=null;
+document.getElementById('logoEl').addEventListener('click',function(){
+  tapC++;clearTimeout(tapT);
+  tapT=setTimeout(function(){tapC=0;},3000);
+  if(tapC>=5){tapC=0;openAdmin();}
+});
+function openAdmin(){
+  if(isAdmin){
+    isAdmin=false;
+    // Re-render current view
+    if(document.getElementById('productsPage').style.display!=='none'){
+      hide('addBtn');renderGrid();
+    }else{renderHome();}
+    showToast('🔒 Admin OFF');return;
+  }
+  document.getElementById('adminPwd').value='';
+  document.getElementById('adminErr').style.display='none';
+  document.getElementById('adminOverlay').classList.add('open');
+  setTimeout(function(){document.getElementById('adminPwd').focus();},100);
+}
+function checkPwd(){
+  if(document.getElementById('adminPwd').value==='sri123'){
+    isAdmin=true;closeAdmin();
+    // Re-render current view
+    if(document.getElementById('productsPage').style.display!=='none'){
+      show('addBtn');renderGrid();
+    }else{
+      hide('addBtn'); // Home page — no add product button!
+      renderHome();
+    }
+    showToast('🔓 Admin ON');
+  }else{
+    document.getElementById('adminErr').style.display='block';
+    document.getElementById('adminPwd').value='';
+  }
+}
+function closeAdmin(){document.getElementById('adminOverlay').classList.remove('open');}
+
+// TOAST
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show';
+  setTimeout(function(){t.className='toast';},2500);
+}
+
+// Close on outside click
+['addOverlay','detOverlay','delOverlay','delCatOverlay','covOverlay','editCatOverlay','newCatOverlay','adminOverlay'].forEach(function(id){
+  document.getElementById(id).addEventListener('click',function(e){
+    if(e.target.id===id)document.getElementById(id).classList.remove('open');
+  });
+});
+
+// INIT
+renderHome();
+</script>
+</body>
+</html>
