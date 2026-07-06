@@ -364,6 +364,29 @@ function showToast(msg){
 
 // INIT
 loadCategories();
+// Touch swipe for fullscreen
+var fsTouchX=0;
+document.getElementById('fsOverlay').addEventListener('touchstart',function(e){fsTouchX=e.touches[0].clientX;},{passive:true});
+document.getElementById('fsOverlay').addEventListener('touchend',function(e){
+  var diff=fsTouchX-e.changedTouches[0].clientX;
+  if(Math.abs(diff)>50){if(diff>0)fsNav(1);else fsNav(-1);}
+},{passive:true});
+
+// Touch swipe for product card sliders
+document.addEventListener('touchstart',function(e){
+  var sl=e.target.closest('.sl-wrap');
+  if(sl) sl._tx=e.touches[0].clientX;
+},{passive:true});
+document.addEventListener('touchend',function(e){
+  var sl=e.target.closest('.sl-wrap');
+  if(!sl||!sl._tx) return;
+  var diff=sl._tx-e.changedTouches[0].clientX;
+  var pid=sl.querySelector('.sl-track')?sl.querySelector('.sl-track').id.replace('sl-',''):null;
+  if(pid&&Math.abs(diff)>40){
+    if(diff>0)goSlide(+pid,(slIdx[+pid]||0)+1);
+    else goSlide(+pid,(slIdx[+pid]||0)-1);
+  }
+},{passive:true});
 </script>
 </body>
 </html>
