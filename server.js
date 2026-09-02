@@ -41,13 +41,19 @@ createDefaultAdmin();
 
 // Create default admin if not exists
 function createDefaultAdmin() {
-  db.query('SELECT * FROM admin_users WHERE username = ?', ['admin'], (err, results) => {
-    if (results && results.length === 0) {
-      const hashed = bcrypt.hashSync('viki@123', 10);
-      db.query('INSERT INTO admin_users (username, password) VALUES (?, ?)', ['admin', hashed]);
-      console.log('Default admin created — username: admin, password: viki@123');
+  const hashed = bcrypt.hashSync('viki@123', 10);
+
+  db.query(
+    'UPDATE admin_users SET password = ? WHERE username = ?',
+    [hashed, 'admin'],
+    (err, result) => {
+      if (err) {
+        console.log('Admin update error:', err);
+      } else {
+        console.log('Admin password reset successfully!');
+      }
     }
-  });
+  );
 }
 
 // ── AUTH MIDDLEWARE ──────────────────────────
