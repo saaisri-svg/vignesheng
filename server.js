@@ -49,7 +49,6 @@ function createDefaultAdmin() {
     }
   });
 }
-
 // ── AUTH MIDDLEWARE ──────────────────────────
 function authMiddleware(req, res, next) {
   const token = req.headers['authorization'];
