@@ -44,11 +44,15 @@ function createDefaultAdmin() {
   db.query('SELECT * FROM admin_users WHERE username = ?', ['admin'], (err, results) => {
     if (results && results.length === 0) {
       const hashed = bcrypt.hashSync('viki@123', 10);
-      db.query('INSERT INTO admin_users (username, password) VALUES (?, ?)', ['admin', hashed]);
-      console.log('Default admin created — username: admin, password: viki@123');
+      db.query(
+        'INSERT INTO admin_users (username, password) VALUES (?, ?)',
+        ['admin', hashed]
+      );
+      console.log('Default admin created — username: admin');
     }
   });
 }
+
 // ── AUTH MIDDLEWARE ──────────────────────────
 function authMiddleware(req, res, next) {
   const token = req.headers['authorization'];
