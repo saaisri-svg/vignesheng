@@ -250,7 +250,43 @@ function renderGrid(){
   var html='';
   list.forEach(function(p){
     if(!slIdx[p.id])slIdx[p.id]=0;
-    var imgs=p.images||[];
+  var imgs = p.images || [];
+
+if (typeof imgs === 'string') {
+  try {
+    imgs = JSON.parse(imgs);
+  } catch (e) {
+    imgs = [imgs];
+  }
+}
+
+imgs = imgs.map(function(img) {
+  if (!img) return img;
+
+  if (img.startsWith('data:')) return img;
+
+  if (img.startsWith('http')) return img;
+
+  return API.replace('/api', '') + (img.startsWith('/') ? img : '/' + img);
+});
+
+if (typeof imgs === 'string') {
+  try {
+    imgs = JSON.parse(imgs);
+  } catch (e) {
+    imgs = [imgs];
+  }
+}
+
+imgs = imgs.map(function(img) {
+  if (!img) return img;
+
+  if (img.startsWith('data:')) return img;
+
+  if (img.startsWith('http')) return img;
+
+  return API.replace('/api', '') + (img.startsWith('/') ? img : '/' + img);
+});
     var slides='';
     imgs.forEach(function(img){
       slides+='<div class="sl-slide">'+(img&&(img.indexOf('data:')===0||img.indexOf('http')===0)?'<img src="'+img+'" alt=""/>':'<span>'+p.emoji+'</span>')+'</div>';
@@ -290,7 +326,23 @@ function sNext(e,pid){e.stopPropagation();goSlide(pid,(slIdx[pid]||0)+1);}
 // DETAIL
 function openDet(id){
   var p=prods.find(function(x){return x.id===id;});if(!p)return;
-  detIdx=0;var imgs=p.images||[];
+ detIdx=0;
+var imgs = p.images || [];
+
+if (typeof imgs === 'string') {
+  try {
+    imgs = JSON.parse(imgs);
+  } catch (e) {
+    imgs = [imgs];
+  }
+}
+
+imgs = imgs.map(function(img) {
+  if (!img) return img;
+  if (img.startsWith('data:')) return img;
+  if (img.startsWith('http')) return img;
+  return API.replace('/api', '') + (img.startsWith('/') ? img : '/' + img);
+});
   var slides='';
   imgs.forEach(function(img){slides+='<div class="det-slide">'+(img&&(img.indexOf('data:')===0||img.indexOf('http')===0)?'<img src="'+img+'" alt=""/>':'<span>📦</span>')+'</div>';});
   if(!imgs.length)slides='<div class="det-slide"><span style="font-size:4rem">📦</span></div>';
