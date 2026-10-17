@@ -26,22 +26,7 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;
 .home-hero h1{color:#fff;font-size:1.8rem;font-weight:900;margin-bottom:6px;}
 .home-hero p{color:rgba(255,255,255,.6);font-size:.9rem;}
 .home-hero .ac{color:var(--accent);}
-.home-hero .tagline{color:rgba(255,255,255,.75);font-size:.85rem;font-weight:600;margin-top:4px;}
-.nav-links{display:flex;gap:4px;overflow-x:auto;flex:1;margin:0 14px;scrollbar-width:none;}
-.nav-links::-webkit-scrollbar{display:none;}
-.nav-links a{color:rgba(255,255,255,.75);font-size:.78rem;font-weight:700;text-decoration:none;white-space:nowrap;padding:8px 10px;border-radius:8px;}
-.nav-links a:active{background:rgba(255,255,255,.1);}
-.nav-links a.nav-cta{background:var(--accent);color:#1a1a1a;font-weight:900;padding:8px 14px;border-radius:20px;margin:0 2px;}
-.sec-block{max-width:600px;margin:0 auto;padding:28px 16px 4px;}
-.sec-h{font-size:1.25rem;font-weight:900;color:var(--dark);margin-bottom:6px;}
-.sec-sub{color:var(--muted);font-size:.85rem;margin-bottom:10px;}
-.sec-text{color:var(--mid);font-size:.9rem;line-height:1.5;background:#F3F6FB;padding:14px;border-radius:12px;}
-.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px 0;}
-.gal-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer;}
-.contact-card{background:#F3F6FB;border-radius:14px;padding:18px;margin:16px 0 8px;}
-.contact-card p{color:var(--mid);font-size:.92rem;margin-bottom:10px;}
-.contact-card a{color:var(--dark);font-weight:700;text-decoration:none;}
-.cat-grid{display:grid;grid-template-columns:1fr;gap:16px;padding:16px 0;max-width:600px;margin:0 auto;}
+.cat-grid{display:grid;grid-template-columns:1fr;gap:16px;padding:24px 16px;max-width:600px;margin:0 auto;}
 .cat-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s;}
 .cat-card:hover{transform:translateY(-4px);}
 .cat-img{width:100%;aspect-ratio:1/1;position:relative;overflow:hidden;background:linear-gradient(135deg,#e8e8f0,#d0d0e8);display:flex;align-items:center;justify-content:center;font-size:4rem;}
@@ -130,57 +115,15 @@ footer strong{color:var(--accent);}
 <body>
 <nav>
   <div class="logo">Vignesh<span>eng</span></div>
-  <div class="nav-links" id="navLinks">
-    <a href="#home" onclick="navGo('home')">Home</a>
-    <a href="#about" onclick="navGo('about')">About Us</a>
-    <a href="#services" onclick="navGo('services')">Our Services</a>
-    <a href="javascript:void(0)" class="nav-cta" onclick="goBuySell()">🚛 Buy &amp; Sell</a>
-    <a href="javascript:void(0)" onclick="goGallery()">Gallery</a>
-    <a href="#contact" onclick="navGo('contact')">Contact Us</a>
-  </div>
   <button class="back-btn" id="backBtn" style="display:none" onclick="goHome()">← Back</button>
 </nav>
 
 <div id="homePage">
-  <div class="home-hero" id="home">
-    <h1>Welcome to <span class="ac">Vignesheng</span> 🚛</h1>
-    <p class="tagline">Welding &middot; Body Building &middot; Repair &middot; Vehicle Sales — Ellam Oru Idathula!</p>
-  </div>
-
-  <div class="sec-block" id="about">
-    <h2 class="sec-h">About Us</h2>
-    <p class="sec-text">Vignesheng la naanga welding works, vehicle body building &amp; fabrication, vehicle repair/denting-painting seivom, melum used vehicles buy &amp; sell pannuvom. Quality work &amp; trust than enga specialty.</p>
-  </div>
-
-  <div class="sec-block" id="services">
-    <h2 class="sec-h">Our Services</h2>
-    <div class="cat-grid" id="serviceGrid"><div class="loading">Loading...</div></div>
-  </div>
-
-  <div class="sec-block" id="contact">
-    <h2 class="sec-h">Contact Us</h2>
-    <div class="contact-card">
-      <p>📍 Unga Address inga varum</p>
-      <p>📞 <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
-      <a class="cta-wa" style="display:inline-block;text-decoration:none;text-align:center;max-width:220px" href="https://wa.me/91XXXXXXXXXX" target="_blank">💬 WhatsApp Us</a>
-    </div>
-  </div>
-</div>
-
-<div id="buySellPage" style="display:none">
   <div class="home-hero">
-    <h1>🚛 Buy &amp; Sell Vehicles</h1>
-    <p class="tagline">Used vehicles — buy &amp; sell</p>
+    <h1>Welcome to <span class="ac">Vignesheng</span> 🚛</h1>
+    <p>Browse our products by category</p>
   </div>
   <div class="cat-grid" id="catGrid"><div class="loading">Loading...</div></div>
-</div>
-
-<div id="galleryPage" style="display:none">
-  <div class="home-hero">
-    <h1>🖼️ Gallery</h1>
-    <p class="tagline">Enga work samples — before/after photos</p>
-  </div>
-  <div class="gal-grid" id="galGrid" style="padding:16px;max-width:600px;margin:0 auto;"><div class="loading">Loading...</div></div>
 </div>
 
 <div id="productsPage">
@@ -215,7 +158,7 @@ footer strong{color:var(--accent);}
 <footer><strong>Vignesheng</strong> — All rights reserved</footer>
 
 <script>
-const API = 'https://vignesheng.up.railway.app/api';
+const API='https://vignesheng.up.railway.app/api';
 var cats=[], prods=[], currentCatId=null, activeFilter='all', slIdx={}, detIdx=0, productImagesMap={};
 
 function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
@@ -227,82 +170,34 @@ async function loadCategories(){
     const res = await fetch(API+'/categories');
     cats = await res.json();
     renderHome();
-    loadGallery();
   }catch(e){
     document.getElementById('catGrid').innerHTML='<div class="loading">Server connection failed. Make sure server is running!</div>';
-    document.getElementById('serviceGrid').innerHTML='<div class="loading">Server connection failed.</div>';
   }
 }
 
-function catCardHtml(c){
-  var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:5rem">'+c.emoji+'</span>';
-  return '<div class="cat-card" data-id="'+c.id+'" onclick="goCategory('+c.id+')">'
-    +'<div class="cat-img">'+cov+'<div class="cat-overlay"></div>'
-    +'<div class="cat-label">'+c.name+'<small>'+c.description+'</small></div>'
-    +'</div><div class="cat-footer"><span class="cat-count">Click to browse</span></div></div>';
-}
-
 function renderHome(){
-  var services=cats.filter(function(c){return c.type==='service';});
-  var market=cats.filter(function(c){return c.type!=='service';});
-
-  var sg=document.getElementById('serviceGrid');
-  sg.innerHTML=services.length?services.map(catCardHtml).join(''):'<div class="loading">Services soon varum</div>';
-
-  var mg=document.getElementById('catGrid');
-  mg.innerHTML=market.length?market.map(catCardHtml).join(''):'<div class="loading">No vehicles listed yet</div>';
+  var g=document.getElementById('catGrid');
+  if(!cats.length){g.innerHTML='<div class="loading">No categories yet</div>';return;}
+  var html='';
+  cats.forEach(function(c){
+    var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:5rem">'+c.emoji+'</span>';
+    html+='<div class="cat-card" data-id="'+c.id+'" onclick="goCategory('+c.id+')">'
+      +'<div class="cat-img">'+cov+'<div class="cat-overlay"></div>'
+      +'<div class="cat-label">'+c.name+'<small>'+c.description+'</small></div>'
+      +'</div><div class="cat-footer"><span class="cat-count">Click to browse</span></div></div>';
+  });
+  g.innerHTML=html;
 }
-
-// GALLERY — pulls product images from Service categories
-async function loadGallery(){
-  var services=cats.filter(function(c){return c.type==='service';});
-  var g=document.getElementById('galGrid');
-  if(!services.length){g.innerHTML='<div class="loading">Gallery soon varum</div>';return;}
-  try{
-    var allImgs=[];
-    for(var i=0;i<services.length;i++){
-      var res=await fetch(API+'/products/'+services[i].id);
-      var list=await res.json();
-      list.forEach(function(p){(p.images||[]).forEach(function(img){if(img)allImgs.push(img);});});
-    }
-    if(!allImgs.length){g.innerHTML='<div class="loading">Photos soon varum</div>';return;}
-    g.innerHTML=allImgs.slice(0,24).map(function(img,i){return '<img src="'+img+'" alt="" onclick="openFs(window.__galImgs,'+i+')"/>';}).join('');
-    window.__galImgs=allImgs.slice(0,24);
-  }catch(e){g.innerHTML='<div class="loading">Gallery load failed</div>';}
-}
-
-// PAGE SYSTEM — 'home','buysell','gallery','products'
-var PAGES={home:'homePage',buysell:'buySellPage',gallery:'galleryPage',products:'productsPage'};
-var cameFrom='home'; // which page Back should return to from 'products'
-function showPage(name){
-  Object.keys(PAGES).forEach(function(k){document.getElementById(PAGES[k]).style.display=(k===name)?'block':'none';});
-  document.getElementById('backBtn').style.display=(name==='home')?'none':'flex';
-  document.getElementById('navLinks').style.display=(name==='home')?'flex':'none';
-  window.scrollTo(0,0);
-}
-
-function navGo(id){ // Home/About/Services/Contact — sections inside home page
-  showPage('home');
-  setTimeout(function(){scrollToSec(id);},50);
-}
-function scrollToSec(id){
-  var el=document.getElementById(id);
-  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function goBuySell(){ showPage('buysell'); document.getElementById('backBtn').onclick=goHomeFull; }
-function goGallery(){ showPage('gallery'); document.getElementById('backBtn').onclick=goHomeFull; }
-function goHomeFull(){ cameFrom='home'; showPage('home'); }
 
 // LOAD PRODUCTS
 async function goCategory(catId){
-  cameFrom=(document.getElementById('buySellPage').style.display==='block')?'buysell':'home';
   currentCatId=catId; activeFilter='all';
   document.getElementById('searchQ').value='';
   var cat=cats.find(function(c){return c.id===catId;});
   document.getElementById('pageTitle').textContent=cat.emoji+' '+cat.name;
-  showPage('products');
-  document.getElementById('backBtn').onclick=goHome;
+  document.getElementById('homePage').style.display='none';
+  document.getElementById('productsPage').style.display='block';
+  document.getElementById('backBtn').style.display='flex';
   document.getElementById('grid').innerHTML='<div class="loading" style="grid-column:1/-1">Loading...</div>';
   try{
     const res=await fetch(API+'/products/'+catId);
@@ -311,8 +206,10 @@ async function goCategory(catId){
   }catch(e){showToast('Error loading products');}
 }
 
-function goHome(){ // Back from a category page — returns to wherever it came from
-  showPage(cameFrom);
+function goHome(){
+  document.getElementById('homePage').style.display='block';
+  document.getElementById('productsPage').style.display='none';
+  document.getElementById('backBtn').style.display='none';
   currentCatId=null; prods=[];
 }
 
@@ -353,7 +250,43 @@ function renderGrid(){
   var html='';
   list.forEach(function(p){
     if(!slIdx[p.id])slIdx[p.id]=0;
-    var imgs=p.images||[];
+  var imgs = p.images || [];
+
+if (typeof imgs === 'string') {
+  try {
+    imgs = JSON.parse(imgs);
+  } catch (e) {
+    imgs = [imgs];
+  }
+}
+
+imgs = imgs.map(function(img) {
+  if (!img) return img;
+
+  if (img.startsWith('data:')) return img;
+
+  if (img.startsWith('http')) return img;
+
+  return API.replace('/api', '') + (img.startsWith('/') ? img : '/' + img);
+});
+
+if (typeof imgs === 'string') {
+  try {
+    imgs = JSON.parse(imgs);
+  } catch (e) {
+    imgs = [imgs];
+  }
+}
+
+imgs = imgs.map(function(img) {
+  if (!img) return img;
+
+  if (img.startsWith('data:')) return img;
+
+  if (img.startsWith('http')) return img;
+
+  return API.replace('/api', '') + (img.startsWith('/') ? img : '/' + img);
+});
     var slides='';
     imgs.forEach(function(img){
       slides+='<div class="sl-slide">'+(img&&(img.indexOf('data:')===0||img.indexOf('http')===0)?'<img src="'+img+'" alt=""/>':'<span>'+p.emoji+'</span>')+'</div>';
@@ -393,7 +326,23 @@ function sNext(e,pid){e.stopPropagation();goSlide(pid,(slIdx[pid]||0)+1);}
 // DETAIL
 function openDet(id){
   var p=prods.find(function(x){return x.id===id;});if(!p)return;
-  detIdx=0;var imgs=p.images||[];
+ detIdx=0;
+var imgs = p.images || [];
+
+if (typeof imgs === 'string') {
+  try {
+    imgs = JSON.parse(imgs);
+  } catch (e) {
+    imgs = [imgs];
+  }
+}
+
+imgs = imgs.map(function(img) {
+  if (!img) return img;
+  if (img.startsWith('data:')) return img;
+  if (img.startsWith('http')) return img;
+  return API.replace('/api', '') + (img.startsWith('/') ? img : '/' + img);
+});
   var slides='';
   imgs.forEach(function(img){slides+='<div class="det-slide">'+(img&&(img.indexOf('data:')===0||img.indexOf('http')===0)?'<img src="'+img+'" alt=""/>':'<span>📦</span>')+'</div>';});
   if(!imgs.length)slides='<div class="det-slide"><span style="font-size:4rem">📦</span></div>';
@@ -467,6 +416,29 @@ function showToast(msg){
 
 // INIT
 loadCategories();
+// Touch swipe for fullscreen
+var fsTouchX=0;
+document.getElementById('fsOverlay').addEventListener('touchstart',function(e){fsTouchX=e.touches[0].clientX;},{passive:true});
+document.getElementById('fsOverlay').addEventListener('touchend',function(e){
+  var diff=fsTouchX-e.changedTouches[0].clientX;
+  if(Math.abs(diff)>50){if(diff>0)fsNav(1);else fsNav(-1);}
+},{passive:true});
+
+// Touch swipe for product card sliders
+document.addEventListener('touchstart',function(e){
+  var sl=e.target.closest('.sl-wrap');
+  if(sl) sl._tx=e.touches[0].clientX;
+},{passive:true});
+document.addEventListener('touchend',function(e){
+  var sl=e.target.closest('.sl-wrap');
+  if(!sl||!sl._tx) return;
+  var diff=sl._tx-e.changedTouches[0].clientX;
+  var pid=sl.querySelector('.sl-track')?sl.querySelector('.sl-track').id.replace('sl-',''):null;
+  if(pid&&Math.abs(diff)>40){
+    if(diff>0)goSlide(+pid,(slIdx[+pid]||0)+1);
+    else goSlide(+pid,(slIdx[+pid]||0)-1);
+  }
+},{passive:true});
 </script>
 </body>
 </html>
