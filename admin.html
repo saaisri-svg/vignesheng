@@ -44,6 +44,9 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;justify-c
 .home-hero h1{color:#fff;font-size:1.5rem;font-weight:900;margin-bottom:4px;}
 .home-hero p{color:rgba(255,255,255,.6);font-size:.85rem;}
 .home-hero .ac{color:var(--accent);}
+.admin-tabs{display:flex;gap:8px;max-width:600px;margin:16px auto 0;padding:0 16px;}
+.admin-tab{flex:1;border:2px solid #E2E6EE;background:#fff;color:var(--dark);padding:11px 8px;border-radius:12px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Inter',sans-serif;}
+.admin-tab.on{background:var(--dark);color:#fff;border-color:var(--dark);}
 
 .cat-grid{display:grid;grid-template-columns:1fr;gap:16px;padding:20px 16px;max-width:600px;margin:0 auto;}
 .cat-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s;}
@@ -211,6 +214,10 @@ footer strong{color:var(--accent);}
     <div class="home-hero">
       <h1><span class="ac">Vignesheng</span> Admin 🛠️</h1>
       <p>Manage categories and products</p>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab" id="tab-service" onclick="setAdminTab('service')">🔧 Our Services</button>
+      <button class="admin-tab" id="tab-marketplace" onclick="setAdminTab('marketplace')">🚛 Buy &amp; Sell</button>
     </div>
     <div class="cat-grid" id="catGrid"><div class="loading">Loading...</div></div>
   </div>
@@ -424,14 +431,19 @@ async function loadCategories(){
   }catch(e){showToast('Server error!');}
 }
 
+var adminTab='service';
+function setAdminTab(t){adminTab=t;renderHome();}
+
 function renderHome(){
+  document.getElementById('tab-service').className='admin-tab'+(adminTab==='service'?' on':'');
+  document.getElementById('tab-marketplace').className='admin-tab'+(adminTab==='marketplace'?' on':'');
   document.getElementById('homePage').style.display='block';
   document.getElementById('productsPage').style.display='none';
   document.getElementById('backBtn').style.display='none';
   document.getElementById('addBtn').style.display='none';
   document.getElementById('salesBtn').style.display='block';
   var g=document.getElementById('catGrid'),html='';
-  cats.forEach(function(c){
+  cats.filter(function(c){return (c.type==='service'?'service':'marketplace')===adminTab;}).forEach(function(c){
     var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:4.5rem">'+c.emoji+'</span>';
     var isService=c.type==='service';
     var badge='<span style="position:absolute;top:8px;left:8px;z-index:2;font-size:.65rem;font-weight:800;padding:3px 9px;border-radius:10px;color:#fff;background:'+(isService?'#9333EA':'#2563EB')+'">'+(isService?'🔧 SERVICE':'🚛 MARKETPLACE')+'</span>';
@@ -445,7 +457,7 @@ function renderHome(){
       +'<button class="btn-del" data-id="'+c.id+'" onclick="event.stopPropagation();openDelCat(+this.dataset.id)">🗑️</button>'
       +'</div></div></div>';
   });
-  html+='<div class="cat-add-card" onclick="openNewCat()"><div class="plus">＋</div><span>Add Category</span></div>';
+  html+='<div class="cat-add-card" onclick="openNewCat()"><div class="plus">＋</div><span>'+(adminTab==='service'?'Add Service':'Add Category')+'</span></div>';
   g.innerHTML=html;
 }
 
@@ -749,7 +761,7 @@ function openNewCat(){
   newEmoji='🚛';
   document.getElementById('nc-name').value='';
   document.getElementById('nc-desc').value='';
-  document.getElementById('nc-type').value='marketplace';
+  document.getElementById('nc-type').value=adminTab;
   buildEG('newEG',newEmoji,'pickNE');
   document.getElementById('newCatOverlay').classList.add('open');
 }
