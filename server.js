@@ -156,11 +156,12 @@ app.get('/api/categories', (req, res) => {
 
 // Add category
 app.post('/api/categories', authMiddleware, (req, res) => {
-  const { name, description, emoji } = req.body;
+  const { name, description, emoji, type } = req.body;
+  const catType = type === 'service' ? 'service' : 'marketplace';
 
   db.query(
-    'INSERT INTO categories (name, description, emoji) VALUES (?, ?, ?)',
-    [name, description, emoji],
+    'INSERT INTO categories (name, description, emoji, type) VALUES (?, ?, ?, ?)',
+    [name, description, emoji, catType],
     (err, result) => {
       if (err) {
         return res.status(500).json({
@@ -172,7 +173,8 @@ app.post('/api/categories', authMiddleware, (req, res) => {
         id: result.insertId,
         name,
         description,
-        emoji
+        emoji,
+        type: catType
       });
     }
   );
@@ -184,18 +186,21 @@ app.put('/api/categories/:id', authMiddleware, (req, res) => {
     name,
     description,
     emoji,
-    cover_img
+    cover_img,
+    type
   } = req.body;
+  const catType = type === 'service' ? 'service' : 'marketplace';
 
   db.query(
     `UPDATE categories 
-     SET name=?, description=?, emoji=?, cover_img=? 
+     SET name=?, description=?, emoji=?, cover_img=?, type=? 
      WHERE id=?`,
     [
       name,
       description,
       emoji,
       cover_img || null,
+      catType,
       req.params.id
     ],
     (err) => {
