@@ -548,6 +548,92 @@ app.get('/api/sales', authMiddleware, (req, res) => {
   });
 });
 
+// ---- SITE SETTINGS + GALLERY (About/Contact text, Before/After photos) ----
+function initExtraTables() {
+  db.query(
+    `CREATE TABLE IF NOT EXISTS site_settings (
+      key_name VARCHAR(50) PRIMARY KEY,
+      setting_value TEXT
+    )`,
+    (err) => { if (err) console.error('site_settings table error:', err.message); }
+  );
+  db.query(
+    `CREATE TABLE IF NOT EXISTS gallery (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(150),
+      before_img LONGTEXT,
+      after_img LONGTEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    (err) => { if (err) console.error('gallery table error:', err.message); }
+  );
+}
+initExtraTables();
+
+const SETTING_KEYS = ['about', 'phone', 'whatsapp', 'address'];
+
+// Get settings (public)
+app.get('/api/settings', (req, res) => {
+  db.query('SELECT key_name, setting_value FROM site_settings', (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    const out = {};
+    rows.forEach(r => { out[r.key_name] = r.setting_value; });
+    res.json(out);
+  });
+});
+
+// Save settings (admin)
+app.put('/api/settings', authMiddleware, (req, res) => {
+  const rows = SETTING_KEYS
+    .filter(k => typeof req.body[k] === 'string')
+    .map(k => [k, req.body[k]]);
+  if (!rows.length) return res.json({ success: true });
+  db.query(
+    `INSERT INTO site_settings (key_name, setting_value) VALUES ?
+     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+    [rows],
+    (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Get gallery (public)
+app.get('/api/gallery', (req, res) => {
+  db.query(
+    'SELECT id, title, before_img, after_img FROM gallery ORDER BY id DESC',
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+// Add gallery item (admin)
+app.post('/api/gallery', authMiddleware, (req, res) => {
+  const { title, before_img, after_img } = req.body;
+  if (!before_img || !after_img) {
+    return res.status(400).json({ error: 'Before and After photos required' });
+  }
+  db.query(
+    'INSERT INTO gallery (title, before_img, after_img) VALUES (?, ?, ?)',
+    [title || '', before_img, after_img],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ id: result.insertId, success: true });
+    }
+  );
+});
+
+// Delete gallery item (admin)
+app.delete('/api/gallery/:id', authMiddleware, (req, res) => {
+  db.query('DELETE FROM gallery WHERE id=?', [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(

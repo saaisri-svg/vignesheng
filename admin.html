@@ -44,8 +44,8 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;justify-c
 .home-hero h1{color:#fff;font-size:1.5rem;font-weight:900;margin-bottom:4px;}
 .home-hero p{color:rgba(255,255,255,.6);font-size:.85rem;}
 .home-hero .ac{color:var(--accent);}
-.admin-tabs{display:flex;gap:8px;max-width:600px;margin:16px auto 0;padding:0 16px;}
-.admin-tab{flex:1;border:2px solid #E2E6EE;background:#fff;color:var(--dark);padding:11px 8px;border-radius:12px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Inter',sans-serif;}
+.admin-tabs{display:flex;flex-wrap:wrap;gap:8px;max-width:600px;margin:16px auto 0;padding:0 16px;}
+.admin-tab{flex:1 1 45%;border:2px solid #E2E6EE;background:#fff;color:var(--dark);padding:11px 8px;border-radius:12px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Inter',sans-serif;}
 .admin-tab.on{background:var(--dark);color:#fff;border-color:var(--dark);}
 
 .cat-grid{display:grid;grid-template-columns:1fr;gap:16px;padding:20px 16px;max-width:600px;margin:0 auto;}
@@ -218,8 +218,23 @@ footer strong{color:var(--accent);}
     <div class="admin-tabs">
       <button class="admin-tab" id="tab-service" onclick="setAdminTab('service')">🔧 Our Services</button>
       <button class="admin-tab" id="tab-marketplace" onclick="setAdminTab('marketplace')">🚛 Buy &amp; Sell</button>
+      <button class="admin-tab" id="tab-gallery" onclick="setAdminTab('gallery')">📸 Gallery</button>
+      <button class="admin-tab" id="tab-settings" onclick="setAdminTab('settings')">ℹ️ About &amp; Contact</button>
     </div>
     <div class="cat-grid" id="catGrid"><div class="loading">Loading...</div></div>
+
+    <div id="galPanel" style="display:none;max-width:600px;margin:0 auto;padding:16px">
+      <div class="cat-add-card" onclick="openGalAdd()" style="margin-bottom:14px"><div class="plus">＋</div><span>Add Before / After</span></div>
+      <div id="galList"><div class="loading">Loading...</div></div>
+    </div>
+
+    <div id="setPanel" style="display:none;max-width:600px;margin:0 auto;padding:16px">
+      <div class="fg"><label>About Us text</label><textarea id="st-about" rows="5" placeholder="Unga shop pathi..."></textarea></div>
+      <div class="fg"><label>Address</label><input id="st-address" type="text" placeholder="Shop address"/></div>
+      <div class="fg"><label>Phone number</label><input id="st-phone" type="text" placeholder="e.g. 98xxxxxxxx"/></div>
+      <div class="fg"><label>WhatsApp number (blank na phone use aagum)</label><input id="st-whatsapp" type="text" placeholder="e.g. 98xxxxxxxx"/></div>
+      <button class="m-save" style="width:100%;padding:12px" onclick="saveSettings()">Save ✅</button>
+    </div>
   </div>
 
   <div id="productsPage">
@@ -338,6 +353,19 @@ footer strong{color:var(--accent);}
   </div>
 </div>
 
+<div class="overlay" id="galOverlay">
+  <div class="cat-modal">
+    <h2>📸 Add Before / After</h2>
+    <div class="fg"><label>Title (optional)</label><input id="g-title" type="text" placeholder="e.g. Tata Ace body building"/></div>
+    <div class="fg"><label>Before photo *</label><input id="g-before" type="file" accept="image/*" onchange="pickGal('before',this)"/><img id="g-before-pv" style="display:none;width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-top:6px"/></div>
+    <div class="fg"><label>After photo *</label><input id="g-after" type="file" accept="image/*" onchange="pickGal('after',this)"/><img id="g-after-pv" style="display:none;width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-top:6px"/></div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeGalAdd()">Cancel</button>
+      <button class="m-save" id="galSaveBtn" onclick="saveGal()">Add ✅</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="newCatOverlay">
   <div class="cat-modal">
     <h2>➕ Add Category</h2>
@@ -435,6 +463,14 @@ var adminTab='service';
 function setAdminTab(t){adminTab=t;renderHome();}
 
 function renderHome(){
+  document.getElementById('tab-gallery').className='admin-tab'+(adminTab==='gallery'?' on':'');
+  document.getElementById('tab-settings').className='admin-tab'+(adminTab==='settings'?' on':'');
+  var isCat=(adminTab==='service'||adminTab==='marketplace');
+  document.getElementById('catGrid').style.display=isCat?'':'none';
+  document.getElementById('galPanel').style.display=(adminTab==='gallery')?'block':'none';
+  document.getElementById('setPanel').style.display=(adminTab==='settings')?'block':'none';
+  if(adminTab==='gallery')loadGalAdmin();
+  if(adminTab==='settings')loadSettingsAdmin();
   document.getElementById('tab-service').className='admin-tab'+(adminTab==='service'?' on':'');
   document.getElementById('tab-marketplace').className='admin-tab'+(adminTab==='marketplace'?' on':'');
   document.getElementById('homePage').style.display='block';
@@ -755,6 +791,91 @@ async function confirmDelCat(){
     await fetch(API+'/categories/'+deleteCatId,{method:'DELETE',headers:authHeader()});
     closeDelCat();showToast('🗑️ Category deleted');loadCategories();
   }catch(e){showToast('Error!');}
+}
+
+// ---- GALLERY (Before / After) ----
+var galBefore='', galAfter='';
+function compressImg(file,max,cb){
+  var r=new FileReader();
+  r.onload=function(e){
+    var im=new Image();
+    im.onload=function(){
+      var k=Math.min(1,max/Math.max(im.width,im.height));
+      var c=document.createElement('canvas');
+      c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      cb(c.toDataURL('image/jpeg',0.75));
+    };
+    im.src=e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function pickGal(which,input){
+  var f=input.files&&input.files[0];if(!f)return;
+  compressImg(f,1000,function(url){
+    if(which==='before')galBefore=url;else galAfter=url;
+    var pv=document.getElementById('g-'+which+'-pv');pv.src=url;pv.style.display='block';
+  });
+}
+function openGalAdd(){
+  galBefore='';galAfter='';
+  document.getElementById('g-title').value='';
+  ['before','after'].forEach(function(w){
+    document.getElementById('g-'+w).value='';
+    var pv=document.getElementById('g-'+w+'-pv');pv.style.display='none';pv.removeAttribute('src');
+  });
+  document.getElementById('galOverlay').classList.add('open');
+}
+function closeGalAdd(){document.getElementById('galOverlay').classList.remove('open');}
+async function saveGal(){
+  if(!galBefore||!galAfter){showToast('⚠️ Before & After photo rendum venum!');return;}
+  var btn=document.getElementById('galSaveBtn');btn.disabled=true;btn.textContent='Saving...';
+  try{
+    var res=await fetch(API+'/gallery',{method:'POST',headers:authHeader(),
+      body:JSON.stringify({title:document.getElementById('g-title').value.trim(),before_img:galBefore,after_img:galAfter})});
+    if(!res.ok)throw new Error('fail');
+    closeGalAdd();showToast('🎉 Added!');loadGalAdmin();
+  }catch(e){showToast('Error saving!');}
+  btn.disabled=false;btn.textContent='Add ✅';
+}
+async function loadGalAdmin(){
+  var box=document.getElementById('galList');
+  try{
+    var res=await fetch(API+'/gallery');var list=await res.json();
+    if(!list.length){box.innerHTML='<div class="loading">Innum photos illa. Mela "Add Before / After" click pannunga.</div>';return;}
+    box.innerHTML=list.map(function(g){
+      return '<div style="background:#fff;border-radius:14px;padding:10px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.08)">'
+        +'<div style="font-weight:800;margin-bottom:6px">'+(g.title||'(no title)')+'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'
+        +'<img src="'+g.before_img+'" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px"/>'
+        +'<img src="'+g.after_img+'" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px"/></div>'
+        +'<button class="btn-del" style="margin-top:8px" data-id="'+g.id+'" onclick="delGal(+this.dataset.id)">🗑️ Delete</button></div>';
+    }).join('');
+  }catch(e){box.innerHTML='<div class="loading">Load failed</div>';}
+}
+async function delGal(id){
+  if(!confirm('Idha delete pannanuma?'))return;
+  try{
+    await fetch(API+'/gallery/'+id,{method:'DELETE',headers:authHeader()});
+    showToast('Deleted');loadGalAdmin();
+  }catch(e){showToast('Error!');}
+}
+
+// ---- ABOUT & CONTACT ----
+async function loadSettingsAdmin(){
+  try{
+    var res=await fetch(API+'/settings');var st=await res.json();
+    ['about','address','phone','whatsapp'].forEach(function(k){document.getElementById('st-'+k).value=st[k]||'';});
+  }catch(e){showToast('Load failed');}
+}
+async function saveSettings(){
+  var body={};
+  ['about','address','phone','whatsapp'].forEach(function(k){body[k]=document.getElementById('st-'+k).value.trim();});
+  try{
+    var res=await fetch(API+'/settings',{method:'PUT',headers:authHeader(),body:JSON.stringify(body)});
+    if(!res.ok)throw new Error('fail');
+    showToast('✅ Saved!');
+  }catch(e){showToast('Error saving!');}
 }
 
 function openNewCat(){

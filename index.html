@@ -37,8 +37,13 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;
 .sec-text{color:var(--mid);font-size:.9rem;line-height:1.5;background:#F3F6FB;padding:14px;border-radius:12px;}
 .sec-block .cat-grid{padding:16px 0;}
 .gal-wrap{max-width:600px;margin:0 auto;padding:16px;}
-.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.gal-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer;}
+.sec-text{white-space:pre-line;}
+.gal-item{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:10px;margin-bottom:14px;}
+.gal-title{font-weight:800;font-size:.9rem;margin-bottom:8px;}
+.gal-pair{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.gal-pair div{position:relative;}
+.gal-pair img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer;}
+.gal-tag{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.65);color:#fff;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:8px;}
 .gal-more{display:block;margin:16px auto;padding:10px 22px;border:none;border-radius:20px;background:var(--dark);color:#fff;font-weight:700;cursor:pointer;}
 .contact-card{background:#F3F6FB;border-radius:14px;padding:18px;margin:16px 0 28px;}
 .contact-card p{color:var(--mid);font-size:.92rem;margin-bottom:10px;}
@@ -151,7 +156,7 @@ footer strong{color:var(--accent);}
 
   <div class="sec-block" id="about">
     <h2 class="sec-h">About Us</h2>
-    <p class="sec-text">Vignesheng la naanga welding works, vehicle body building &amp; fabrication, vehicle repair / denting-painting seivom. Melum used vehicles buy &amp; sell um pannuvom. Quality work &amp; trust than enga specialty.</p>
+    <p class="sec-text" id="aboutText">Vignesheng la naanga welding works, vehicle body building &amp; fabrication, vehicle repair / denting-painting seivom. Melum used vehicles buy &amp; sell um pannuvom. Quality work &amp; trust than enga specialty.</p>
   </div>
 
   <div class="sec-block" id="services">
@@ -162,9 +167,9 @@ footer strong{color:var(--accent);}
   <div class="sec-block" id="contact">
     <h2 class="sec-h">Contact Us</h2>
     <div class="contact-card">
-      <p>📍 Unga Address inga varum</p>
-      <p>📞 <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
-      <a class="cta-wa" style="display:inline-block;text-decoration:none;text-align:center;max-width:220px" href="https://wa.me/91XXXXXXXXXX" target="_blank">💬 WhatsApp Us</a>
+      <p>📍 <span id="cAddr">Unga Address inga varum</span></p>
+      <p>📞 <a id="cPhone" href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
+      <a id="cWa" class="cta-wa" style="display:inline-block;text-decoration:none;text-align:center;max-width:220px" href="https://wa.me/91XXXXXXXXXX" target="_blank">💬 WhatsApp Us</a>
     </div>
   </div>
 </div>
@@ -267,37 +272,51 @@ function scrollToSec(id){var el=document.getElementById(id);if(el)el.scrollIntoV
 function navGo(id){scrollToSec(id);}
 function goBuySell(){showPage('buysell');}
 
-// GALLERY — work photos from Service categories, loaded only when Gallery is opened
-var galImgs=[], galShown=0;
+// GALLERY — Before / After photos added from admin (Gallery tab)
+var galItems=[], galShown=0;
 async function goGallery(){
   showPage('gallery');
-  if(galImgs.length){return;}
   var g=document.getElementById('galGrid');
-  var services=cats.filter(function(c){return c.type==='service';});
-  if(!services.length){g.innerHTML='<div class="loading" style="grid-column:1/-1">Gallery soon varum</div>';return;}
+  g.innerHTML='<div class="loading">Loading...</div>';
+  document.getElementById('galMore').style.display='none';
   try{
-    for(var i=0;i<services.length;i++){
-      var res=await fetch(API+'/products/'+services[i].id);
-      var list=await res.json();
-      list.forEach(function(p){(p.images||[]).forEach(function(img){if(img)galImgs.push(img);});});
-    }
+    var res=await fetch(API+'/gallery');
+    galItems=await res.json();
     galShown=0; g.innerHTML='';
-    if(!galImgs.length){g.innerHTML='<div class="loading" style="grid-column:1/-1">Photos soon varum</div>';return;}
+    if(!galItems.length){g.innerHTML='<div class="loading">Photos soon varum</div>';return;}
     renderGal();
-  }catch(e){g.innerHTML='<div class="loading" style="grid-column:1/-1">Gallery load failed</div>';}
+  }catch(e){g.innerHTML='<div class="loading">Gallery load failed</div>';}
 }
 function renderGal(){
   var g=document.getElementById('galGrid');
-  var next=galImgs.slice(galShown,galShown+30);
-  next.forEach(function(img,k){
-    var el=document.createElement('img');
-    el.src=img; el.alt=''; el.loading='lazy';
-    var idx=galShown+k;
-    el.onclick=function(){openFs(galImgs,idx);};
-    g.appendChild(el);
+  var next=galItems.slice(galShown,galShown+10);
+  next.forEach(function(it){
+    var card=document.createElement('div');card.className='gal-item';
+    if(it.title){var t=document.createElement('div');t.className='gal-title';t.textContent=it.title;card.appendChild(t);}
+    var pair=document.createElement('div');pair.className='gal-pair';
+    [['Before',it.before_img],['After',it.after_img]].forEach(function(x,i){
+      var w=document.createElement('div');
+      var im=document.createElement('img');im.src=x[1];im.alt='';im.loading='lazy';
+      im.onclick=function(){openFs([it.before_img,it.after_img],i);};
+      var tag=document.createElement('span');tag.className='gal-tag';tag.textContent=x[0];
+      w.appendChild(im);w.appendChild(tag);pair.appendChild(w);
+    });
+    card.appendChild(pair);g.appendChild(card);
   });
   galShown+=next.length;
-  document.getElementById('galMore').style.display=(galShown<galImgs.length)?'block':'none';
+  document.getElementById('galMore').style.display=(galShown<galItems.length)?'block':'none';
+}
+
+// ABOUT & CONTACT text from admin
+async function loadSettings(){
+  try{
+    var res=await fetch(API+'/settings');var st=await res.json();
+    if(st.about)document.getElementById('aboutText').textContent=st.about;
+    if(st.address)document.getElementById('cAddr').textContent=st.address;
+    if(st.phone){var p=document.getElementById('cPhone');p.textContent=st.phone;p.href='tel:'+st.phone.replace(/\s/g,'');}
+    var wa=(st.whatsapp||st.phone||'').replace(/\D/g,'');
+    if(wa){if(wa.length===10)wa='91'+wa;document.getElementById('cWa').href='https://wa.me/'+wa;}
+  }catch(e){}
 }
 
 // LOAD PRODUCTS
@@ -530,6 +549,7 @@ function showToast(msg){
 
 // INIT
 loadCategories();
+loadSettings();
 // Touch swipe for fullscreen
 var fsTouchX=0;
 document.getElementById('fsOverlay').addEventListener('touchstart',function(e){fsTouchX=e.touches[0].clientX;},{passive:true});
