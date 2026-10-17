@@ -44,7 +44,28 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;justify-c
 .home-hero h1{color:#fff;font-size:1.5rem;font-weight:900;margin-bottom:4px;}
 .home-hero p{color:rgba(255,255,255,.6);font-size:.85rem;}
 .home-hero .ac{color:var(--accent);}
-.admin-tabs{display:flex;flex-wrap:wrap;gap:8px;max-width:600px;margin:16px auto 0;padding:0 16px;}
+.admin-dash{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:600px;margin:20px auto;padding:0 16px;}
+.dash-card{background:#fff;border-radius:16px;padding:22px 12px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.08);}
+.dash-card:active{transform:scale(.97);}
+.dash-card span{display:block;font-size:2.4rem;margin-bottom:8px;}
+.dash-card b{display:block;font-size:.95rem;color:var(--dark);}
+.dash-card small{display:block;font-size:.72rem;color:var(--muted);margin-top:4px;}
+.sec-hdr{max-width:600px;margin:18px auto 0;padding:0 16px;}
+.sec-hdr h2{font-size:1.3rem;font-weight:900;color:var(--dark);}
+.stat-wrap{max-width:600px;margin:12px auto 0;padding:0 16px;}
+.stat-per{display:flex;gap:8px;margin-bottom:10px;}
+.stat-per button{flex:1;border:2px solid #E2E6EE;background:#fff;border-radius:10px;padding:8px;font-weight:800;font-size:.8rem;cursor:pointer;font-family:'Inter',sans-serif;}
+.stat-per button.on{background:var(--dark);color:#fff;border-color:var(--dark);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-tile{background:#fff;border-radius:14px;padding:12px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.stat-tile small{display:block;color:#666;font-size:.72rem;font-weight:700;margin-bottom:4px;}
+.stat-tile b{font-size:1.15rem;font-weight:900;}
+.stat-tile.wide{grid-column:1/-1;}
+.stat-note{font-size:.72rem;color:#92400E;background:#FEF3C7;border-radius:8px;padding:6px 10px;margin-top:8px;}
+.job-row{background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.job-row .jt{font-weight:800;font-size:.88rem;}
+.job-row .js{font-size:.72rem;color:#666;margin-top:2px;}
+.admin-tabs{display:none;flex-wrap:wrap;gap:8px;max-width:600px;margin:16px auto 0;padding:0 16px;}
 .admin-tab{flex:1 1 45%;border:2px solid #E2E6EE;background:#fff;color:var(--dark);padding:11px 8px;border-radius:12px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Inter',sans-serif;}
 .admin-tab.on{background:var(--dark);color:#fff;border-color:var(--dark);}
 
@@ -211,16 +232,26 @@ footer strong{color:var(--accent);}
   </nav>
 
   <div id="homePage">
-    <div class="home-hero">
+    <div class="home-hero" id="adminHero">
       <h1><span class="ac">Vignesheng</span> Admin 🛠️</h1>
       <p>Manage categories and products</p>
     </div>
-    <div class="admin-tabs">
-      <button class="admin-tab" id="tab-service" onclick="setAdminTab('service')">🔧 Our Services</button>
-      <button class="admin-tab" id="tab-marketplace" onclick="setAdminTab('marketplace')">🚛 Buy &amp; Sell</button>
-      <button class="admin-tab" id="tab-gallery" onclick="setAdminTab('gallery')">📸 Gallery</button>
-      <button class="admin-tab" id="tab-settings" onclick="setAdminTab('settings')">ℹ️ About &amp; Contact</button>
+    <div class="admin-dash" id="adminDash">
+      <div class="dash-card" onclick="openSection('service')"><span>🔧</span><b>Our Services</b><small>Welding, body building, repair</small></div>
+      <div class="dash-card" onclick="openSection('marketplace')"><span>🚛</span><b>Buy &amp; Sell</b><small>Vehicles for sale</small></div>
+      <div class="dash-card" onclick="openSection('gallery')"><span>📸</span><b>Gallery</b><small>Before / After photos</small></div>
+      <div class="dash-card" onclick="openSection('settings')"><span>ℹ️</span><b>About &amp; Contact</b><small>Text, phone, address</small></div>
     </div>
+    <div class="sec-hdr" id="secHdr" style="display:none"><h2 id="secTitle"></h2></div>
+    <div class="stat-wrap" id="statsBox" style="display:none"></div>
+
+    <div id="jobsPanel" style="display:none;max-width:600px;margin:14px auto 0;padding:0 16px">
+      <h3 style="font-size:1rem;font-weight:900;margin-bottom:8px">🧾 Jobs (Income / Expense)</h3>
+      <div class="cat-add-card" onclick="openJobAdd()" style="margin-bottom:10px"><div class="plus">＋</div><span>Add Job</span></div>
+      <div id="jobList"></div>
+    </div>
+
+    <h3 id="catSubHdr" style="display:none;max-width:600px;margin:18px auto 0;padding:0 16px;font-size:1rem;font-weight:900">🖼️ Work photos (categories)</h3>
     <div class="cat-grid" id="catGrid"><div class="loading">Loading...</div></div>
 
     <div id="galPanel" style="display:none;max-width:600px;margin:0 auto;padding:16px">
@@ -266,6 +297,7 @@ footer strong{color:var(--accent);}
         <select id="f-cond"><option>Brand New</option><option>Like New</option><option>Good</option><option>Fair</option></select>
       </div>
     </div>
+    <div class="fg" id="costRow"><label>Vangina price / Cost (₹) — optional (profit ku mattum, public ku theriyaadhu)</label><input id="f-cost" type="number" placeholder="380000"/></div>
     <div class="fg">
       <label>Sub Category</label>
       <div class="sub-row">
@@ -349,6 +381,23 @@ footer strong{color:var(--accent);}
     <div class="m-actions">
       <button class="m-cancel" onclick="closeEditCat()">Cancel</button>
       <button class="m-save" onclick="saveEditCat()">Save ✅</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="jobOverlay">
+  <div class="cat-modal">
+    <h2>🧾 Add Job</h2>
+    <div class="fg"><label>Service</label><select id="j-cat"></select></div>
+    <div class="fg"><label>Job / Customer *</label><input id="j-title" type="text" placeholder="e.g. Tata Ace body work - Ravi"/></div>
+    <div class="row2">
+      <div class="fg"><label>Income (₹) *</label><input id="j-income" type="number" placeholder="25000"/></div>
+      <div class="fg"><label>Expense (₹)</label><input id="j-expense" type="number" placeholder="15000"/></div>
+    </div>
+    <div class="fg"><label>Date</label><input id="j-date" type="date"/></div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeJobAdd()">Cancel</button>
+      <button class="m-save" id="jobSaveBtn" onclick="saveJob()">Add ✅</button>
     </div>
   </div>
 </div>
@@ -459,25 +508,120 @@ async function loadCategories(){
   }catch(e){showToast('Server error!');}
 }
 
-var adminTab='service';
-function setAdminTab(t){adminTab=t;renderHome();}
+// ---- PROFIT / LOSS ----
+var statPeriod='all', statsData=null;
+function rupee(n){return (n<0?'-':'')+'₹'+Math.abs(Math.round(n)).toLocaleString('en-IN');}
+function plTile(label,n){
+  var c=n>=0?'#16A34A':'#DC2626';
+  return '<div class="stat-tile wide" style="border-left:5px solid '+c+'"><small>'+label+(n>=0?' (Profit)':' (Loss)')+'</small><b style="color:'+c+';font-size:1.4rem">'+rupee(n)+'</b></div>';
+}
+function setStatPeriod(p){statPeriod=p;renderStats();}
+async function loadStats(){
+  try{
+    var res=await fetch(API+'/stats',{headers:{'authorization':token}});
+    if(!res.ok)throw new Error('stats');
+    statsData=await res.json();renderStats();
+  }catch(e){document.getElementById('statsBox').innerHTML='<div class="stat-note">Stats load aagala. Page refresh pannunga.</div>';}
+}
+function renderStats(){
+  if(!statsData)return;
+  var box=document.getElementById('statsBox'),h='';
+  h+='<div class="stat-per"><button class="'+(statPeriod==='all'?'on':'')+'" onclick="setStatPeriod(\'all\')">All time</button>'
+    +'<button class="'+(statPeriod==='month'?'on':'')+'" onclick="setStatPeriod(\'month\')">This month</button></div>';
+  if(adminTab==='marketplace'){
+    var m=statsData.market[statPeriod], a=statsData.market.all;
+    h+='<div class="stat-grid">'
+      +'<div class="stat-tile"><small>🟢 In stock</small><b>'+a.in_stock+'</b></div>'
+      +'<div class="stat-tile"><small>🔴 Sold</small><b>'+m.sold_count+'</b></div>'
+      +'<div class="stat-tile"><small>Sales (vitta total)</small><b>'+rupee(m.sales_total)+'</b></div>'
+      +'<div class="stat-tile"><small>Cost (vangina total)</small><b>'+rupee(m.cost_total)+'</b></div>'
+      +plTile('Net',m.profit)+'</div>';
+    if(m.missing_cost>0)h+='<div class="stat-note">⚠️ '+m.missing_cost+' sold vehicle ku cost price illa, adhu profit la count aagala. Product Edit la "Vangina price" potta correct aagum.</div>';
+  }else{
+    var s2=statsData.service[statPeriod];
+    h+='<div class="stat-grid">'
+      +'<div class="stat-tile"><small>Jobs</small><b>'+s2.jobs+'</b></div>'
+      +'<div class="stat-tile"><small>Income</small><b>'+rupee(s2.income)+'</b></div>'
+      +'<div class="stat-tile"><small>Expense</small><b>'+rupee(s2.expense)+'</b></div>'
+      +'<div class="stat-tile"><small>Avg / job</small><b>'+rupee(s2.jobs?(s2.income-s2.expense)/s2.jobs:0)+'</b></div>'
+      +plTile('Net',s2.income-s2.expense)+'</div>';
+  }
+  box.innerHTML=h;
+}
+
+// ---- SERVICE JOBS ----
+async function loadJobs(){
+  var box=document.getElementById('jobList');
+  try{
+    var res=await fetch(API+'/jobs',{headers:{'authorization':token}});
+    var list=await res.json();
+    if(!list.length){box.innerHTML='<div class="loading">Innum jobs illa. "Add Job" click pannunga.</div>';return;}
+    box.innerHTML=list.map(function(j){
+      var p=Number(j.income)-Number(j.expense),c=p>=0?'#16A34A':'#DC2626';
+      var d=j.job_date?new Date(j.job_date).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'';
+      return '<div class="job-row"><div><div class="jt">'+(j.title||'(no title)')+'</div>'
+        +'<div class="js">'+(j.category_name?j.category_name+' · ':'')+d+' · In '+rupee(Number(j.income))+' / Out '+rupee(Number(j.expense))+'</div></div>'
+        +'<div style="text-align:right"><b style="color:'+c+'">'+rupee(p)+'</b><br/>'
+        +'<button class="btn-del" style="margin-top:4px" data-id="'+j.id+'" onclick="delJob(+this.dataset.id)">🗑️</button></div></div>';
+    }).join('');
+  }catch(e){box.innerHTML='<div class="loading">Load failed</div>';}
+}
+function openJobAdd(){
+  var sel=document.getElementById('j-cat');
+  var svc=cats.filter(function(c){return c.type==='service';});
+  sel.innerHTML='<option value="">(General)</option>'+svc.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>';}).join('');
+  ['j-title','j-income','j-expense'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('j-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('jobOverlay').classList.add('open');
+}
+function closeJobAdd(){document.getElementById('jobOverlay').classList.remove('open');}
+async function saveJob(){
+  var title=document.getElementById('j-title').value.trim();
+  var income=document.getElementById('j-income').value.trim();
+  if(!title||income===''){showToast('⚠️ Job & Income venum!');return;}
+  var btn=document.getElementById('jobSaveBtn');btn.disabled=true;btn.textContent='Saving...';
+  try{
+    var res=await fetch(API+'/jobs',{method:'POST',headers:authHeader(),body:JSON.stringify({
+      category_id:document.getElementById('j-cat').value||null,title:title,income:+income,
+      expense:+(document.getElementById('j-expense').value||0),job_date:document.getElementById('j-date').value})});
+    if(!res.ok)throw new Error('fail');
+    closeJobAdd();showToast('🎉 Job added!');loadJobs();loadStats();
+  }catch(e){showToast('Error saving!');}
+  btn.disabled=false;btn.textContent='Add ✅';
+}
+async function delJob(id){
+  if(!confirm('Idha delete pannanuma?'))return;
+  try{await fetch(API+'/jobs/'+id,{method:'DELETE',headers:authHeader()});showToast('Deleted');loadJobs();loadStats();}
+  catch(e){showToast('Error!');}
+}
+
+var adminTab='';   // '' = dashboard, else 'service' | 'marketplace' | 'gallery' | 'settings'
+var SEC_TITLES={service:'🔧 Our Services',marketplace:'🚛 Buy & Sell',gallery:'📸 Gallery',settings:'ℹ️ About & Contact'};
+function openSection(t){adminTab=t;renderHome();window.scrollTo(0,0);}
 
 function renderHome(){
-  document.getElementById('tab-gallery').className='admin-tab'+(adminTab==='gallery'?' on':'');
-  document.getElementById('tab-settings').className='admin-tab'+(adminTab==='settings'?' on':'');
+  var dash=(adminTab==='');
   var isCat=(adminTab==='service'||adminTab==='marketplace');
+  document.getElementById('adminHero').style.display=dash?'block':'none';
+  document.getElementById('adminDash').style.display=dash?'grid':'none';
+  document.getElementById('secHdr').style.display=dash?'none':'block';
+  document.getElementById('secTitle').textContent=SEC_TITLES[adminTab]||'';
   document.getElementById('catGrid').style.display=isCat?'':'none';
   document.getElementById('galPanel').style.display=(adminTab==='gallery')?'block':'none';
   document.getElementById('setPanel').style.display=(adminTab==='settings')?'block':'none';
+  document.getElementById('statsBox').style.display=isCat?'block':'none';
+  document.getElementById('jobsPanel').style.display=(adminTab==='service')?'block':'none';
+  document.getElementById('catSubHdr').style.display=(adminTab==='service')?'block':'none';
+  if(isCat)loadStats();
+  if(adminTab==='service')loadJobs();
   if(adminTab==='gallery')loadGalAdmin();
   if(adminTab==='settings')loadSettingsAdmin();
-  document.getElementById('tab-service').className='admin-tab'+(adminTab==='service'?' on':'');
-  document.getElementById('tab-marketplace').className='admin-tab'+(adminTab==='marketplace'?' on':'');
   document.getElementById('homePage').style.display='block';
   document.getElementById('productsPage').style.display='none';
-  document.getElementById('backBtn').style.display='none';
+  document.getElementById('backBtn').style.display=dash?'none':'block';
   document.getElementById('addBtn').style.display='none';
-  document.getElementById('salesBtn').style.display='block';
+  document.getElementById('salesBtn').style.display=dash?'block':'none';
+  if(!isCat)return;
   var g=document.getElementById('catGrid'),html='';
   cats.filter(function(c){return (c.type==='service'?'service':'marketplace')===adminTab;}).forEach(function(c){
     var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:4.5rem">'+c.emoji+'</span>';
@@ -515,7 +659,11 @@ async function goCategory(catId){
   }catch(e){showToast('Error loading!');}
 }
 
-function goHome(){loadCategories();}
+function goHome(){
+  // Back: from a category's products -> that section page; from a section page -> dashboard
+  if(document.getElementById('productsPage').style.display==='block'){loadCategories();}
+  else{adminTab='';renderHome();window.scrollTo(0,0);}
+}
 
 function getSubs(){
   var s=[];
@@ -619,10 +767,15 @@ function getSubVal(){
   var v=document.getElementById('f-sub-sel').value;return v==='__new__'?'':norm(v);
 }
 
+function syncCostRow(){
+  var cc=cats.find(function(c){return c.id===currentCatId;});
+  document.getElementById('costRow').style.display=(cc&&cc.type==='service')?'none':'block';
+}
 function openAdd(){
   editId=null;pendingImgs=[];subNewMode=false;
   document.getElementById('modalTitle').textContent='➕ Add Product';
-  ['f-title','f-price','f-loc','f-phone','f-desc','f-sub-new'].forEach(function(id){document.getElementById(id).value='';});
+  ['f-title','f-price','f-cost','f-loc','f-phone','f-desc','f-sub-new'].forEach(function(id){document.getElementById(id).value='';});
+  syncCostRow();
   document.getElementById('f-cond').value='Brand New';
   document.getElementById('f-sub-sel').style.display='block';
   document.getElementById('f-sub-new').style.display='none';
@@ -642,6 +795,8 @@ function openEdit(id){
   document.getElementById('modalTitle').textContent='✏️ Edit Product';
   document.getElementById('f-title').value=p.title;
   document.getElementById('f-price').value=p.price;
+  document.getElementById('f-cost').value=(p.cost_price==null?'':p.cost_price);
+  syncCostRow();
   document.getElementById('f-loc').value=p.location||'';
   document.getElementById('f-phone').value=p.phone||'';
   document.getElementById('f-desc').value=p.description||'';
@@ -690,7 +845,8 @@ async function saveProduct(){
     sub_category:getSubVal(),condition_type:document.getElementById('f-cond').value,
     location:document.getElementById('f-loc').value.trim(),
     phone:document.getElementById('f-phone').value.trim(),
-    description:document.getElementById('f-desc').value.trim(),images:imgs};
+    description:document.getElementById('f-desc').value.trim(),images:imgs,
+    cost_price:document.getElementById('f-cost').value.trim()};
   try{
     var url=editId?API+'/products/'+editId:API+'/products';
     var method=editId?'PUT':'POST';
@@ -972,7 +1128,7 @@ async function openSales(){
 }
 function closeSales(){document.getElementById('salesOverlay').classList.remove('open');}
 
-['addOverlay','delOverlay','delCatOverlay','covOverlay','editCatOverlay','newCatOverlay','salesOverlay'].forEach(function(id){
+['addOverlay','delOverlay','delCatOverlay','covOverlay','editCatOverlay','newCatOverlay','salesOverlay','jobOverlay'].forEach(function(id){
   document.getElementById(id).addEventListener('click',function(e){if(e.target.id===id)document.getElementById(id).classList.remove('open');});
 });
 </script>

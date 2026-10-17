@@ -286,10 +286,19 @@ app.get('/api/products/:categoryId', (req, res) => {
             imageMap[img.product_id].push(img.image_data);
           });
 
-          const result = products.map(product => ({
-            ...product,
-            images: imageMap[product.id] || []
-          }));
+          let isAdmin = false;
+          try {
+            jwt.verify(req.headers['authorization'] || '', process.env.JWT_SECRET);
+            isAdmin = true;
+          } catch (e) { /* public visitor */ }
+
+          const result = products.map(product => {
+            const { cost_price, ...publicFields } = product;
+            return {
+              ...(isAdmin ? product : publicFields),
+              images: imageMap[product.id] || []
+            };
+          });
 
           res.json(result);
         }
@@ -309,8 +318,10 @@ app.post('/api/products', authMiddleware, (req, res) => {
     location,
     phone,
     description,
-    images
+    images,
+    cost_price
   } = req.body;
+  const cost = (cost_price === '' || cost_price === undefined || cost_price === null) ? null : Number(cost_price);
 
   db.query(
     `INSERT INTO products
@@ -322,9 +333,10 @@ app.post('/api/products', authMiddleware, (req, res) => {
       condition_type,
       location,
       phone,
-      description
+      description,
+      cost_price
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       category_id,
       title,
@@ -333,7 +345,8 @@ app.post('/api/products', authMiddleware, (req, res) => {
       condition_type,
       location,
       phone,
-      description
+      description,
+      cost
     ],
     (err, result) => {
       if (err) {
@@ -391,8 +404,10 @@ app.put('/api/products/:id', authMiddleware, (req, res) => {
     location,
     phone,
     description,
-    images
+    images,
+    cost_price
   } = req.body;
+  const cost = (cost_price === '' || cost_price === undefined || cost_price === null) ? null : Number(cost_price);
 
   db.query(
     `UPDATE products
@@ -403,7 +418,8 @@ app.put('/api/products/:id', authMiddleware, (req, res) => {
       condition_type=?,
       location=?,
       phone=?,
-      description=?
+      description=?,
+      cost_price=?
     WHERE id=?`,
     [
       title,
@@ -413,6 +429,7 @@ app.put('/api/products/:id', authMiddleware, (req, res) => {
       location,
       phone,
       description,
+      cost,
       req.params.id
     ],
     (err) => {
@@ -570,6 +587,23 @@ function initExtraTables() {
 }
 initExtraTables();
 
+// cost_price column on products (ignore error if it already exists)
+db.query('ALTER TABLE products ADD COLUMN cost_price DECIMAL(12,2) NULL', (err) => {
+  if (err && err.code !== 'ER_DUP_FIELDNAME') console.error('cost_price column error:', err.message);
+});
+db.query(
+  `CREATE TABLE IF NOT EXISTS service_jobs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT NULL,
+    title VARCHAR(200),
+    income DECIMAL(12,2) NOT NULL DEFAULT 0,
+    expense DECIMAL(12,2) NOT NULL DEFAULT 0,
+    job_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`,
+  (err) => { if (err) console.error('service_jobs table error:', err.message); }
+);
+
 const SETTING_KEYS = ['about', 'phone', 'whatsapp', 'address'];
 
 // Get settings (public)
@@ -632,6 +666,81 @@ app.delete('/api/gallery/:id', authMiddleware, (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ success: true });
   });
+});
+
+// ---- SERVICE JOBS (income / expense) ----
+app.get('/api/jobs', authMiddleware, (req, res) => {
+  db.query(
+    `SELECT j.id, j.title, j.income, j.expense, j.job_date, j.category_id, c.name AS category_name
+     FROM service_jobs j LEFT JOIN categories c ON j.category_id = c.id
+     ORDER BY j.job_date DESC, j.id DESC LIMIT 200`,
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+app.post('/api/jobs', authMiddleware, (req, res) => {
+  const { category_id, title, income, expense, job_date } = req.body;
+  db.query(
+    'INSERT INTO service_jobs (category_id, title, income, expense, job_date) VALUES (?, ?, ?, ?, ?)',
+    [category_id || null, title || '', Number(income) || 0, Number(expense) || 0, job_date || new Date()],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ id: result.insertId, success: true });
+    }
+  );
+});
+
+app.delete('/api/jobs/:id', authMiddleware, (req, res) => {
+  db.query('DELETE FROM service_jobs WHERE id=?', [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});
+
+// ---- PROFIT / LOSS SUMMARY ----
+const dbq = (sql, params) => new Promise((resolve, reject) => {
+  db.query(sql, params || [], (err, rows) => (err ? reject(err) : resolve(rows)));
+});
+
+app.get('/api/stats', authMiddleware, async (req, res) => {
+  try {
+    const now = new Date();
+    const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+
+    const marketSql = (extra) => `
+      SELECT
+        COUNT(*) AS listed,
+        COALESCE(SUM(p.sold = 0), 0) AS in_stock,
+        COALESCE(SUM(p.sold = 1), 0) AS sold_count,
+        COALESCE(SUM(CASE WHEN p.sold = 1 THEN p.price ELSE 0 END), 0) AS sales_total,
+        COALESCE(SUM(CASE WHEN p.sold = 1 AND p.cost_price IS NOT NULL THEN p.cost_price ELSE 0 END), 0) AS cost_total,
+        COALESCE(SUM(CASE WHEN p.sold = 1 AND p.cost_price IS NOT NULL THEN p.price - p.cost_price ELSE 0 END), 0) AS profit,
+        COALESCE(SUM(CASE WHEN p.sold = 1 AND p.cost_price IS NULL THEN 1 ELSE 0 END), 0) AS missing_cost
+      FROM products p JOIN categories c ON p.category_id = c.id
+      WHERE c.type <> 'service' ${extra}`;
+
+    const jobSql = (extra) => `
+      SELECT COUNT(*) AS jobs,
+        COALESCE(SUM(income), 0) AS income,
+        COALESCE(SUM(expense), 0) AS expense
+      FROM service_jobs WHERE 1=1 ${extra}`;
+
+    const [mAll] = await dbq(marketSql(''));
+    const [mMonth] = await dbq(marketSql('AND p.sold = 1 AND p.sold_at >= ?'), [monthStart]);
+    const [sAll] = await dbq(jobSql(''));
+    const [sMonth] = await dbq(jobSql('AND job_date >= ?'), [monthStart]);
+
+    const num = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, Number(v)]));
+    res.json({
+      market: { all: num(mAll), month: num(mMonth) },
+      service: { all: num(sAll), month: num(sMonth) }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Start server
