@@ -317,6 +317,12 @@ footer strong{color:var(--accent);}
     <h2>✏️ Edit Category</h2>
     <div class="fg"><label>Name *</label><input id="ec-name" type="text"/></div>
     <div class="fg"><label>Description</label><input id="ec-desc" type="text"/></div>
+    <div class="fg"><label>Type *</label>
+      <select id="ec-type">
+        <option value="marketplace">Marketplace (Buy &amp; Sell)</option>
+        <option value="service">Service (Our Services)</option>
+      </select>
+    </div>
     <div class="fg"><label>Emoji</label><div class="emoji-grid" id="editEG"></div></div>
     <div class="m-actions">
       <button class="m-cancel" onclick="closeEditCat()">Cancel</button>
@@ -330,6 +336,12 @@ footer strong{color:var(--accent);}
     <h2>➕ Add Category</h2>
     <div class="fg"><label>Name *</label><input id="nc-name" type="text" placeholder="e.g. Cars"/></div>
     <div class="fg"><label>Description</label><input id="nc-desc" type="text" placeholder="e.g. Cars for sale"/></div>
+    <div class="fg"><label>Type *</label>
+      <select id="nc-type">
+        <option value="marketplace">Marketplace (Buy &amp; Sell)</option>
+        <option value="service">Service (Our Services)</option>
+      </select>
+    </div>
     <div class="fg"><label>Emoji</label><div class="emoji-grid" id="newEG"></div></div>
     <div class="m-actions">
       <button class="m-cancel" onclick="closeNewCat()">Cancel</button>
@@ -421,7 +433,9 @@ function renderHome(){
   var g=document.getElementById('catGrid'),html='';
   cats.forEach(function(c){
     var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:4.5rem">'+c.emoji+'</span>';
-    html+='<div class="cat-card" data-id="'+c.id+'" onclick="goCategory('+c.id+')">'
+    var isService=c.type==='service';
+    var badge='<span style="position:absolute;top:8px;left:8px;z-index:2;font-size:.65rem;font-weight:800;padding:3px 9px;border-radius:10px;color:#fff;background:'+(isService?'#9333EA':'#2563EB')+'">'+(isService?'🔧 SERVICE':'🚛 MARKETPLACE')+'</span>';
+    html+='<div class="cat-card" data-id="'+c.id+'" onclick="goCategory('+c.id+')" style="position:relative">'+badge
       +'<div class="cat-img">'+cov+'<div class="cat-overlay"></div>'
       +'<div class="cat-label">'+c.name+'<small>'+c.description+'</small></div></div>'
       +'<div class="cat-footer"><span class="cat-count">Click to manage</span>'
@@ -701,6 +715,7 @@ function openEditCat(catId){
   editEmoji=cat.emoji;
   document.getElementById('ec-name').value=cat.name;
   document.getElementById('ec-desc').value=cat.description;
+  document.getElementById('ec-type').value=cat.type||'marketplace';
   buildEG('editEG',editEmoji,'pickEE');
   document.getElementById('editCatOverlay').classList.add('open');
 }
@@ -712,7 +727,7 @@ async function saveEditCat(){
   var cat=cats.find(function(c){return c.id===editCatId;});
   try{
     await fetch(API+'/categories/'+editCatId,{method:'PUT',headers:authHeader(),
-      body:JSON.stringify({name:name,description:document.getElementById('ec-desc').value.trim()||cat.description,emoji:editEmoji,cover_img:cat.cover_img})});
+      body:JSON.stringify({name:name,description:document.getElementById('ec-desc').value.trim()||cat.description,emoji:editEmoji,cover_img:cat.cover_img,type:document.getElementById('ec-type').value})});
     closeEditCat();showToast('✅ Updated!');loadCategories();
   }catch(e){showToast('Error!');}
 }
@@ -734,6 +749,7 @@ function openNewCat(){
   newEmoji='🚛';
   document.getElementById('nc-name').value='';
   document.getElementById('nc-desc').value='';
+  document.getElementById('nc-type').value='marketplace';
   buildEG('newEG',newEmoji,'pickNE');
   document.getElementById('newCatOverlay').classList.add('open');
 }
@@ -744,7 +760,7 @@ async function saveNewCat(){
   if(!name){showToast('⚠️ Name required!');return;}
   try{
     await fetch(API+'/categories',{method:'POST',headers:authHeader(),
-      body:JSON.stringify({name:name,description:document.getElementById('nc-desc').value.trim()||name,emoji:newEmoji})});
+      body:JSON.stringify({name:name,description:document.getElementById('nc-desc').value.trim()||name,emoji:newEmoji,type:document.getElementById('nc-type').value})});
     closeNewCat();showToast('🎉 Category added!');loadCategories();
   }catch(e){showToast('Error!');}
 }
