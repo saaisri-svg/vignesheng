@@ -733,10 +733,30 @@ app.get('/api/stats', authMiddleware, async (req, res) => {
     const [sAll] = await dbq(jobSql(''));
     const [sMonth] = await dbq(jobSql('AND job_date >= ?'), [monthStart]);
 
+    // Month-wise breakdown (newest first)
+    const mMonthly = await dbq(`
+      SELECT DATE_FORMAT(p.sold_at, '%Y-%m') AS ym,
+        COUNT(*) AS sold_count,
+        COALESCE(SUM(p.price), 0) AS sales_total,
+        COALESCE(SUM(CASE WHEN p.cost_price IS NOT NULL THEN p.cost_price ELSE 0 END), 0) AS cost_total,
+        COALESCE(SUM(CASE WHEN p.cost_price IS NOT NULL THEN p.price - p.cost_price ELSE 0 END), 0) AS profit,
+        COALESCE(SUM(CASE WHEN p.cost_price IS NULL THEN 1 ELSE 0 END), 0) AS missing_cost
+      FROM products p JOIN categories c ON p.category_id = c.id
+      WHERE c.type <> 'service' AND p.sold = 1 AND p.sold_at IS NOT NULL
+      GROUP BY ym ORDER BY ym DESC LIMIT 24`);
+    const sMonthly = await dbq(`
+      SELECT DATE_FORMAT(job_date, '%Y-%m') AS ym,
+        COUNT(*) AS jobs,
+        COALESCE(SUM(income), 0) AS income,
+        COALESCE(SUM(expense), 0) AS expense
+      FROM service_jobs WHERE job_date IS NOT NULL
+      GROUP BY ym ORDER BY ym DESC LIMIT 24`);
+
     const num = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, Number(v)]));
+    const numRow = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, k === 'ym' ? v : Number(v)]));
     res.json({
-      market: { all: num(mAll), month: num(mMonth) },
-      service: { all: num(sAll), month: num(sMonth) }
+      market: { all: num(mAll), month: num(mMonth), monthly: mMonthly.map(numRow) },
+      service: { all: num(sAll), month: num(sMonth), monthly: sMonthly.map(numRow) }
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

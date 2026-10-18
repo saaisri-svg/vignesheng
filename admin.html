@@ -61,6 +61,12 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;justify-c
 .stat-tile small{display:block;color:#666;font-size:.72rem;font-weight:700;margin-bottom:4px;}
 .stat-tile b{font-size:1.15rem;font-weight:900;}
 .stat-tile.wide{grid-column:1/-1;}
+.mtbl-h{font-size:.85rem;font-weight:900;margin:16px 0 6px;}
+.mtbl{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);font-size:.74rem;}
+.mtbl th{background:#1F2937;color:#fff;padding:7px 6px;text-align:right;font-weight:800;}
+.mtbl th:first-child,.mtbl td:first-child{text-align:left;}
+.mtbl td{padding:7px 6px;text-align:right;border-top:1px solid #EEF0F4;}
+.mtbl td:first-child{font-weight:800;}
 .stat-note{font-size:.72rem;color:#92400E;background:#FEF3C7;border-radius:8px;padding:6px 10px;margin-top:8px;}
 .job-row{background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;gap:8px;}
 .job-row .jt{font-weight:800;font-size:.88rem;}
@@ -515,6 +521,16 @@ function plTile(label,n){
   var c=n>=0?'#16A34A':'#DC2626';
   return '<div class="stat-tile wide" style="border-left:5px solid '+c+'"><small>'+label+(n>=0?' (Profit)':' (Loss)')+'</small><b style="color:'+c+';font-size:1.4rem">'+rupee(n)+'</b></div>';
 }
+function monthLabel(ym){
+  var p=String(ym).split('-');
+  return new Date(+p[0],+p[1]-1,1).toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+}
+function netCell(n){var c=n>=0?'#16A34A':'#DC2626';return '<td style="color:'+c+';font-weight:900">'+rupee(n)+'</td>';}
+function monthTable(rows,heads,rowFn,emptyMsg){
+  if(!rows||!rows.length)return '<div class="stat-note" style="background:#F3F4F6;color:#555">'+emptyMsg+'</div>';
+  return '<div style="overflow-x:auto"><table class="mtbl"><thead><tr>'+heads.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead><tbody>'
+    +rows.map(rowFn).join('')+'</tbody></table></div>';
+}
 function setStatPeriod(p){statPeriod=p;renderStats();}
 async function loadStats(){
   try{
@@ -536,6 +552,11 @@ function renderStats(){
       +'<div class="stat-tile"><small>Sales (vitta total)</small><b>'+rupee(m.sales_total)+'</b></div>'
       +'<div class="stat-tile"><small>Cost (vangina total)</small><b>'+rupee(m.cost_total)+'</b></div>'
       +plTile('Net',m.profit)+'</div>';
+    h+='<div class="mtbl-h">📅 Month-wise</div>'
+      +monthTable(statsData.market.monthly,['Month','Sold','Sales','Cost','Net'],function(r){
+        return '<tr><td>'+monthLabel(r.ym)+(r.missing_cost>0?' ⚠️':'')+'</td><td>'+r.sold_count+'</td><td>'+rupee(r.sales_total)+'</td><td>'+rupee(r.cost_total)+'</td>'+netCell(r.profit)+'</tr>';
+      },'Innum sold vehicles illa. Vehicle ah Sold nu mark pannina month-wise varum.')
+      +'<div class="stat-note" style="background:#F3F4F6;color:#555">⚠️ nu irundha andha maasam sila vehicles ku cost price illa, adhu Net la count aagala.</div>';
     if(m.missing_cost>0)h+='<div class="stat-note">⚠️ '+m.missing_cost+' sold vehicle ku cost price illa, adhu profit la count aagala. Product Edit la "Vangina price" potta correct aagum.</div>';
   }else{
     var s2=statsData.service[statPeriod];
@@ -545,6 +566,10 @@ function renderStats(){
       +'<div class="stat-tile"><small>Expense</small><b>'+rupee(s2.expense)+'</b></div>'
       +'<div class="stat-tile"><small>Avg / job</small><b>'+rupee(s2.jobs?(s2.income-s2.expense)/s2.jobs:0)+'</b></div>'
       +plTile('Net',s2.income-s2.expense)+'</div>';
+    h+='<div class="mtbl-h">📅 Month-wise</div>'
+      +monthTable(statsData.service.monthly,['Month','Jobs','Income','Expense','Net'],function(r){
+        return '<tr><td>'+monthLabel(r.ym)+'</td><td>'+r.jobs+'</td><td>'+rupee(r.income)+'</td><td>'+rupee(r.expense)+'</td>'+netCell(r.income-r.expense)+'</tr>';
+      },'Innum jobs illa. Add Job pannina month-wise varum.');
   }
   box.innerHTML=h;
 }
