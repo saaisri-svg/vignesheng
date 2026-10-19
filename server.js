@@ -705,6 +705,36 @@ const dbq = (sql, params) => new Promise((resolve, reject) => {
   db.query(sql, params || [], (err, rows) => (err ? reject(err) : resolve(rows)));
 });
 
+// Items inside one month (for the drill-down page in admin)
+app.get('/api/stats/month', authMiddleware, (req, res) => {
+  const { kind, ym } = req.query;
+  if (!/^\d{4}-\d{2}$/.test(ym || '')) {
+    return res.status(400).json({ error: 'Bad month' });
+  }
+  const done = (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  };
+  if (kind === 'service') {
+    db.query(
+      `SELECT j.id, j.title, j.income, j.expense, j.job_date, c.name AS category_name
+       FROM service_jobs j LEFT JOIN categories c ON j.category_id = c.id
+       WHERE DATE_FORMAT(j.job_date, '%Y-%m') = ?
+       ORDER BY j.job_date DESC, j.id DESC`,
+      [ym], done
+    );
+  } else {
+    db.query(
+      `SELECT p.id, p.title, p.price, p.cost_price, p.sold_at, c.name AS category_name
+       FROM products p JOIN categories c ON p.category_id = c.id
+       WHERE c.type <> 'service' AND p.sold = 1
+         AND DATE_FORMAT(p.sold_at, '%Y-%m') = ?
+       ORDER BY p.sold_at DESC`,
+      [ym], done
+    );
+  }
+});
+
 app.get('/api/stats', authMiddleware, async (req, res) => {
   try {
     const now = new Date();
@@ -743,14 +773,14 @@ app.get('/api/stats', authMiddleware, async (req, res) => {
         COALESCE(SUM(CASE WHEN p.cost_price IS NULL THEN 1 ELSE 0 END), 0) AS missing_cost
       FROM products p JOIN categories c ON p.category_id = c.id
       WHERE c.type <> 'service' AND p.sold = 1 AND p.sold_at IS NOT NULL
-      GROUP BY ym ORDER BY ym DESC LIMIT 24`);
+      GROUP BY ym ORDER BY ym DESC`);
     const sMonthly = await dbq(`
       SELECT DATE_FORMAT(job_date, '%Y-%m') AS ym,
         COUNT(*) AS jobs,
         COALESCE(SUM(income), 0) AS income,
         COALESCE(SUM(expense), 0) AS expense
       FROM service_jobs WHERE job_date IS NOT NULL
-      GROUP BY ym ORDER BY ym DESC LIMIT 24`);
+      GROUP BY ym ORDER BY ym DESC`);
 
     const num = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, Number(v)]));
     const numRow = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, k === 'ym' ? v : Number(v)]));
