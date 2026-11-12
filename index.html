@@ -8,9 +8,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dark:#1A1A2E;--accent:#E8B400;--orange:#FF6B35;
-  --teal:#00B4B4;--teal-dark:#007F7F;--teal-light:#E0F7F7;
-  --bg:#F2F5FA;--white:#fff;--mid:#555577;--muted:#8888AA;
+  --dark:#15171A;--accent:#FF7A1F;--orange:#FF7A1F;
+  --teal:#23272D;--teal-dark:#15171A;--teal-light:#F1EDE6;
+  --bg:#F6F3EE;--white:#fff;--mid:#4A4F57;--muted:#6B7078;
   --shadow:0 4px 20px rgba(0,0,0,0.10);--r:14px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
@@ -20,12 +20,50 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;
 .logo{font-size:1.4rem;font-weight:900;color:#fff;}
 .logo span{color:var(--accent);}
 #homePage{display:block;}
-#productsPage,#buySellPage,#galleryPage{display:none;}
+#productsPage,#buySellPage,#galleryPage,#servicesPage{display:none;}
 .home-hero{background:linear-gradient(135deg,var(--dark) 0%,#2D2D5E 100%);
   padding:36px 20px 44px;text-align:center;}
 .home-hero h1{color:#fff;font-size:1.8rem;font-weight:900;margin-bottom:6px;}
 .home-hero p{color:rgba(255,255,255,.6);font-size:.9rem;}
 .home-hero .ac{color:var(--accent);}
+.home-hero{position:relative;overflow:hidden;border-bottom:3px solid var(--accent);background:linear-gradient(135deg,#15171A,#23272D) !important;}
+.hero-kick{font-size:.72rem;font-weight:800;letter-spacing:2px;color:var(--accent);margin-bottom:8px;animation:up .7s both;}
+.home-hero h1{animation:up .7s .15s both;}
+.seam{height:4px;width:0;margin:12px auto 10px;background:var(--accent);box-shadow:0 0 14px var(--accent);border-radius:2px;animation:seam 1.4s .5s forwards;}
+.home-hero .tagline{animation:up .7s .35s both;}
+.hero-btns{display:flex;gap:10px;justify-content:center;margin:18px 0 8px;animation:up .7s .5s both;}
+.hero-btn{cursor:pointer;padding:11px 20px;border-radius:12px;font-weight:900;font-size:.85rem;background:var(--accent);color:#1A1208;text-decoration:none;}
+.hero-btn.alt{background:transparent;color:#fff;border:2px solid var(--accent);}
+.road{position:relative;height:74px;margin:26px -20px -44px;}
+.road::before{content:'';position:absolute;left:0;right:0;bottom:0;height:30px;background:#0E0F11;}
+.lane{position:absolute;left:0;right:0;bottom:13px;height:4px;background:repeating-linear-gradient(90deg,#FFD500 0 28px,transparent 28px 56px);animation:lane .6s linear infinite;}
+.lorry{position:absolute;left:0;bottom:16px;animation:drive 9s linear infinite;}
+.puff{position:absolute;left:2px;top:38px;width:12px;height:12px;border-radius:50%;background:#8B9099;animation:puff 1s infinite;}
+.puff.b{animation-delay:.5s;width:9px;height:9px;}
+.spark{position:absolute;bottom:60px;width:5px;height:5px;border-radius:50%;background:var(--accent);animation:rise 3s infinite;}
+.wheel{transform-box:fill-box;transform-origin:center;animation:spin .5s linear infinite;}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes seam{to{width:140px}}
+@keyframes lane{to{background-position:-56px 0}}
+@keyframes drive{0%{transform:translateX(-190px)}100%{transform:translateX(calc(100vw + 20px))}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes puff{0%{transform:translate(0,0) scale(.4);opacity:.7}100%{transform:translate(-40px,-30px) scale(1.6);opacity:0}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-150px);opacity:0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,122,31,.6)}50%{box-shadow:0 0 0 9px rgba(255,122,31,0)}}
+.nav-links a.nav-cta{animation:pulse 2s infinite;}
+.sec-h::after{content:'';display:block;height:3px;width:56px;margin-top:6px;border-radius:2px;background:var(--accent);box-shadow:0 0 10px var(--accent);}
+.cat-card{animation:up .6s both;border:2px solid transparent;}
+.cat-card:hover{border-color:var(--accent);box-shadow:0 8px 26px rgba(255,122,31,.25);}
+.cat-card:nth-child(2){animation-delay:.1s}.cat-card:nth-child(3){animation-delay:.2s}.cat-card:nth-child(4){animation-delay:.3s}
+/* gallery before/after weld slider */
+.cmp{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:12px;background:#000;touch-action:pan-y;}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.cmp-line{position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--accent);box-shadow:0 0 14px var(--accent);pointer-events:none;z-index:2;}
+.cmp-line::after{content:'';position:absolute;top:50%;left:50%;width:30px;height:30px;margin:-15px;border-radius:50%;background:var(--accent);border:3px solid #fff;}
+.cmp .gal-tag{z-index:3;}.cmp .gal-tag.r{left:auto;right:6px;}
+.cmp input[type=range]{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:ew-resize;z-index:4;}
+.cmp-fs{position:absolute;right:8px;bottom:8px;z-index:5;border:none;border-radius:8px;background:rgba(0,0,0,.65);color:#fff;font-size:1rem;padding:4px 9px;cursor:pointer;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important;}}
 .home-hero .tagline{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:600;margin-top:4px;}
 .nav-links{display:flex;gap:4px;overflow-x:auto;flex:1;margin:0 12px;scrollbar-width:none;align-items:center;}
 .nav-links::-webkit-scrollbar{display:none;}
@@ -132,36 +170,165 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;
 .img-fs-counter{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:.85rem;font-weight:600;}
 footer{background:var(--dark);color:rgba(255,255,255,.4);text-align:center;padding:16px;font-size:.76rem;}
 footer strong{color:var(--accent);}
+
+/* workshop reel (real photos, 30s loop) */
+.reel{position:relative;aspect-ratio:3/2;border-radius:16px;overflow:hidden;background:#0E0F11;margin-top:12px;}
+.reel[hidden]{display:none;}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 1s;}
+.slide.on{opacity:1;}
+.kb{position:absolute;inset:0;transform-origin:var(--ox) var(--oy);}
+.kb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.slide.on .kb{animation:kb 10s ease-in-out forwards;}
+.sfx{position:absolute;left:var(--sx);top:var(--sy);width:0;height:0;display:none;}
+.slide.on .sfx{display:block;}
+.sfx .g{position:absolute;width:110px;height:110px;margin:-55px 0 0 -55px;border-radius:50%;background:radial-gradient(circle,rgba(255,236,180,.95),rgba(255,140,40,.45) 40%,transparent 70%);mix-blend-mode:screen;animation:flick .2s steps(2) infinite alternate;}
+.sfx i{position:absolute;width:3px;height:3px;border-radius:50%;background:#FFD27A;box-shadow:0 0 6px #FF9A3C;animation:fly 1s ease-out infinite;animation-delay:var(--d);}
+.reel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:5;}
+.reel video.on{display:block;}
+.reel-cap{position:absolute;left:12px;bottom:12px;z-index:3;color:#fff;font-weight:900;font-size:.9rem;background:rgba(0,0,0,.6);padding:5px 12px;border-radius:20px;}
+.reel-dots{position:absolute;right:12px;bottom:18px;z-index:3;display:flex;gap:6px;}
+.reel-dots b{width:22px;height:4px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden;position:relative;}
+.reel-dots b.on::after{content:'';position:absolute;inset:0;background:var(--accent);transform-origin:left;animation:dotf 10s linear forwards;}
+@keyframes kb{from{transform:scale(var(--z0))}to{transform:scale(var(--z1))}}
+@keyframes flick{from{opacity:.55;transform:scale(.85)}to{opacity:1;transform:scale(1.15)}}
+@keyframes fly{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--dx),var(--dy));opacity:0}}
+@keyframes dotf{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.slide.on .kb{animation:none}.sfx{display:none !important}}
+/* header, drawer, search */
+.nav-right{display:flex;align-items:center;gap:4px;margin-left:auto;}
+.nav-right .nav-cta{background:var(--accent);color:#1A1208;font-weight:900;font-size:.78rem;padding:8px 12px;border-radius:20px;text-decoration:none;white-space:nowrap;cursor:pointer;margin-right:4px;animation:pulse 2s infinite;}
+.icon-btn{background:none;border:none;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:10px;}
+.icon-btn:active{background:rgba(255,255,255,.12);}
+nav .back-btn{margin-left:10px;}
+#drawerBg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;opacity:0;visibility:hidden;transition:opacity .25s;}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(78vw,300px);background:#15171A;z-index:1001;transform:translateX(100%);transition:transform .28s;padding:16px 0;overflow:auto;color:#fff;}
+body.menu-open #drawerBg{opacity:1;visibility:visible;}
+body.menu-open #drawer{transform:none;}
+.drawer-top{display:flex;justify-content:space-between;align-items:center;padding:0 12px 10px 22px;font-weight:900;font-size:1.1rem;}
+#drawer a{display:flex;gap:12px;align-items:center;padding:14px 22px;font-weight:700;color:#E8EAED;cursor:pointer;border-bottom:1px solid #23272D;}
+#drawer a.hl{background:var(--accent);color:#1A1208;margin:8px 16px 12px;border-radius:12px;border:none;}
+#searchPanel{position:fixed;inset:0;background:#15171A;z-index:1002;display:none;flex-direction:column;padding:14px;}
+#searchPanel.open{display:flex;}
+.sp-bar{display:flex;gap:8px;align-items:center;}
+.sp-bar input{flex:1;padding:13px 16px;border-radius:14px;border:none;font-size:1rem;font-family:inherit;}
+.sp-close{color:#fff;background:none;border:none;font-size:1.6rem;cursor:pointer;padding:6px 10px;}
+#spResults{margin-top:14px;overflow:auto;flex:1;}
+.sp-item{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;}
+.sp-item b{font-size:.92rem;}
+.sp-item small{color:#6B7078;display:block;margin-top:2px;font-size:.75rem;}
+.sp-tag{font-size:.65rem;font-weight:800;background:#F1EDE6;border-radius:8px;padding:3px 8px;white-space:nowrap;}
+.sp-hint{color:#9AA0A8;text-align:center;padding:30px 10px;font-size:.9rem;}
+.bs-search{margin:16px 16px 0;background:#fff;border-radius:14px;padding:13px 16px;color:var(--muted);box-shadow:var(--shadow);cursor:pointer;font-weight:600;}
+@media (max-width:380px){.logo{font-size:1.15rem;}.nav-right .nav-cta{padding:7px 9px;font-size:.7rem;}nav{padding:0 10px;}}
+/* auto-slide banner */
+.banner{position:relative;overflow:hidden;border-bottom:3px solid var(--accent);}
+.b-track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.b-slide{min-width:100%;flex-shrink:0;box-sizing:border-box;min-height:310px;border-bottom:0 !important;}
+.b-slide.s2,.b-slide.s3{display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:40px;}
+.b-slide.s2{background:linear-gradient(135deg,#0F2A44,#15171A) !important;}
+.b-slide.s3{background:linear-gradient(135deg,#3A1A08,#15171A) !important;}
+.b-dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px;z-index:3;}
+.b-dots b{width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);cursor:pointer;transition:all .3s;}
+.b-dots b.on{width:22px;background:var(--accent);}
+.chips{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.chips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:6px 12px;border-radius:20px;font-size:.78rem;font-weight:700;color:#fff;}
+.b-btn{display:inline-block;margin-top:18px;background:var(--accent);color:#1A1208;font-weight:900;padding:11px 22px;border-radius:12px;cursor:pointer;}
+/* reviews */
+.sec-block[hidden]{display:none;}
+.rev-sum{color:var(--mid);font-size:.9rem;margin:6px 0 4px;}
+.rev-sum b{font-size:1.4rem;color:var(--dark);}
+.rev-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 2px 8px;scrollbar-width:none;}
+.rev-row::-webkit-scrollbar{display:none;}
+.rev-card{min-width:80%;scroll-snap-align:start;background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow);box-sizing:border-box;}
+.stars{color:#F5A400;letter-spacing:2px;font-size:1rem;}
+.rev-text{font-size:.9rem;color:var(--mid);margin:8px 0 12px;line-height:1.5;}
+.rev-who{display:flex;align-items:center;gap:10px;font-weight:900;font-size:.85rem;}
+.rev-av{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#1A1208;display:flex;align-items:center;justify-content:center;font-weight:900;}
+/* professional 2-column category cards */
+.cat-grid{grid-template-columns:1fr 1fr;gap:14px;padding:16px;}
+.sec-block .cat-grid{padding:16px 0;}
+.cat-card{border-radius:20px;background:#15171A;}
+.cat-img{aspect-ratio:4/5;background:linear-gradient(135deg,#3A2A1E,#15171A);color:#fff;}
+.cat-label{font-size:1.02rem;padding:14px 14px 16px;}
+.cat-go{position:absolute;right:10px;top:10px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#1A1208;display:flex;align-items:center;justify-content:center;font-weight:900;z-index:2;}
 </style>
 </head>
 <body>
 <nav>
-  <div class="logo">Vignesh<span>eng</span></div>
-  <div class="nav-links" id="navLinks">
-    <a onclick="navGo('home')">Home</a>
-    <a onclick="navGo('about')">About Us</a>
-    <a onclick="navGo('services')">Our Services</a>
-    <a onclick="navGo('contact')">Contact Us</a>
-    <a class="nav-cta" onclick="goBuySell()">🚛 Buy &amp; Sell</a>
-    <a onclick="goGallery()">📸 Gallery</a>
-  </div>
+  <div class="logo" onclick="goHomeFull()" style="cursor:pointer">Vignesh<span>eng</span></div>
   <button class="back-btn" id="backBtn" style="display:none" onclick="goHome()">← Back</button>
+  <div class="nav-right">
+    <a class="nav-cta" id="navCta" onclick="goBuySell()">🚛 Buy &amp; Sell</a>
+    <button class="icon-btn" aria-label="Search" onclick="openSearch()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    <button class="icon-btn" aria-label="Menu" onclick="openMenu()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
 </nav>
 
+<div id="drawerBg" onclick="closeMenu()"></div>
+<div id="drawer" aria-label="Menu">
+  <div class="drawer-top"><span>Menu</span><button class="icon-btn" aria-label="Close menu" onclick="closeMenu()" style="color:#fff;font-size:1.5rem">✕</button></div>
+  <a class="hl" onclick="closeMenu();goBuySell()">🚛 Buy &amp; Sell Vehicles</a>
+  <a onclick="closeMenu();goHomeFull()">🏠 Home</a>
+  <a onclick="closeMenu();goServices()">🔧 Our Services</a>
+  <a onclick="closeMenu();goGallery()">📸 Gallery</a>
+  <a onclick="closeMenu();navGo('reviews')">⭐ Customer Reviews</a>
+  <a onclick="closeMenu();navGo('about')">ℹ️ About Us</a>
+  <a onclick="closeMenu();navGo('contact')">📞 Contact Us</a>
+</div>
+
+<div id="searchPanel" role="dialog" aria-label="Search">
+  <div class="sp-bar"><input id="spInput" type="search" placeholder="Search vehicles, services..." oninput="renderSearch(this.value)" autocomplete="off"/><button class="sp-close" aria-label="Close search" onclick="closeSearch()">✕</button></div>
+  <div id="spResults"></div>
+</div>
+
 <div id="homePage">
-  <div class="home-hero" id="home">
-    <h1>Welcome to <span class="ac">Vignesheng</span> 🚛</h1>
-    <p class="tagline">Welding · Body Building · Repair · Vehicle Sales — Ellam Oru Idathula!</p>
+  <div class="banner" id="home">
+    <div class="b-track" id="bTrack">
+      <div class="b-slide home-hero s1">
+    <div class="hero-kick">WELCOME TO VIGNESHENG</div>
+    <h1>Welding, Body Building,<br>Repair &amp; <span class="ac">Vehicle Sales</span></h1>
+    <div class="seam"></div>
+    <p class="tagline">Ellam Oru Idathula!</p>
+    <span class="spark" style="left:12%"></span><span class="spark" style="left:38%;animation-delay:1s"></span><span class="spark" style="left:66%;animation-delay:.5s"></span><span class="spark" style="left:88%;animation-delay:1.6s"></span>
+    <div class="road"><div class="lane"></div><div class="lorry"><svg width="170" height="86" viewBox="0 0 170 86" role="img" aria-label="Lorry driving"><rect x="4" y="14" width="90" height="46" rx="3" fill="#FFD500"/><rect x="94" y="28" width="46" height="32" rx="4" fill="#FF7A1F"/><rect x="112" y="33" width="22" height="14" rx="2" fill="#BFE3FF"/><rect x="4" y="56" width="136" height="8" fill="#3A3F47"/><g class="wheel"><circle cx="34" cy="68" r="14" fill="#0E0F11"/><path d="M34 56V80M22 68H46" stroke="#9AA0A8" stroke-width="3"/></g><g class="wheel"><circle cx="116" cy="68" r="14" fill="#0E0F11"/><path d="M116 56V80M104 68H128" stroke="#9AA0A8" stroke-width="3"/></g></svg><span class="puff"></span><span class="puff b"></span></div></div>
+      </div>
+      <div class="b-slide home-hero s2">
+        <div class="hero-kick">BUY &amp; SELL</div>
+        <h1>Trusted <span class="ac">Used Vehicles</span></h1>
+        <p class="tagline">Cars, bikes and lorries, checked and ready to drive.</p>
+        <div class="chips"><span>🚗 Cars</span><span>🏍️ Bikes</span><span>🚛 Lorries</span></div>
+        <a class="b-btn" onclick="goBuySell()">Browse Vehicles →</a>
+      </div>
+      <div class="b-slide home-hero s3">
+        <div class="hero-kick">OUR SERVICES</div>
+        <h1>Welding · Cutting · <span class="ac">Grinding</span></h1>
+        <p class="tagline">Body building, fabrication and repair by skilled workers.</p>
+        <div class="chips"><span>🔥 Welding</span><span>✂️ Cutting</span><span>⚙️ Grinding</span></div>
+        <a class="b-btn" onclick="goServices()">See Our Services →</a>
+      </div>
+    </div>
+    <div class="b-dots" id="bDots"><b class="on"></b><b></b><b></b></div>
+  </div>
+
+  <div class="sec-block" id="workshop">
+    <h2 class="sec-h">Workshop in Action</h2>
+    <div class="reel" id="reel" hidden>
+      <video id="reelVid" muted loop playsinline autoplay preload="metadata"></video>
+      <div id="reelSlides"></div>
+      <div class="reel-cap" id="reelCap"></div>
+      <div class="reel-dots" id="reelDots"></div>
+    </div>
+  </div>
+
+  <div class="sec-block" id="reviews" hidden>
+    <h2 class="sec-h">Customer Reviews</h2>
+    <div class="rev-sum" id="revSum"></div>
+    <div class="rev-row" id="revRow"></div>
   </div>
 
   <div class="sec-block" id="about">
     <h2 class="sec-h">About Us</h2>
     <p class="sec-text" id="aboutText">Vignesheng la naanga welding works, vehicle body building &amp; fabrication, vehicle repair / denting-painting seivom. Melum used vehicles buy &amp; sell um pannuvom. Quality work &amp; trust than enga specialty.</p>
-  </div>
-
-  <div class="sec-block" id="services">
-    <h2 class="sec-h">Our Services</h2>
-    <div class="cat-grid" id="serviceGrid"><div class="loading">Loading...</div></div>
   </div>
 
   <div class="sec-block" id="contact">
@@ -174,11 +341,20 @@ footer strong{color:var(--accent);}
   </div>
 </div>
 
+<div id="servicesPage">
+  <div class="home-hero">
+    <h1>🔧 Our Services</h1>
+    <p class="tagline">Welding · Body Building · Repair</p>
+  </div>
+  <div class="cat-grid" id="serviceGrid"><div class="loading">Loading...</div></div>
+</div>
+
 <div id="buySellPage">
   <div class="home-hero">
     <h1>🚛 Buy &amp; Sell Vehicles</h1>
     <p class="tagline">Used vehicles — buy &amp; sell</p>
   </div>
+  <div class="bs-search" onclick="openSearch()">🔍 <span>Search vehicles...</span></div>
   <div class="cat-grid" id="catGrid"><div class="loading">Loading...</div></div>
 </div>
 
@@ -237,18 +413,26 @@ async function loadCategories(){
     const res = await fetch(API+'/categories');
     cats = await res.json();
     renderHome();
+    loadIndex();
   }catch(e){
     document.getElementById('catGrid').innerHTML='<div class="loading">Server connection failed. Make sure server is running!</div>';
     document.getElementById('serviceGrid').innerHTML='<div class="loading">Server connection failed.</div>';
   }
 }
 
+var catCount={};
+function catCountText(c){
+  var n=catCount[c.id];
+  if(n===undefined)return c.description||'';
+  if(c.type==='service')return n?n+(n===1?' work':' works'):(c.description||'');
+  return n?n+(n===1?' vehicle':' vehicles')+' available':(c.description||'');
+}
 function catCardHtml(c){
-  var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:5rem">'+c.emoji+'</span>';
+  var cov=c.cover_img?'<img src="'+c.cover_img+'" alt=""/>':'<span style="font-size:4.2rem">'+c.emoji+'</span>';
   return '<div class="cat-card" data-id="'+c.id+'" onclick="goCategory('+c.id+')">'
-    +'<div class="cat-img">'+cov+'<div class="cat-overlay"></div>'
-    +'<div class="cat-label">'+c.name+'<small>'+c.description+'</small></div>'
-    +'</div><div class="cat-footer"><span class="cat-count">Click to browse</span></div></div>';
+    +'<div class="cat-img">'+cov+'<div class="cat-overlay"></div><span class="cat-go">›</span>'
+    +'<div class="cat-label">'+c.name+'<small>'+catCountText(c)+'</small></div>'
+    +'</div></div>';
 }
 
 function renderHome(){
@@ -259,18 +443,145 @@ function renderHome(){
 }
 
 // PAGES: home / buysell / gallery / products
-var PAGES={home:'homePage',buysell:'buySellPage',gallery:'galleryPage',products:'productsPage'};
+var PAGES={home:'homePage',services:'servicesPage',buysell:'buySellPage',gallery:'galleryPage',products:'productsPage'};
 var curPage='home', cameFrom='home';
 function showPage(name){
   curPage=name;
   Object.keys(PAGES).forEach(function(k){document.getElementById(PAGES[k]).style.display=(k===name)?'block':'none';});
   document.getElementById('backBtn').style.display=(name==='home')?'none':'flex';
-  document.getElementById('navLinks').style.display=(name==='home')?'flex':'none';
+  document.getElementById('navCta').style.display=(name==='home')?'':'none';
   window.scrollTo(0,0);
 }
 function scrollToSec(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
-function navGo(id){scrollToSec(id);}
+function goHomeFull(){cameFrom='home';showPage('home');}
+function navGo(id){
+  if(curPage!=='home'){showPage('home');setTimeout(function(){scrollToSec(id);},80);}
+  else scrollToSec(id);
+}
+
+// DRAWER MENU
+function openMenu(){document.body.classList.add('menu-open');}
+function closeMenu(){document.body.classList.remove('menu-open');}
+
+// SEARCH (vehicles + services). Product list comes from a light /search-index endpoint (no photos).
+var searchIdx=null;
+async function loadIndex(){
+  try{
+    var res=await fetch(API+'/search-index');
+    if(!res.ok)throw new Error('no index');
+    searchIdx=await res.json();
+    catCount={};
+    searchIdx.forEach(function(p){
+      var c=cats.find(function(x){return x.id===p.category_id;});
+      if(!c)return;
+      if(c.type!=='service'&&p.sold)return;
+      catCount[p.category_id]=(catCount[p.category_id]||0)+1;
+    });
+    renderHome();
+    if(document.getElementById('searchPanel').classList.contains('open'))renderSearch(document.getElementById('spInput').value);
+  }catch(e){if(!searchIdx)searchIdx=[];}
+}
+function openSearch(){
+  var p=document.getElementById('searchPanel');p.classList.add('open');
+  var i=document.getElementById('spInput');i.value='';renderSearch('');
+  setTimeout(function(){i.focus();},60);
+  if(searchIdx===null)loadIndex();
+}
+function closeSearch(){document.getElementById('searchPanel').classList.remove('open');}
+function openProduct(catId,title){
+  closeSearch();
+  goCategory(catId).then(function(){
+    document.getElementById('searchQ').value=title;filterProducts();
+  });
+}
+function renderSearch(q){
+  var box=document.getElementById('spResults');box.innerHTML='';
+  q=(q||'').trim().toLowerCase();
+  function hint(t){var d=document.createElement('div');d.className='sp-hint';d.textContent=t;box.appendChild(d);}
+  if(!q){hint('Type to search vehicles and services');return;}
+  var out=0;
+  function item(title,sub,tag,fn){
+    var d=document.createElement('div');d.className='sp-item';
+    var l=document.createElement('div');var b=document.createElement('b');b.textContent=title;l.appendChild(b);
+    if(sub){var sm=document.createElement('small');sm.textContent=sub;l.appendChild(sm);}
+    var t=document.createElement('span');t.className='sp-tag';t.textContent=tag;
+    d.appendChild(l);d.appendChild(t);d.onclick=fn;box.appendChild(d);out++;
+  }
+  cats.forEach(function(c){
+    if(((c.name||'')+' '+(c.description||'')).toLowerCase().indexOf(q)>-1)
+      item(c.emoji+' '+c.name,c.description||'',c.type==='service'?'Service':'Category',function(){closeSearch();goCategory(c.id);});
+  });
+  (searchIdx||[]).forEach(function(p){
+    if(out>=25)return;
+    if(((p.title||'')+' '+(p.sub_category||'')+' '+(p.location||'')).toLowerCase().indexOf(q)>-1){
+      var c=cats.find(function(x){return x.id===p.category_id;});
+      item(p.title,(c?c.name:'')+(p.location?' · '+p.location:'')+(p.price?' · ₹'+Number(p.price).toLocaleString('en-IN'):''),p.sold?'SOLD':(c&&c.type==='service'?'Work':'Vehicle'),function(){openProduct(p.category_id,p.title);});
+    }
+  });
+  if(!out)hint('No results for "'+q+'"');
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeSearch();closeMenu();}});
+
+// AUTO-SLIDE BANNER
+var bIdx=0,bTimer=null;
+function bGo(i){
+  bIdx=(i+3)%3;
+  document.getElementById('bTrack').style.transform='translateX(-'+(bIdx*100)+'%)';
+  [].forEach.call(document.getElementById('bDots').children,function(d,k){d.className=(k===bIdx)?'on':'';});
+}
+function bAuto(){
+  clearInterval(bTimer);
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  bTimer=setInterval(function(){if(curPage==='home')bGo(bIdx+1);},4500);
+}
+function initBanner(){
+  var ban=document.getElementById('home');
+  [].forEach.call(document.getElementById('bDots').children,function(d,k){d.onclick=function(){bGo(k);bAuto();};});
+  var x0=null;
+  ban.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+  ban.addEventListener('touchend',function(e){
+    if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;
+    if(Math.abs(dx)>40){bGo(bIdx+(dx<0?1:-1));bAuto();}
+  },{passive:true});
+  bGo(0);bAuto();
+}
+
+// CUSTOMER REVIEWS (added by owner from admin)
+var revIdx=0,revPause=0;
+async function loadReviews(){
+  try{
+    var res=await fetch(API+'/reviews');if(!res.ok)return;
+    var list=await res.json();
+    if(!Array.isArray(list)||!list.length)return;
+    var row=document.getElementById('revRow');row.innerHTML='';
+    var sum=0;
+    list.forEach(function(r){
+      sum+=Number(r.rating)||0;
+      var card=document.createElement('div');card.className='rev-card';
+      var st=document.createElement('div');st.className='stars';
+      var n=Math.max(1,Math.min(5,Number(r.rating)||5));st.textContent='★'.repeat(n)+'☆'.repeat(5-n);
+      var tx=document.createElement('div');tx.className='rev-text';tx.textContent=r.review_text||'';
+      var who=document.createElement('div');who.className='rev-who';
+      var av=document.createElement('span');av.className='rev-av';av.textContent=((r.name||'?').trim()[0]||'?').toUpperCase();
+      var nm=document.createElement('span');nm.textContent=r.name||'Customer';
+      who.appendChild(av);who.appendChild(nm);
+      card.appendChild(st);card.appendChild(tx);card.appendChild(who);row.appendChild(card);
+    });
+    var avg=(sum/list.length).toFixed(1);
+    document.getElementById('revSum').innerHTML='<b>'+avg+'</b> ★ &nbsp;·&nbsp; '+list.length+(list.length===1?' review':' reviews');
+    document.getElementById('reviews').hidden=false;
+    ['touchstart','wheel','mousedown'].forEach(function(ev){row.addEventListener(ev,function(){revPause=Date.now();},{passive:true});});
+    if(!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)&&list.length>1){
+      setInterval(function(){
+        if(curPage!=='home'||Date.now()-revPause<9000)return;
+        revIdx=(revIdx+1)%row.children.length;
+        row.scrollTo({left:row.children[revIdx].offsetLeft-row.children[0].offsetLeft,behavior:'smooth'});
+      },5000);
+    }
+  }catch(e){}
+}
 function goBuySell(){showPage('buysell');}
+function goServices(){showPage('services');}
 
 // GALLERY — Before / After photos added from admin (Gallery tab)
 var galItems=[], galShown=0;
@@ -293,15 +604,19 @@ function renderGal(){
   next.forEach(function(it){
     var card=document.createElement('div');card.className='gal-item';
     if(it.title){var t=document.createElement('div');t.className='gal-title';t.textContent=it.title;card.appendChild(t);}
-    var pair=document.createElement('div');pair.className='gal-pair';
-    [['Before',it.before_img],['After',it.after_img]].forEach(function(x,i){
-      var w=document.createElement('div');
-      var im=document.createElement('img');im.src=x[1];im.alt='';im.loading='lazy';
-      im.onclick=function(){openFs([it.before_img,it.after_img],i);};
-      var tag=document.createElement('span');tag.className='gal-tag';tag.textContent=x[0];
-      w.appendChild(im);w.appendChild(tag);pair.appendChild(w);
-    });
-    card.appendChild(pair);g.appendChild(card);
+    var cmp=document.createElement('div');cmp.className='cmp';
+    var a=document.createElement('img');a.src=it.after_img;a.alt='After';a.loading='lazy';
+    var b=document.createElement('img');b.src=it.before_img;b.alt='Before';b.loading='lazy';
+    var line=document.createElement('div');line.className='cmp-line';
+    var tb=document.createElement('span');tb.className='gal-tag';tb.textContent='Before';
+    var ta=document.createElement('span');ta.className='gal-tag r';ta.textContent='After';
+    var r=document.createElement('input');r.type='range';r.min=0;r.max=100;r.value=50;r.setAttribute('aria-label','Before and after slider');
+    var fs=document.createElement('button');fs.type='button';fs.className='cmp-fs';fs.textContent='⛶';fs.setAttribute('aria-label','Full screen');
+    function upd(){b.style.clipPath='inset(0 '+(100-r.value)+'% 0 0)';line.style.left=r.value+'%';}
+    r.oninput=upd;upd();
+    fs.onclick=function(){openFs([it.before_img,it.after_img],0);};
+    [a,b,line,tb,ta,r,fs].forEach(function(n){cmp.appendChild(n);});
+    card.appendChild(cmp);g.appendChild(card);
   });
   galShown+=next.length;
   document.getElementById('galMore').style.display=(galShown<galItems.length)?'block':'none';
@@ -324,7 +639,7 @@ async function goCategory(catId){
   currentCatId=catId; activeFilter='all';
   document.getElementById('searchQ').value='';
   var cat=cats.find(function(c){return c.id===catId;});
-  cameFrom=(cat.type==='service')?'home':'buysell';
+  cameFrom=(cat.type==='service')?'services':'buysell';
   document.getElementById('pageTitle').textContent=cat.emoji+' '+cat.name;
   showPage('products');
   document.getElementById('grid').innerHTML='<div class="loading" style="grid-column:1/-1">Loading...</div>';
@@ -339,7 +654,6 @@ async function goCategory(catId){
 function goHome(){
   if(curPage==='products'){
     showPage(cameFrom);
-    if(cameFrom==='home')setTimeout(function(){scrollToSec('services');},50);
   }else{
     showPage('home');
   }
@@ -548,8 +862,73 @@ function showToast(msg){
 }
 
 // INIT
+// WORKSHOP REEL - 30s loop made from real photos in /images (reel-welding.jpg, reel-grinding.jpg, reel-cutting.jpg).
+// If videos/reel.mp4 exists, that real video plays instead.
+function initReel(){
+  var req=[
+    {k:'welding',src:'images/reel-welding.jpg',label:'Welding',sx:45,sy:83,a0:-165,a1:-15},
+    {k:'grinding',src:'images/reel-grinding.jpg',label:'Grinding',sx:35.5,sy:86.4,a0:-182,a1:-122},
+    {k:'cutting',src:'images/reel-cutting.jpg',label:'Cutting',sx:64.7,sy:32,a0:55,a1:118}
+  ];
+  var ok=[],left=req.length,reel=document.getElementById('reel');
+  req.forEach(function(r){
+    var im=new Image();
+    im.onload=function(){ok.push(r);fin();};
+    im.onerror=function(){fin();};
+    im.src=r.src;
+  });
+  function fin(){if(--left===0)build();}
+  function build(){
+    if(!ok.length)return;
+    ok.sort(function(a,b){return req.indexOf(a)-req.indexOf(b);});
+    var shots=ok.map(function(r){return {r:r,ox:r.sx,oy:r.sy,z0:1,z1:1.18};});
+    var extra=[
+      function(r){return {r:r,ox:r.sx,oy:r.sy-3,z0:1.6,z1:1.95};},
+      function(r){return {r:r,ox:55,oy:35,z0:1.4,z1:1.75};}
+    ];
+    var n=0;
+    while(shots.length<3){shots.push(extra[n%extra.length](ok[n%ok.length]));n++;}
+    shots=shots.slice(0,3);
+    var wrap=document.getElementById('reelSlides'),dots=document.getElementById('reelDots'),cap=document.getElementById('reelCap');
+    shots.forEach(function(sh){
+      var slide=document.createElement('div');slide.className='slide';
+      var kb=document.createElement('div');kb.className='kb';
+      kb.style.setProperty('--ox',sh.ox+'%');kb.style.setProperty('--oy',sh.oy+'%');
+      kb.style.setProperty('--z0',sh.z0);kb.style.setProperty('--z1',sh.z1);
+      var img=document.createElement('img');img.src=sh.r.src;img.alt=sh.r.label+' at the workshop';
+      var fx=document.createElement('div');fx.className='sfx';
+      fx.style.setProperty('--sx',sh.r.sx+'%');fx.style.setProperty('--sy',sh.r.sy+'%');
+      var g=document.createElement('div');g.className='g';fx.appendChild(g);
+      for(var i=0;i<16;i++){
+        var p=document.createElement('i'),ang=(sh.r.a0+(sh.r.a1-sh.r.a0)*Math.random())*Math.PI/180,d=30+Math.random()*60;
+        p.style.setProperty('--dx',(Math.cos(ang)*d).toFixed(0)+'px');
+        p.style.setProperty('--dy',(Math.sin(ang)*d).toFixed(0)+'px');
+        p.style.setProperty('--d',(Math.random()).toFixed(2)+'s');
+        fx.appendChild(p);
+      }
+      kb.appendChild(img);kb.appendChild(fx);slide.appendChild(kb);wrap.appendChild(slide);
+      dots.appendChild(document.createElement('b'));
+    });
+    var slides=wrap.children,dotEls=dots.children,cur=-1;
+    function show(i){
+      cur=i;
+      for(var k=0;k<slides.length;k++){slides[k].classList.toggle('on',k===i);dotEls[k].classList.remove('on');}
+      void dots.offsetWidth;dotEls[i].classList.add('on');
+      cap.textContent=shots[i].r.label;
+    }
+    reel.hidden=false;show(0);
+    setInterval(function(){show((cur+1)%slides.length);},10000);
+  }
+  var v=document.getElementById('reelVid');
+  v.onloadeddata=function(){reel.hidden=false;v.classList.add('on');if(v.videoWidth&&v.videoHeight){reel.style.aspectRatio=Math.max(0.75,Math.min(1.78,v.videoWidth/v.videoHeight));}var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){});};
+  v.onerror=function(){v.remove();};
+  v.src='videos/reel.mp4';
+}
 loadCategories();
 loadSettings();
+initReel();
+initBanner();
+loadReviews();
 // Touch swipe for fullscreen
 var fsTouchX=0;
 document.getElementById('fsOverlay').addEventListener('touchstart',function(e){fsTouchX=e.touches[0].clientX;},{passive:true});

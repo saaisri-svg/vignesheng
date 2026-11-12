@@ -793,6 +793,67 @@ app.get('/api/stats', authMiddleware, async (req, res) => {
   }
 });
 
+// ---- REVIEWS (added by owner from admin) + light search index ----
+db.query(
+  `CREATE TABLE IF NOT EXISTS reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(80),
+    rating TINYINT,
+    review_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`,
+  (err) => { if (err) console.error('reviews table error:', err.message); }
+);
+
+// Public: latest reviews
+app.get('/api/reviews', (req, res) => {
+  db.query(
+    'SELECT id, name, rating, review_text FROM reviews ORDER BY id DESC LIMIT 50',
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+// Admin: add review
+app.post('/api/reviews', authMiddleware, (req, res) => {
+  const name = String(req.body.name || '').trim().slice(0, 80);
+  const text = String(req.body.review_text || '').trim().slice(0, 600);
+  const rating = Math.round(Number(req.body.rating));
+  if (!name || !text || !(rating >= 1 && rating <= 5)) {
+    return res.status(400).json({ error: 'Name, review text and rating (1-5) required' });
+  }
+  db.query(
+    'INSERT INTO reviews (name, rating, review_text) VALUES (?, ?, ?)',
+    [name, rating, text],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ id: result.insertId, success: true });
+    }
+  );
+});
+
+// Admin: delete review
+app.delete('/api/reviews/:id', authMiddleware, (req, res) => {
+  db.query('DELETE FROM reviews WHERE id=?', [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});
+
+// Public: product titles for search and category counts (no photos, no cost price)
+app.get('/api/search-index', (req, res) => {
+  db.query(
+    `SELECT id, title, price, category_id, sub_category, location, sold
+     FROM products ORDER BY created_at DESC LIMIT 1000`,
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(
