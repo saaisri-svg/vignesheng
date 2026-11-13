@@ -253,7 +253,7 @@ footer strong{color:var(--accent);}
       <div class="dash-card" onclick="openSection('marketplace')"><span>🚛</span><b>Buy &amp; Sell</b><small>Vehicles for sale</small></div>
       <div class="dash-card" onclick="openSection('gallery')"><span>📸</span><b>Gallery</b><small>Before / After photos</small></div>
       <div class="dash-card" onclick="openSection('settings')"><span>ℹ️</span><b>About &amp; Contact</b><small>Text, phone, address</small></div>
-      <div class="dash-card" onclick="openSection('reviews')"><span>⭐</span><b>Reviews</b><small>Customer reviews</small></div>
+      <div class="dash-card" onclick="openSection('reviews')"><span>⭐</span><b>Reviews</b><small>Approve customer reviews</small></div>
     </div>
     <div class="sec-hdr" id="secHdr" style="display:none"><h2 id="secTitle"></h2></div>
     <div class="stat-wrap" id="statsBox" style="display:none"></div>
@@ -273,12 +273,7 @@ footer strong{color:var(--accent);}
     </div>
 
     <div id="revPanel" style="display:none;max-width:600px;margin:0 auto;padding:16px">
-      <div class="fg"><label>Customer name</label><input id="rv-name" type="text" maxlength="80" placeholder="e.g. Ravi, Tiruppur"/></div>
-      <div class="fg"><label>Rating</label>
-        <select id="rv-rating"><option value="5">★★★★★ (5)</option><option value="4">★★★★☆ (4)</option><option value="3">★★★☆☆ (3)</option><option value="2">★★☆☆☆ (2)</option><option value="1">★☆☆☆☆ (1)</option></select>
-      </div>
-      <div class="fg"><label>Review</label><textarea id="rv-text" rows="4" maxlength="600" placeholder="What the customer said..."></textarea></div>
-      <button class="m-save" style="width:100%;padding:12px;margin-bottom:16px" onclick="saveRev()">Add Review ✅</button>
+      <div style="background:#EEF2FF;color:#3B4A7A;border-radius:12px;padding:10px 14px;font-size:.85rem;margin-bottom:14px">Customers website la review write pannuvaanga. Neenga <b>Approve</b> pannina mattum public ah theriyum.</div>
       <div id="revList"><div class="loading">Loading...</div></div>
     </div>
 
@@ -1110,39 +1105,42 @@ async function loadSettingsAdmin(){
     ['about','address','phone','whatsapp'].forEach(function(k){document.getElementById('st-'+k).value=st[k]||'';});
   }catch(e){showToast('Load failed');}
 }
-// ---- CUSTOMER REVIEWS ----
+// ---- CUSTOMER REVIEWS (customers write on the site, admin approves) ----
 async function loadRevAdmin(){
   var box=document.getElementById('revList');
   try{
-    var res=await fetch(API+'/reviews');var list=await res.json();
+    var res=await fetch(API+'/reviews/all',{headers:authHeader()});
+    if(!res.ok)throw new Error('fail');
+    var list=await res.json();
     box.innerHTML='';
-    if(!list.length){box.innerHTML='<div class="loading">Innum reviews illa. Mela add pannunga.</div>';return;}
-    list.forEach(function(r){
+    var pending=list.filter(function(r){return !r.approved;});
+    var done=list.filter(function(r){return r.approved;});
+    function head(t){var h=document.createElement('h3');h.style.cssText='font-size:.95rem;font-weight:900;margin:14px 0 8px';h.textContent=t;box.appendChild(h);}
+    function card(r,isPending){
       var d=document.createElement('div');
-      d.style.cssText='background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.08)';
+      d.style.cssText='background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);'+(isPending?'border-left:4px solid #F59E0B':'');
       var n=Math.max(1,Math.min(5,Number(r.rating)||5));
       var h=document.createElement('div');h.style.cssText='display:flex;justify-content:space-between;gap:8px;font-weight:800';
       var nm=document.createElement('span');nm.textContent=r.name;
       var st=document.createElement('span');st.style.color='#F5A400';st.textContent='★'.repeat(n)+'☆'.repeat(5-n);
       h.appendChild(nm);h.appendChild(st);
       var tx=document.createElement('div');tx.style.cssText='margin:6px 0 8px;font-size:.9rem;color:#4A4F57';tx.textContent=r.review_text;
-      var bt=document.createElement('button');bt.className='btn-del';bt.textContent='🗑️ Delete';
-      bt.onclick=function(){delRev(r.id);};
-      d.appendChild(h);d.appendChild(tx);d.appendChild(bt);box.appendChild(d);
-    });
+      var row=document.createElement('div');row.style.cssText='display:flex;gap:8px';
+      if(isPending){var ap=document.createElement('button');ap.className='m-save';ap.style.cssText='flex:1;padding:8px';ap.textContent='✅ Approve';ap.onclick=function(){approveRev(r.id);};row.appendChild(ap);}
+      var bt=document.createElement('button');bt.className='btn-del';bt.textContent='🗑️ Delete';bt.onclick=function(){delRev(r.id);};row.appendChild(bt);
+      d.appendChild(h);d.appendChild(tx);d.appendChild(row);box.appendChild(d);
+    }
+    if(!list.length){box.innerHTML='<div class="loading">Innum customer reviews varala.</div>';return;}
+    head('⏳ Waiting for approval ('+pending.length+')');
+    if(!pending.length){var e=document.createElement('div');e.className='loading';e.textContent='Pudhu review illa';box.appendChild(e);}
+    pending.forEach(function(r){card(r,true);});
+    head('✅ Published ('+done.length+')');
+    done.forEach(function(r){card(r,false);});
   }catch(e){box.innerHTML='<div class="loading">Load failed</div>';}
 }
-async function saveRev(){
-  var name=document.getElementById('rv-name').value.trim();
-  var text=document.getElementById('rv-text').value.trim();
-  var rating=document.getElementById('rv-rating').value;
-  if(!name||!text){showToast('⚠️ Name and review venum!');return;}
-  try{
-    var res=await fetch(API+'/reviews',{method:'POST',headers:authHeader(),body:JSON.stringify({name:name,review_text:text,rating:Number(rating)})});
-    if(!res.ok)throw new Error('fail');
-    document.getElementById('rv-name').value='';document.getElementById('rv-text').value='';
-    showToast('🎉 Review added!');loadRevAdmin();
-  }catch(e){showToast('Error saving!');}
+async function approveRev(id){
+  try{await fetch(API+'/reviews/'+id+'/approve',{method:'PUT',headers:authHeader()});showToast('✅ Approved');loadRevAdmin();}
+  catch(e){showToast('Error!');}
 }
 async function delRev(id){
   if(!confirm('Intha review ah delete pannanuma?'))return;

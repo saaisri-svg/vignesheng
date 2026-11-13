@@ -793,22 +793,38 @@ app.get('/api/stats', authMiddleware, async (req, res) => {
   }
 });
 
-// ---- REVIEWS (added by owner from admin) + light search index ----
+// ---- REVIEWS (customers submit, admin approves) + light search index ----
 db.query(
   `CREATE TABLE IF NOT EXISTS reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(80),
     rating TINYINT,
     review_text TEXT,
+    approved TINYINT NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`,
-  (err) => { if (err) console.error('reviews table error:', err.message); }
+  (err) => {
+    if (err) return console.error('reviews table error:', err.message);
+    // older installs: add the approved column once (old reviews stay approved)
+    db.query("SHOW COLUMNS FROM reviews LIKE 'approved'", (e2, cols) => {
+      if (e2 || (cols && cols.length)) return;
+      db.query('ALTER TABLE reviews ADD COLUMN approved TINYINT NOT NULL DEFAULT 1', (e3) => {
+        if (e3) console.error('reviews alter error:', e3.message);
+      });
+    });
+  }
 );
 
-// Public: latest reviews
+const reviewHits = {};
+function clientIp(req) {
+  return String((req.headers && req.headers['x-forwarded-for']) || (req.socket && req.socket.remoteAddress) || '')
+    .split(',')[0].trim();
+}
+
+// Public: approved reviews only
 app.get('/api/reviews', (req, res) => {
   db.query(
-    'SELECT id, name, rating, review_text FROM reviews ORDER BY id DESC LIMIT 50',
+    'SELECT id, name, rating, review_text FROM reviews WHERE approved = 1 ORDER BY id DESC LIMIT 50',
     (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);
@@ -816,25 +832,53 @@ app.get('/api/reviews', (req, res) => {
   );
 });
 
-// Admin: add review
-app.post('/api/reviews', authMiddleware, (req, res) => {
-  const name = String(req.body.name || '').trim().slice(0, 80);
-  const text = String(req.body.review_text || '').trim().slice(0, 600);
-  const rating = Math.round(Number(req.body.rating));
-  if (!name || !text || !(rating >= 1 && rating <= 5)) {
-    return res.status(400).json({ error: 'Name, review text and rating (1-5) required' });
+// Public: a customer submits a review (shows on the site only after admin approves)
+app.post('/api/reviews/submit', (req, res) => {
+  const body = req.body || {};
+  if (body.website) return res.json({ success: true }); // hidden field, bots fill it
+  const name = String(body.name || '').trim().slice(0, 80);
+  const text = String(body.review_text || '').trim().slice(0, 600);
+  const rating = Math.round(Number(body.rating));
+  if (!name || text.length < 5 || !(rating >= 1 && rating <= 5)) {
+    return res.status(400).json({ error: 'Name, review (min 5 letters) and rating required' });
   }
+  const ip = clientIp(req);
+  const now = Date.now();
+  reviewHits[ip] = (reviewHits[ip] || []).filter((t) => now - t < 3600000);
+  if (reviewHits[ip].length >= 3) {
+    return res.status(429).json({ error: 'Too many reviews from this device. Please try later.' });
+  }
+  reviewHits[ip].push(now);
   db.query(
-    'INSERT INTO reviews (name, rating, review_text) VALUES (?, ?, ?)',
+    'INSERT INTO reviews (name, rating, review_text, approved) VALUES (?, ?, ?, 0)',
     [name, rating, text],
-    (err, result) => {
+    (err) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: result.insertId, success: true });
+      res.json({ success: true });
     }
   );
 });
 
-// Admin: delete review
+// Admin: all reviews, waiting ones first
+app.get('/api/reviews/all', authMiddleware, (req, res) => {
+  db.query(
+    'SELECT id, name, rating, review_text, approved, created_at FROM reviews ORDER BY approved ASC, id DESC',
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+// Admin: approve a review
+app.put('/api/reviews/:id/approve', authMiddleware, (req, res) => {
+  db.query('UPDATE reviews SET approved = 1 WHERE id = ?', [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});
+
+// Admin: delete a review
 app.delete('/api/reviews/:id', authMiddleware, (req, res) => {
   db.query('DELETE FROM reviews WHERE id=?', [req.params.id], (err) => {
     if (err) return res.status(500).json({ error: err.message });

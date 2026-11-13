@@ -251,6 +251,23 @@ body.menu-open #drawer{transform:none;}
 .cat-img{aspect-ratio:4/5;background:linear-gradient(135deg,#3A2A1E,#15171A);color:#fff;}
 .cat-label{font-size:1.02rem;padding:14px 14px 16px;}
 .cat-go{position:absolute;right:10px;top:10px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#1A1208;display:flex;align-items:center;justify-content:center;font-weight:900;z-index:2;}
+.rev-empty{color:var(--mid);font-size:.9rem;background:#fff;border-radius:14px;padding:16px;margin:10px 0;box-shadow:var(--shadow);}
+.rev-empty[hidden]{display:none;}
+.rev-write{display:block;margin:10px auto 0;background:var(--dark);color:#fff;border:none;border-radius:24px;padding:12px 24px;font-weight:800;font-family:inherit;cursor:pointer;}
+.rev-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1003;display:none;align-items:center;justify-content:center;padding:16px;}
+.rev-modal.open{display:flex;}
+.rev-box{background:#fff;border-radius:18px;padding:20px;width:100%;max-width:420px;position:relative;}
+.rev-box h3{margin-bottom:12px;font-size:1.1rem;}
+.rev-box input[type=text],.rev-box textarea{width:100%;padding:12px;border:2px solid #E5E1D9;border-radius:12px;font-family:inherit;font-size:.95rem;margin-bottom:10px;box-sizing:border-box;}
+.star-pick{display:flex;gap:6px;margin-bottom:10px;}
+.star-pick span{font-size:2rem;color:#D8D2C6;cursor:pointer;line-height:1;}
+.star-pick span.on{color:#F5A400;}
+.rv-msg{font-size:.85rem;min-height:18px;margin-bottom:8px;font-weight:700;}
+.rv-msg.ok{color:#16A34A;}.rv-msg.err{color:#DC2626;}
+.rv-btns{display:flex;gap:10px;}
+.rv-btns button{flex:1;padding:12px;border:none;border-radius:12px;font-weight:800;font-family:inherit;cursor:pointer;}
+.rv-cancel{background:#EEE9E0;color:var(--dark);}
+.rv-send{background:var(--accent);color:#1A1208;}
 </style>
 </head>
 <body>
@@ -324,6 +341,20 @@ body.menu-open #drawer{transform:none;}
     <h2 class="sec-h">Customer Reviews</h2>
     <div class="rev-sum" id="revSum"></div>
     <div class="rev-row" id="revRow"></div>
+    <div class="rev-empty" id="revEmpty" hidden>Be the first to share your experience with us!</div>
+    <button class="rev-write" onclick="openReview()">✍️ Write a review</button>
+  </div>
+
+  <div id="revModal" class="rev-modal" onclick="if(event.target===this)closeReview()">
+    <div class="rev-box">
+      <h3>Write a review</h3>
+      <input id="rvName" type="text" maxlength="80" placeholder="Your name"/>
+      <div class="star-pick" id="starPick" aria-label="Rating"></div>
+      <textarea id="rvText" rows="4" maxlength="600" placeholder="Share your experience..."></textarea>
+      <input id="rvWeb" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0"/>
+      <div class="rv-msg" id="rvMsg"></div>
+      <div class="rv-btns"><button class="rv-cancel" onclick="closeReview()">Cancel</button><button class="rv-send" id="rvSend" onclick="sendReview()">Submit</button></div>
+    </div>
   </div>
 
   <div class="sec-block" id="about">
@@ -547,12 +578,46 @@ function initBanner(){
 }
 
 // CUSTOMER REVIEWS (added by owner from admin)
-var revIdx=0,revPause=0;
+var revIdx=0,revPause=0,rvRating=5;
+function drawStars(){
+  var box=document.getElementById('starPick');box.innerHTML='';
+  for(var i=1;i<=5;i++){(function(n){
+    var sp=document.createElement('span');sp.textContent='★';sp.className=(n<=rvRating)?'on':'';
+    sp.onclick=function(){rvRating=n;drawStars();};box.appendChild(sp);
+  })(i);}
+}
+function openReview(){
+  rvRating=5;drawStars();
+  ['rvName','rvText','rvWeb'].forEach(function(id){document.getElementById(id).value='';});
+  var m=document.getElementById('rvMsg');m.textContent='';m.className='rv-msg';
+  document.getElementById('rvSend').disabled=false;
+  document.getElementById('revModal').classList.add('open');
+}
+function closeReview(){document.getElementById('revModal').classList.remove('open');}
+async function sendReview(){
+  var name=document.getElementById('rvName').value.trim();
+  var text=document.getElementById('rvText').value.trim();
+  var m=document.getElementById('rvMsg'),btn=document.getElementById('rvSend');
+  function say(t,ok){m.textContent=t;m.className='rv-msg '+(ok?'ok':'err');}
+  if(!name){say('Please enter your name',false);return;}
+  if(text.length<5){say('Please write a few words about your experience',false);return;}
+  btn.disabled=true;say('Sending...',true);
+  try{
+    var res=await fetch(API+'/reviews/submit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:name,review_text:text,rating:rvRating,website:document.getElementById('rvWeb').value})});
+    var data={};try{data=await res.json();}catch(e){}
+    if(!res.ok){say(data.error||'Could not send. Please try again.',false);btn.disabled=false;return;}
+    say('Thank you! Your review will appear after we approve it.',true);
+    setTimeout(closeReview,2200);
+  }catch(e){say('Network problem. Please try again.',false);btn.disabled=false;}
+}
 async function loadReviews(){
   try{
     var res=await fetch(API+'/reviews');if(!res.ok)return;
     var list=await res.json();
-    if(!Array.isArray(list)||!list.length)return;
+    if(!Array.isArray(list))return;
+    document.getElementById('reviews').hidden=false;
+    if(!list.length){document.getElementById('revEmpty').hidden=false;return;}
     var row=document.getElementById('revRow');row.innerHTML='';
     var sum=0;
     list.forEach(function(r){
@@ -569,7 +634,6 @@ async function loadReviews(){
     });
     var avg=(sum/list.length).toFixed(1);
     document.getElementById('revSum').innerHTML='<b>'+avg+'</b> ★ &nbsp;·&nbsp; '+list.length+(list.length===1?' review':' reviews');
-    document.getElementById('reviews').hidden=false;
     ['touchstart','wheel','mousedown'].forEach(function(ev){row.addEventListener(ev,function(){revPause=Date.now();},{passive:true});});
     if(!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)&&list.length>1){
       setInterval(function(){
