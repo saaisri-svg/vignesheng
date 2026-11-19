@@ -8,14 +8,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dark:#1A1A2E;--accent:#E8B400;--orange:#FF6B35;
-  --teal:#00B4B4;--teal-dark:#007F7F;--teal-light:#E0F7F7;
-  --bg:#F2F5FA;--white:#fff;--mid:#555577;--muted:#8888AA;
+  --dark:#14392B;--accent:#C9A25C;--orange:#C9A25C;
+  --teal:#14392B;--teal-dark:#0F2D22;--teal-light:#EDE7D8;
+  --bg:#F4F2EC;--white:#fff;--mid:#4B5A52;--muted:#6F7B74;
   --shadow:0 4px 20px rgba(0,0,0,0.10);--r:14px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
 
-#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--dark),#2D2D5E);}
+#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--dark),#1E4A38);}
 .login-box{background:#fff;border-radius:20px;padding:36px;width:90%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
 .login-box .li{font-size:2.5rem;margin-bottom:12px;}
 .login-box h2{font-size:1.2rem;font-weight:900;margin-bottom:4px;}
@@ -40,7 +40,7 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;justify-c
 #homePage{display:block;}
 #productsPage{display:none;}
 
-.home-hero{background:linear-gradient(135deg,var(--dark),#2D2D5E);padding:28px 20px 36px;text-align:center;}
+.home-hero{background:linear-gradient(135deg,var(--dark),#1E4A38);padding:28px 20px 36px;text-align:center;}
 .home-hero h1{color:#fff;font-size:1.5rem;font-weight:900;margin-bottom:4px;}
 .home-hero p{color:rgba(255,255,255,.6);font-size:.85rem;}
 .home-hero .ac{color:var(--accent);}
@@ -102,7 +102,7 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;justify-c
   border:2px solid var(--accent);}
 .sales-dash-card:hover{transform:translateY(-4px);}
 .sales-dash-img{width:100%;aspect-ratio:1/1;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,#1A1A2E,#2D2D5E);
+  background:linear-gradient(135deg,#1A1A2E,#1E4A38);
   display:flex;align-items:center;justify-content:center;font-size:4rem;}
 
 .cat-add-card{background:#fff;border-radius:16px;border:3px dashed #ccc;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:var(--muted);transition:all .2s;padding:20px;}
@@ -216,6 +216,75 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;justify-c
 .loading{text-align:center;padding:40px;color:var(--muted);font-size:.9rem;}
 footer{background:var(--dark);color:rgba(255,255,255,.4);text-align:center;padding:16px;font-size:.76rem;}
 footer strong{color:var(--accent);}
+/* dashboard vehicle sales + globe + all data */
+.dash-sales{max-width:600px;margin:6px auto 0;padding:0 16px 90px;}
+.dash-sales h3{font-size:1rem;font-weight:900;margin:14px 0 8px;}
+.dash-hint{color:var(--muted);font-size:.78rem;text-align:center;margin-top:12px;}
+#globeBtn{position:fixed;right:16px;bottom:18px;width:56px;height:56px;border-radius:50%;border:none;background:var(--dark);color:#fff;font-size:1.7rem;cursor:pointer;z-index:150;box-shadow:0 6px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;}
+#globeBtn:active{transform:scale(.93);}
+.ad-overlay{display:none;position:fixed;inset:0;background:#F4F2EC;z-index:300;flex-direction:column;padding:12px;box-sizing:border-box;}
+.ad-overlay.open{display:flex;}
+.ad-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:1.1rem;}
+.ad-head-btns{display:flex;gap:8px;}
+.ad-btn{border:none;background:var(--dark);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.ad-tabs{display:flex;gap:8px;margin-bottom:10px;}
+.ad-tabs button{flex:1;border:2px solid #E2E6EE;background:#fff;border-radius:12px;padding:10px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;}
+.ad-tabs button.on{background:var(--dark);color:#fff;border-color:var(--dark);}
+.ad-search{padding:11px 14px;border:2px solid #E2E6EE;border-radius:12px;font-size:.95rem;margin-bottom:8px;font-family:'Inter',sans-serif;}
+.ad-sum{font-size:.8rem;color:#555;margin-bottom:8px;font-weight:600;}
+.ad-table-wrap{flex:1;overflow:auto;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.ad-table{width:100%;border-collapse:collapse;font-size:.74rem;min-width:470px;}
+.ad-table td.v{white-space:normal;min-width:105px;}
+.ad-table td.v small{display:block;color:#6B7078;font-weight:600;margin-top:2px;}
+.ad-table th{position:sticky;top:0;background:#1F2937;color:#fff;padding:9px 6px;text-align:left;font-weight:800;white-space:nowrap;}
+.ad-table td{padding:9px 6px;border-top:1px solid #EEF0F4;white-space:nowrap;}
+.ad-table td.r,.ad-table th.r{text-align:right;}
+.ad-table tr.tot td{font-weight:900;background:#F7F8FB;}
+.ad-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.68rem;font-weight:800;}
+.ad-badge.ready{background:#DCFCE7;color:#166534;}
+.ad-badge.sold{background:#FEE2E2;color:#991B1B;}
+/* ===== Owner-dashboard look: deep green + gold on warm white ===== */
+nav{background:#fff;border-bottom:1px solid #E4DFD2;}
+.logo{font-size:1.02rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:#14392B;}
+.logo span{color:#A87B2E;}
+.logo small{color:#6F7B74;letter-spacing:0;text-transform:none;font-weight:600;}
+.btn-back{background:#EDE7D8;color:#14392B;}
+.btn-add{color:#14392B;}
+.btn-site{background:#14392B;color:#fff;text-decoration:none;display:inline-flex;align-items:center;}
+.btn-logout{background:#FBE9E7;color:#B3261E;}
+#salesBtn{background:#EDE7D8 !important;color:#14392B !important;}
+@media (max-width:420px){.nav-btn{padding:7px 10px;font-size:.76rem;}.nav-right{gap:5px;}.logo small{display:none;}}
+.own-head{display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:1100px;margin:16px auto 0;padding:16px 18px;background:#fff;border:1px solid #E4DFD2;}
+.own-head h1{font-size:1.15rem;font-weight:800;color:#14392B;}
+.own-head p{font-size:.8rem;color:#6F7B74;margin-top:2px;}
+.add-veh{background:#C9A25C;color:#14392B;border:none;border-radius:999px;padding:11px 20px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;}
+.admin-dash{max-width:1100px;margin:14px auto;gap:10px;}
+@media (min-width:800px){.admin-dash{grid-template-columns:repeat(5,1fr);}}
+.dash-card{border:1px solid #E4DFD2;border-radius:6px;box-shadow:none;padding:18px 10px;}
+.dash-card:hover{border-color:#C9A25C;}
+.dash-sales{max-width:1100px;}
+.dash-sales h3{font-size:1.15rem;}
+.dash-sales .stat-grid{grid-template-columns:repeat(2,1fr);}
+@media (min-width:800px){.dash-sales .stat-grid{grid-template-columns:repeat(3,1fr);}}
+.dash-sales .stat-tile{border:1px solid #E4DFD2;border-radius:4px;box-shadow:none;display:flex;flex-direction:column-reverse;gap:2px;}
+.dash-sales .stat-tile b{font-size:1.5rem;}
+.dash-sales .stat-tile small{font-size:.72rem;}
+.dl-box{margin-top:18px;}
+.dl-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:10px;}
+.dl-head h3{font-size:1.15rem;margin:0;}
+.dl-head p{font-size:.78rem;color:#6F7B74;margin-top:2px;}
+.dl-all{background:#14392B;color:#fff;border:none;border-radius:999px;padding:9px 18px;font-weight:800;font-size:.8rem;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;}
+.ad-table.dl{min-width:0;}
+.dl-edit{background:#EDE7D8;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:.9rem;}
+.store-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;}
+.store-link{background:#fff;border:1px solid #E4DFD2;padding:10px 12px;font-size:.78rem;color:#4B5A52;}
+.store-row button{background:#fff;border:1px solid #E4DFD2;padding:10px 14px;font-size:.78rem;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;}
+@media (min-width:800px){.dash-sales .stat-grid{grid-template-columns:repeat(5,1fr);}.dash-sales .stat-tile.wide{grid-column:auto;}}
+.ad-table.dl th{background:#14392B;}
+/* keep the globe and the All Data screen exactly as before (navy) */
+#globeBtn{background:#1A1A2E;}
+.ad-btn{background:#1A1A2E;}
+.ad-tabs button.on{background:#1A1A2E;border-color:#1A1A2E;}
 </style>
 </head>
 <body>
@@ -239,14 +308,34 @@ footer strong{color:var(--accent);}
       <button class="nav-btn btn-back" id="backBtn" onclick="goHome()">← Back</button>
       <button class="nav-btn btn-add" id="addBtn" onclick="openAdd()">+ Add Product</button>
       <button class="nav-btn" id="salesBtn" style="background:rgba(232,180,0,0.2);color:var(--accent);display:none" onclick="openSales()">📊 Sales</button>
+      <a class="nav-btn btn-site" href="/" target="_blank" rel="noopener">Site ↗</a>
       <button class="nav-btn btn-logout" onclick="doLogout()">Logout</button>
     </div>
   </nav>
 
+  <button id="globeBtn" aria-label="All data" title="All data" onclick="openAllData()" style="display:none">🌐</button>
+
+  <div class="ad-overlay" id="allDataOverlay">
+    <div class="ad-head">
+      <b>🌐 All Data</b>
+      <div class="ad-head-btns">
+        <button class="ad-btn" onclick="exportAllData()">⬇ CSV</button>
+        <button class="ad-btn" onclick="closeAllData()">✕</button>
+      </div>
+    </div>
+    <div class="ad-tabs">
+      <button id="adTabVeh" class="on" onclick="adSetTab('veh')">🚛 Vehicles</button>
+      <button id="adTabJob" onclick="adSetTab('job')">🔧 Service Jobs</button>
+    </div>
+    <input id="adSearch" class="ad-search" type="search" placeholder="Search..." oninput="adRender()"/>
+    <div class="ad-sum" id="adSum"></div>
+    <div class="ad-table-wrap" id="adTable"><div class="loading">Loading...</div></div>
+  </div>
+
   <div id="homePage">
-    <div class="home-hero" id="adminHero">
-      <h1><span class="ac">Vignesheng</span> Admin 🛠️</h1>
-      <p>Manage categories and products</p>
+    <div class="own-head" id="adminHero">
+      <div><h1>Owner dashboard</h1><p>Manage your workshop and vehicle listings</p></div>
+      <button class="add-veh" onclick="addVehicleShortcut()">+ Add vehicle</button>
     </div>
     <div class="admin-dash" id="adminDash">
       <div class="dash-card" onclick="openSection('service')"><span>🔧</span><b>Our Services</b><small>Welding, body building, repair</small></div>
@@ -254,6 +343,23 @@ footer strong{color:var(--accent);}
       <div class="dash-card" onclick="openSection('gallery')"><span>📸</span><b>Gallery</b><small>Before / After photos</small></div>
       <div class="dash-card" onclick="openSection('settings')"><span>ℹ️</span><b>About &amp; Contact</b><small>Text, phone, address</small></div>
       <div class="dash-card" onclick="openSection('reviews')"><span>⭐</span><b>Reviews</b><small>Approve customer reviews</small></div>
+    </div>
+    <div class="dash-sales" id="dashSales" style="display:none">
+      <h3>🚛 Vehicle sales</h3>
+      <div class="stat-grid" id="dashSalesGrid"><div class="loading">Loading...</div></div>
+      <div class="dl-box">
+        <div class="dl-head">
+          <div><h3>Your vehicle listings</h3><p>Latest vehicles. Edit pannina ✏️ click pannunga.</p></div>
+          <button class="dl-all" onclick="openAllData()">View all →</button>
+        </div>
+        <div class="ad-table-wrap" id="dashListBody"><div class="loading">Loading...</div></div>
+        <div class="store-row">
+          <span class="store-link">Store link: <b id="storeLink"></b></span>
+          <button onclick="copyStore()">Copy link</button>
+          <button onclick="shareStore()">Share showroom</button>
+        </div>
+      </div>
+      <div class="dash-hint">Full list paarkka keela right side 🌐 click pannunga</div>
     </div>
     <div class="sec-hdr" id="secHdr" style="display:none"><h2 id="secTitle"></h2></div>
     <div class="stat-wrap" id="statsBox" style="display:none"></div>
@@ -681,8 +787,11 @@ function renderHome(){
   statView=null;
   var dash=(adminTab==='');
   var isCat=(adminTab==='service'||adminTab==='marketplace');
-  document.getElementById('adminHero').style.display=dash?'block':'none';
+  document.getElementById('adminHero').style.display=dash?'flex':'none';
   document.getElementById('adminDash').style.display=dash?'grid':'none';
+  document.getElementById('dashSales').style.display=dash?'block':'none';
+  document.getElementById('globeBtn').style.display=dash?'flex':'none';
+  if(dash)loadDashStats();
   document.getElementById('secHdr').style.display=dash?'none':'block';
   document.getElementById('secTitle').textContent=SEC_TITLES[adminTab]||'';
   document.getElementById('catGrid').style.display=isCat?'':'none';
@@ -1105,6 +1214,161 @@ async function loadSettingsAdmin(){
     ['about','address','phone','whatsapp'].forEach(function(k){document.getElementById('st-'+k).value=st[k]||'';});
   }catch(e){showToast('Load failed');}
 }
+// ---- OWNER DASHBOARD: add vehicle, listings, store link ----
+async function addVehicleShortcut(){
+  var mk=cats.filter(function(c){return c.type!=='service';});
+  if(!mk.length){showToast('Mudhalla Buy & Sell la oru category add pannunga');openSection('marketplace');return;}
+  if(mk.length===1){await goCategory(mk[0].id);openAdd();return;}
+  openSection('marketplace');showToast('Endha category ku vehicle add pannanum nu select pannunga');
+}
+async function editVehicle(id,catName){
+  var c=cats.find(function(x){return x.name===catName;});
+  if(!c){showToast('Category kidaikkala');return;}
+  await goCategory(c.id);openEdit(id);
+}
+async function loadDashList(){
+  var box=document.getElementById('dashListBody');
+  document.getElementById('storeLink').textContent=storeUrl().replace(/^https?:\/\//,'');
+  await adLoadVehicles();
+  var rows=adVeh.slice(0,8);
+  if(!rows.length){box.innerHTML='<div class="loading">Innum vehicles illa. "+ Add vehicle" click pannunga.</div>';return;}
+  var h='<table class="ad-table dl"><thead><tr><th>Vehicle</th><th>Status</th><th class="r">Price</th><th>Edit</th></tr></thead><tbody>';
+  rows.forEach(function(v){
+    var sold=Number(v.sold)===1;
+    h+='<tr><td class="v"><b>'+esc(v.title)+'</b><small>'+esc(((v.category_emoji||'')+' '+(v.category_name||'')+(v.location?' · '+v.location:'')).trim())+'</small></td>'
+      +'<td><span class="ad-badge '+(sold?'sold':'ready')+'">'+(sold?'Sold':'Ready')+'</span></td>'
+      +'<td class="r">'+adMoney(v.price)+'</td>'
+      +'<td><button class="dl-edit" data-id="'+v.id+'" data-cat="'+esc(v.category_name||'')+'" onclick="editVehicle(+this.dataset.id,this.dataset.cat)" aria-label="Edit">✏️</button></td></tr>';
+  });
+  h+='</tbody></table>';
+  box.innerHTML=h;
+}
+function storeUrl(){return /^https?:/.test(location.origin||'')?location.origin:'https://vignesheng.up.railway.app';}
+function copyStore(){
+  if(navigator.clipboard){navigator.clipboard.writeText(storeUrl()).then(function(){showToast('✅ Link copied');});}
+  else{showToast(storeUrl());}
+}
+function shareStore(){
+  if(navigator.share){navigator.share({title:'Vignesheng',url:storeUrl()}).catch(function(){});}
+  else{copyStore();}
+}
+
+// ---- DASHBOARD VEHICLE SALES + ALL DATA (globe) ----
+async function loadDashStats(){
+  var g=document.getElementById('dashSalesGrid');
+  try{
+    var res=await fetch(API+'/stats',{headers:{'authorization':token}});
+    if(!res.ok)throw new Error('stats');
+    var st=await res.json();statsData=st;
+    var m=st.market.all;
+    g.innerHTML=
+      '<div class="stat-tile"><small>🚛 Vehicles listed</small><b>'+m.listed+'</b></div>'
+     +'<div class="stat-tile"><small>🟢 Ready to sell</small><b>'+m.in_stock+'</b></div>'
+     +'<div class="stat-tile"><small>🔴 Sold</small><b>'+m.sold_count+'</b></div>'
+     +'<div class="stat-tile"><small>Sales total</small><b>'+rupee(m.sales_total)+'</b></div>'
+     +plTile('Net (vitta - vangina)',m.profit);
+  }catch(e){g.innerHTML='<div class="stat-note">Data load aagala. Page refresh pannunga.</div>';}
+  loadDashList();
+}
+
+var adTab='veh',adVeh=[],adJobs=[];
+function adMoney(n){return (n===null||n===undefined||n==='')?'—':rupee(Number(n));}
+function adDate(d){if(!d)return '—';var x=new Date(d);return isNaN(x)?'—':x.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+async function openAllData(){
+  document.getElementById('allDataOverlay').classList.add('open');
+  document.getElementById('adSearch').value='';
+  document.getElementById('adTable').innerHTML='<div class="loading">Loading...</div>';
+  adTab='veh';adSyncTabs();
+  await Promise.all([adLoadVehicles(),adLoadJobs()]);
+  adRender();
+}
+function closeAllData(){document.getElementById('allDataOverlay').classList.remove('open');}
+function adSetTab(t){adTab=t;document.getElementById('adSearch').value='';adSyncTabs();adRender();}
+function adSyncTabs(){
+  document.getElementById('adTabVeh').className=(adTab==='veh')?'on':'';
+  document.getElementById('adTabJob').className=(adTab==='job')?'on':'';
+}
+async function adLoadVehicles(){
+  adVeh=[];
+  try{
+    var res=await fetch(API+'/admin/vehicles',{headers:{'authorization':token}});
+    if(!res.ok)throw new Error('no endpoint');
+    adVeh=await res.json();return;
+  }catch(e){}
+  // fallback when server.js has no /admin/vehicles yet: read category by category
+  try{
+    var mk=cats.filter(function(c){return c.type!=='service';});
+    for(var i=0;i<mk.length;i++){
+      var r=await fetch(API+'/products/'+mk[i].id,{headers:{'authorization':token}});
+      var list=await r.json();
+      list.forEach(function(p){adVeh.push({id:p.id,title:p.title,price:p.price,cost_price:p.cost_price,sold:p.sold,sold_at:p.sold_at,created_at:p.created_at,category_name:mk[i].name,category_emoji:mk[i].emoji});});
+    }
+    adVeh.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  }catch(e){adVeh=[];}
+}
+async function adLoadJobs(){
+  try{
+    var res=await fetch(API+'/jobs',{headers:{'authorization':token}});
+    adJobs=res.ok?await res.json():[];
+  }catch(e){adJobs=[];}
+}
+function adRows(){
+  var q=(document.getElementById('adSearch').value||'').trim().toLowerCase();
+  if(adTab==='veh')return adVeh.filter(function(v){return !q||((v.title||'')+' '+(v.category_name||'')+' '+(v.location||'')).toLowerCase().indexOf(q)>-1;});
+  return adJobs.filter(function(j){return !q||((j.title||'')+' '+(j.category_name||'')).toLowerCase().indexOf(q)>-1;});
+}
+function adRender(){
+  var rows=adRows(),box=document.getElementById('adTable'),sum=document.getElementById('adSum'),h;
+  if(adTab==='veh'){
+    var sold=rows.filter(function(v){return Number(v.sold)===1;});
+    var sales=0,cost=0,net=0,missing=0;
+    sold.forEach(function(v){sales+=Number(v.price)||0;if(v.cost_price!==null&&v.cost_price!==undefined&&v.cost_price!==''){cost+=Number(v.cost_price);net+=Number(v.price)-Number(v.cost_price);}else missing++;});
+    sum.textContent=rows.length+' vehicles · '+(rows.length-sold.length)+' ready · '+sold.length+' sold';
+    if(!rows.length){box.innerHTML='<div class="loading">Vehicles illa</div>';return;}
+    h='<table class="ad-table"><thead><tr><th>Vehicle</th><th>Status</th><th class="r">Price</th><th class="r">Cost</th><th class="r">Profit</th><th>Date</th></tr></thead><tbody>';
+    rows.forEach(function(v){
+      var isSold=Number(v.sold)===1,hasCost=v.cost_price!==null&&v.cost_price!==undefined&&v.cost_price!=='';
+      var profit=(isSold&&hasCost)?Number(v.price)-Number(v.cost_price):null;
+      var pc=profit===null?'—':'<span style="color:'+(profit>=0?'#16A34A':'#DC2626')+';font-weight:800">'+rupee(profit)+'</span>';
+      h+='<tr><td class="v"><b>'+esc(v.title)+'</b><small>'+esc((v.category_emoji||'')+' '+(v.category_name||''))+'</small></td>'
+        +'<td><span class="ad-badge '+(isSold?'sold':'ready')+'">'+(isSold?'Sold':'Ready')+'</span></td>'
+        +'<td class="r">'+adMoney(v.price)+'</td><td class="r">'+adMoney(v.cost_price)+'</td><td class="r">'+pc+(isSold&&!hasCost?' ⚠️':'')+'</td>'
+        +'<td>'+adDate(isSold?v.sold_at:v.created_at)+'</td></tr>';
+    });
+    h+='<tr class="tot"><td>Total (sold)</td><td></td><td class="r">'+rupee(sales)+'</td><td class="r">'+rupee(cost)+'</td><td class="r" style="color:'+(net>=0?'#16A34A':'#DC2626')+'">'+rupee(net)+'</td><td></td></tr></tbody></table>';
+    if(missing)h+='<div class="stat-note" style="margin:10px">⚠️ '+missing+' sold vehicle ku cost price illa, adhu Profit total la count aagala.</div>';
+    box.innerHTML=h;
+  }else{
+    var inc=0,exp=0;rows.forEach(function(j){inc+=Number(j.income)||0;exp+=Number(j.expense)||0;});
+    sum.textContent=rows.length+' jobs · Income '+rupee(inc)+' · Expense '+rupee(exp);
+    if(!rows.length){box.innerHTML='<div class="loading">Jobs illa</div>';return;}
+    h='<table class="ad-table"><thead><tr><th>Date</th><th>Job</th><th>Service</th><th class="r">Income</th><th class="r">Expense</th><th class="r">Net</th></tr></thead><tbody>';
+    rows.forEach(function(j){
+      var n=(Number(j.income)||0)-(Number(j.expense)||0);
+      h+='<tr><td>'+adDate(j.job_date)+'</td><td><b>'+esc(j.title||'—')+'</b></td><td>'+esc(j.category_name||'—')+'</td><td class="r">'+rupee(Number(j.income)||0)+'</td><td class="r">'+rupee(Number(j.expense)||0)+'</td><td class="r"><span style="color:'+(n>=0?'#16A34A':'#DC2626')+';font-weight:800">'+rupee(n)+'</span></td></tr>';
+    });
+    h+='<tr class="tot"><td>Total</td><td></td><td></td><td class="r">'+rupee(inc)+'</td><td class="r">'+rupee(exp)+'</td><td class="r" style="color:'+(inc-exp>=0?'#16A34A':'#DC2626')+'">'+rupee(inc-exp)+'</td></tr></tbody></table>';
+    box.innerHTML=h;
+  }
+}
+function exportAllData(){
+  var rows=adRows(),lines;
+  function q(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}
+  if(adTab==='veh'){
+    lines=[['Vehicle','Category','Status','Price','Cost','Profit','Date']];
+    rows.forEach(function(v){var s=Number(v.sold)===1,hc=v.cost_price!==null&&v.cost_price!==undefined&&v.cost_price!=='';
+      lines.push([v.title,v.category_name,s?'Sold':'Ready',v.price,hc?v.cost_price:'',(s&&hc)?Number(v.price)-Number(v.cost_price):'',adDate(s?v.sold_at:v.created_at)]);});
+  }else{
+    lines=[['Date','Job','Service','Income','Expense','Net']];
+    rows.forEach(function(j){lines.push([adDate(j.job_date),j.title,j.category_name,j.income,j.expense,(Number(j.income)||0)-(Number(j.expense)||0)]);});
+  }
+  var csv=lines.map(function(r){return r.map(q).join(',');}).join('\n');
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv'}));
+  a.download=(adTab==='veh'?'vehicles':'service-jobs')+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
 // ---- CUSTOMER REVIEWS (customers write on the site, admin approves) ----
 async function loadRevAdmin(){
   var box=document.getElementById('revList');
@@ -1125,10 +1389,12 @@ async function loadRevAdmin(){
       var st=document.createElement('span');st.style.color='#F5A400';st.textContent='★'.repeat(n)+'☆'.repeat(5-n);
       h.appendChild(nm);h.appendChild(st);
       var tx=document.createElement('div');tx.style.cssText='margin:6px 0 8px;font-size:.9rem;color:#4A4F57';tx.textContent=r.review_text;
+      var tg=document.createElement('div');tg.style.cssText='display:inline-block;background:#EEF2FF;color:#3B4A7A;border-radius:10px;padding:3px 10px;font-size:.75rem;font-weight:800;margin-bottom:8px';
+      tg.textContent='For: '+(r.target_title||'—');
       var row=document.createElement('div');row.style.cssText='display:flex;gap:8px';
       if(isPending){var ap=document.createElement('button');ap.className='m-save';ap.style.cssText='flex:1;padding:8px';ap.textContent='✅ Approve';ap.onclick=function(){approveRev(r.id);};row.appendChild(ap);}
       var bt=document.createElement('button');bt.className='btn-del';bt.textContent='🗑️ Delete';bt.onclick=function(){delRev(r.id);};row.appendChild(bt);
-      d.appendChild(h);d.appendChild(tx);d.appendChild(row);box.appendChild(d);
+      d.appendChild(h);d.appendChild(tx);d.appendChild(tg);d.appendChild(row);box.appendChild(d);
     }
     if(!list.length){box.innerHTML='<div class="loading">Innum customer reviews varala.</div>';return;}
     head('⏳ Waiting for approval ('+pending.length+')');

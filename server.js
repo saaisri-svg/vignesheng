@@ -793,7 +793,7 @@ app.get('/api/stats', authMiddleware, async (req, res) => {
   }
 });
 
-// ---- REVIEWS (customers submit, admin approves) + light search index ----
+// ---- REVIEWS (customers submit for a product / service, admin approves) + light search index ----
 db.query(
   `CREATE TABLE IF NOT EXISTS reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -801,15 +801,25 @@ db.query(
     rating TINYINT,
     review_text TEXT,
     approved TINYINT NOT NULL DEFAULT 1,
+    target_type VARCHAR(10) NULL,
+    target_id INT NULL,
+    target_title VARCHAR(200) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`,
   (err) => {
     if (err) return console.error('reviews table error:', err.message);
-    // older installs: add the approved column once (old reviews stay approved)
-    db.query("SHOW COLUMNS FROM reviews LIKE 'approved'", (e2, cols) => {
-      if (e2 || (cols && cols.length)) return;
-      db.query('ALTER TABLE reviews ADD COLUMN approved TINYINT NOT NULL DEFAULT 1', (e3) => {
-        if (e3) console.error('reviews alter error:', e3.message);
+    // older installs: add any missing column once (old reviews stay approved)
+    [
+      ['approved', 'TINYINT NOT NULL DEFAULT 1'],
+      ['target_type', 'VARCHAR(10) NULL'],
+      ['target_id', 'INT NULL'],
+      ['target_title', 'VARCHAR(200) NULL']
+    ].forEach(([col, ddl]) => {
+      db.query('SHOW COLUMNS FROM reviews LIKE ?', [col], (e2, rows) => {
+        if (e2 || (rows && rows.length)) return;
+        db.query('ALTER TABLE reviews ADD COLUMN ' + col + ' ' + ddl, (e3) => {
+          if (e3) console.error('reviews alter error (' + col + '):', e3.message);
+        });
       });
     });
   }
@@ -821,10 +831,14 @@ function clientIp(req) {
     .split(',')[0].trim();
 }
 
-// Public: approved reviews only
+// Public: approved reviews only (with what they are about)
 app.get('/api/reviews', (req, res) => {
   db.query(
-    'SELECT id, name, rating, review_text FROM reviews WHERE approved = 1 ORDER BY id DESC LIMIT 50',
+    `SELECT r.id, r.name, r.rating, r.review_text, r.target_type, r.target_id, r.target_title,
+            p.category_id AS product_category_id
+     FROM reviews r
+     LEFT JOIN products p ON r.target_type = 'product' AND r.target_id = p.id
+     WHERE r.approved = 1 ORDER BY r.id DESC LIMIT 100`,
     (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);
@@ -842,6 +856,11 @@ app.post('/api/reviews/submit', (req, res) => {
   if (!name || text.length < 5 || !(rating >= 1 && rating <= 5)) {
     return res.status(400).json({ error: 'Name, review (min 5 letters) and rating required' });
   }
+  const ttype = ['product', 'category'].includes(body.target_type) ? body.target_type : 'general';
+  const tid = parseInt(body.target_id, 10);
+  if (ttype !== 'general' && !(tid > 0)) {
+    return res.status(400).json({ error: 'Please select what you are reviewing' });
+  }
   const ip = clientIp(req);
   const now = Date.now();
   reviewHits[ip] = (reviewHits[ip] || []).filter((t) => now - t < 3600000);
@@ -849,20 +868,39 @@ app.post('/api/reviews/submit', (req, res) => {
     return res.status(429).json({ error: 'Too many reviews from this device. Please try later.' });
   }
   reviewHits[ip].push(now);
-  db.query(
-    'INSERT INTO reviews (name, rating, review_text, approved) VALUES (?, ?, ?, 0)',
-    [name, rating, text],
-    (err) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ success: true });
-    }
-  );
+
+  const insert = (title) => {
+    db.query(
+      'INSERT INTO reviews (name, rating, review_text, approved, target_type, target_id, target_title) VALUES (?, ?, ?, 0, ?, ?, ?)',
+      [name, rating, text, ttype, ttype === 'general' ? null : tid, title],
+      (err) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
+      }
+    );
+  };
+  // the title is read from our own database, so it cannot be faked by the visitor
+  if (ttype === 'product') {
+    db.query('SELECT title FROM products WHERE id=?', [tid], (e, r) => {
+      if (e) return res.status(500).json({ error: e.message });
+      if (!r || !r.length) return res.status(400).json({ error: 'Selected item not found' });
+      insert(r[0].title);
+    });
+  } else if (ttype === 'category') {
+    db.query('SELECT name FROM categories WHERE id=?', [tid], (e, r) => {
+      if (e) return res.status(500).json({ error: e.message });
+      if (!r || !r.length) return res.status(400).json({ error: 'Selected item not found' });
+      insert(r[0].name);
+    });
+  } else {
+    insert('Vignesheng (General)');
+  }
 });
 
 // Admin: all reviews, waiting ones first
 app.get('/api/reviews/all', authMiddleware, (req, res) => {
   db.query(
-    'SELECT id, name, rating, review_text, approved, created_at FROM reviews ORDER BY approved ASC, id DESC',
+    'SELECT id, name, rating, review_text, approved, target_type, target_title, created_at FROM reviews ORDER BY approved ASC, id DESC',
     (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);
@@ -891,6 +929,21 @@ app.get('/api/search-index', (req, res) => {
   db.query(
     `SELECT id, title, price, category_id, sub_category, location, sold
      FROM products ORDER BY created_at DESC LIMIT 1000`,
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+// Admin: every vehicle (stock + sold) with cost price, for the "All Data" screen
+app.get('/api/admin/vehicles', authMiddleware, (req, res) => {
+  db.query(
+    `SELECT p.id, p.title, p.price, p.cost_price, p.sold, p.sold_at, p.created_at,
+            p.location, p.sub_category, c.name AS category_name, c.emoji AS category_emoji
+     FROM products p JOIN categories c ON p.category_id = c.id
+     WHERE c.type <> 'service'
+     ORDER BY p.created_at DESC LIMIT 2000`,
     (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);

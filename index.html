@@ -8,9 +8,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dark:#15171A;--accent:#FF7A1F;--orange:#FF7A1F;
-  --teal:#23272D;--teal-dark:#15171A;--teal-light:#F1EDE6;
-  --bg:#F6F3EE;--white:#fff;--mid:#4A4F57;--muted:#6B7078;
+  --dark:#14392B;--accent:#C9A25C;--orange:#C9A25C;
+  --teal:#1E4A38;--teal-dark:#14392B;--teal-light:#EDE7D8;
+  --bg:#F4F2EC;--white:#fff;--mid:#4B5A52;--muted:#6F7B74;
   --shadow:0 4px 20px rgba(0,0,0,0.10);--r:14px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
@@ -20,13 +20,13 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;
 .logo{font-size:1.4rem;font-weight:900;color:#fff;}
 .logo span{color:var(--accent);}
 #homePage{display:block;}
-#productsPage,#buySellPage,#galleryPage,#servicesPage{display:none;}
+#productsPage,#servicesPage,#reviewsPage,#aboutPage,#contactPage{display:none;}
 .home-hero{background:linear-gradient(135deg,var(--dark) 0%,#2D2D5E 100%);
   padding:36px 20px 44px;text-align:center;}
 .home-hero h1{color:#fff;font-size:1.8rem;font-weight:900;margin-bottom:6px;}
 .home-hero p{color:rgba(255,255,255,.6);font-size:.9rem;}
 .home-hero .ac{color:var(--accent);}
-.home-hero{position:relative;overflow:hidden;border-bottom:3px solid var(--accent);background:linear-gradient(135deg,#15171A,#23272D) !important;}
+.home-hero{position:relative;overflow:hidden;border-bottom:3px solid var(--accent);background:linear-gradient(135deg,#14392B,#1E4A38) !important;}
 .hero-kick{font-size:.72rem;font-weight:800;letter-spacing:2px;color:var(--accent);margin-bottom:8px;animation:up .7s both;}
 .home-hero h1{animation:up .7s .15s both;}
 .seam{height:4px;width:0;margin:12px auto 10px;background:var(--accent);box-shadow:0 0 14px var(--accent);border-radius:2px;animation:seam 1.4s .5s forwards;}
@@ -49,11 +49,11 @@ nav{background:var(--dark);height:60px;display:flex;align-items:center;
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes puff{0%{transform:translate(0,0) scale(.4);opacity:.7}100%{transform:translate(-40px,-30px) scale(1.6);opacity:0}}
 @keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-150px);opacity:0}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,122,31,.6)}50%{box-shadow:0 0 0 9px rgba(255,122,31,0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,162,92,.6)}50%{box-shadow:0 0 0 9px rgba(201,162,92,0)}}
 .nav-links a.nav-cta{animation:pulse 2s infinite;}
 .sec-h::after{content:'';display:block;height:3px;width:56px;margin-top:6px;border-radius:2px;background:var(--accent);box-shadow:0 0 10px var(--accent);}
 .cat-card{animation:up .6s both;border:2px solid transparent;}
-.cat-card:hover{border-color:var(--accent);box-shadow:0 8px 26px rgba(255,122,31,.25);}
+.cat-card:hover{border-color:var(--accent);box-shadow:0 8px 26px rgba(201,162,92,.25);}
 .cat-card:nth-child(2){animation-delay:.1s}.cat-card:nth-child(3){animation-delay:.2s}.cat-card:nth-child(4){animation-delay:.3s}
 /* gallery before/after weld slider */
 .cmp{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:12px;background:#000;touch-action:pan-y;}
@@ -201,13 +201,13 @@ footer strong{color:var(--accent);}
 .icon-btn:active{background:rgba(255,255,255,.12);}
 nav .back-btn{margin-left:10px;}
 #drawerBg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;opacity:0;visibility:hidden;transition:opacity .25s;}
-#drawer{position:fixed;top:0;right:0;bottom:0;width:min(78vw,300px);background:#15171A;z-index:1001;transform:translateX(100%);transition:transform .28s;padding:16px 0;overflow:auto;color:#fff;}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(78vw,300px);background:#14392B;z-index:1001;transform:translateX(100%);transition:transform .28s;padding:16px 0;overflow:auto;color:#fff;}
 body.menu-open #drawerBg{opacity:1;visibility:visible;}
 body.menu-open #drawer{transform:none;}
 .drawer-top{display:flex;justify-content:space-between;align-items:center;padding:0 12px 10px 22px;font-weight:900;font-size:1.1rem;}
-#drawer a{display:flex;gap:12px;align-items:center;padding:14px 22px;font-weight:700;color:#E8EAED;cursor:pointer;border-bottom:1px solid #23272D;}
+#drawer a{display:flex;gap:12px;align-items:center;padding:14px 22px;font-weight:700;color:#E8EAED;cursor:pointer;border-bottom:1px solid #1E4A38;}
 #drawer a.hl{background:var(--accent);color:#1A1208;margin:8px 16px 12px;border-radius:12px;border:none;}
-#searchPanel{position:fixed;inset:0;background:#15171A;z-index:1002;display:none;flex-direction:column;padding:14px;}
+#searchPanel{position:fixed;inset:0;background:#14392B;z-index:1002;display:none;flex-direction:column;padding:14px;}
 #searchPanel.open{display:flex;}
 .sp-bar{display:flex;gap:8px;align-items:center;}
 .sp-bar input{flex:1;padding:13px 16px;border-radius:14px;border:none;font-size:1rem;font-family:inherit;}
@@ -215,8 +215,8 @@ body.menu-open #drawer{transform:none;}
 #spResults{margin-top:14px;overflow:auto;flex:1;}
 .sp-item{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;}
 .sp-item b{font-size:.92rem;}
-.sp-item small{color:#6B7078;display:block;margin-top:2px;font-size:.75rem;}
-.sp-tag{font-size:.65rem;font-weight:800;background:#F1EDE6;border-radius:8px;padding:3px 8px;white-space:nowrap;}
+.sp-item small{color:#6F7B74;display:block;margin-top:2px;font-size:.75rem;}
+.sp-tag{font-size:.65rem;font-weight:800;background:#EDE7D8;border-radius:8px;padding:3px 8px;white-space:nowrap;}
 .sp-hint{color:#9AA0A8;text-align:center;padding:30px 10px;font-size:.9rem;}
 .bs-search{margin:16px 16px 0;background:#fff;border-radius:14px;padding:13px 16px;color:var(--muted);box-shadow:var(--shadow);cursor:pointer;font-weight:600;}
 @media (max-width:380px){.logo{font-size:1.15rem;}.nav-right .nav-cta{padding:7px 9px;font-size:.7rem;}nav{padding:0 10px;}}
@@ -225,8 +225,8 @@ body.menu-open #drawer{transform:none;}
 .b-track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
 .b-slide{min-width:100%;flex-shrink:0;box-sizing:border-box;min-height:310px;border-bottom:0 !important;}
 .b-slide.s2,.b-slide.s3{display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:40px;}
-.b-slide.s2{background:linear-gradient(135deg,#0F2A44,#15171A) !important;}
-.b-slide.s3{background:linear-gradient(135deg,#3A1A08,#15171A) !important;}
+.b-slide.s2{background:linear-gradient(135deg,#0F2A44,#14392B) !important;}
+.b-slide.s3{background:linear-gradient(135deg,#3A1A08,#14392B) !important;}
 .b-dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px;z-index:3;}
 .b-dots b{width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);cursor:pointer;transition:all .3s;}
 .b-dots b.on{width:22px;background:var(--accent);}
@@ -247,8 +247,8 @@ body.menu-open #drawer{transform:none;}
 /* professional 2-column category cards */
 .cat-grid{grid-template-columns:1fr 1fr;gap:14px;padding:16px;}
 .sec-block .cat-grid{padding:16px 0;}
-.cat-card{border-radius:20px;background:#15171A;}
-.cat-img{aspect-ratio:4/5;background:linear-gradient(135deg,#3A2A1E,#15171A);color:#fff;}
+.cat-card{border-radius:20px;background:#14392B;}
+.cat-img{aspect-ratio:4/5;background:linear-gradient(135deg,#1E4A38,#14392B);color:#fff;}
 .cat-label{font-size:1.02rem;padding:14px 14px 16px;}
 .cat-go{position:absolute;right:10px;top:10px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#1A1208;display:flex;align-items:center;justify-content:center;font-weight:900;z-index:2;}
 .rev-empty{color:var(--mid);font-size:.9rem;background:#fff;border-radius:14px;padding:16px;margin:10px 0;box-shadow:var(--shadow);}
@@ -268,29 +268,150 @@ body.menu-open #drawer{transform:none;}
 .rv-btns button{flex:1;padding:12px;border:none;border-radius:12px;font-weight:800;font-family:inherit;cursor:pointer;}
 .rv-cancel{background:#EEE9E0;color:var(--dark);}
 .rv-send{background:var(--accent);color:#1A1208;}
+.rev-all{display:block;text-align:center;color:var(--dark);font-weight:800;font-size:.9rem;margin:8px 0 0;cursor:pointer;text-decoration:underline;}
+.rev-all[hidden]{display:none;}
+.rp-wrap{max-width:600px;margin:0 auto;padding:16px;}
+.rp-wrap .rev-card{min-width:0;margin-bottom:12px;}
+.rev-chip{display:inline-block;background:#EDE7D8;border-radius:10px;padding:4px 10px;font-size:.74rem;font-weight:800;color:var(--mid);margin:0 0 12px;cursor:pointer;}
+.rev-box select{width:100%;padding:12px;border:2px solid #E5E1D9;border-radius:12px;font-family:inherit;font-size:.95rem;margin-bottom:10px;background:#fff;box-sizing:border-box;}
+/* ===== Garage-style theme: deep green + gold on warm white ===== */
+:root{--line:#E4DFD2;--gold-text:#8A6420;}
+body{background:var(--bg);}
+nav{background:#fff !important;border-bottom:1px solid var(--line);box-shadow:none !important;height:64px;padding:0 16px;}
+.logo{font-size:1.1rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--dark);}
+.logo span{color:#A87B2E;}
+nav .back-btn{background:#EDE7D8;color:var(--dark);border:none;}
+.icon-btn{color:var(--dark);}
+.icon-btn:active{background:#EDE7D8;}
+.nav-right .nav-cta{background:var(--dark);color:#fff;animation:none;}
+.nav-links-d{display:none;gap:24px;margin-left:30px;}
+.nav-links-d a{font-size:.88rem;font-weight:600;color:var(--mid);cursor:pointer;padding:22px 0 19px;border-bottom:3px solid transparent;}
+.nav-links-d a:hover{color:var(--dark);}
+.nav-links-d a.on{color:var(--dark);border-bottom-color:#C9A25C;}
+@media (min-width:900px){.nav-links-d{display:flex;}.nav-right .nav-cta{display:none !important;}#menuBtn{display:none;}}
+#drawer a.hl{background:#C9A25C;color:#14392B;}
+.eyebrow{font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold-text);margin-bottom:6px;}
+.sec-block{max-width:1100px;}
+.sec-h{font-size:1.5rem;font-weight:700;color:var(--dark);}
+.sec-h::after{display:none;}
+.sec-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;}
+.pg-head{max-width:1100px;margin:0 auto;padding:30px 16px 8px;}
+.pg-head h1{font-size:2rem;line-height:1.15;font-weight:700;color:var(--dark);margin:4px 0 10px;}
+.pg-p{color:var(--mid);line-height:1.65;max-width:640px;}
+.pg-h3{font-size:1.15rem;font-weight:700;margin:22px 0 6px;color:var(--dark);}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 0;}
+.tags span{background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px 14px;font-size:.8rem;font-weight:600;color:var(--dark);}
+.g-btn{display:inline-block;background:var(--dark);color:#fff;border-radius:999px;padding:12px 26px;font-weight:800;font-size:.85rem;cursor:pointer;margin-top:12px;}
+.steps{max-width:1100px;margin:0 auto;padding:12px 16px 4px;display:grid;grid-template-columns:1fr;gap:10px;}
+@media (min-width:700px){.steps{grid-template-columns:repeat(5,1fr);}}
+.step{background:#fff;border-top:3px solid #C9A25C;padding:14px;}
+.step b{display:block;font-size:.85rem;margin-bottom:6px;color:var(--dark);}
+.step span{font-size:.78rem;color:var(--mid);line-height:1.5;}
+/* banner */
+.b-slide.s2{background:linear-gradient(135deg,#1E4A38,#14392B) !important;}
+.b-slide.s3{background:linear-gradient(135deg,#2D4F33,#14392B) !important;}
+.b-btn{background:#C9A25C;color:#14392B;border-radius:999px;padding:12px 26px;}
+.banner{border-bottom:0;}
+.b-dots b.on{background:#C9A25C;}
+.home-hero h1{font-weight:700;}
+/* recently added */
+.rc-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px;}
+@media (min-width:800px){.rc-grid{grid-template-columns:repeat(3,1fr);}}
+.rc-card{display:flex;background:#fff;border:1px solid var(--line);cursor:pointer;min-height:130px;overflow:hidden;}
+.rc-card:hover{border-color:#C9A25C;}
+.rc-img{width:40%;flex-shrink:0;background:#EDE7D8;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.rc-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.rc-info{padding:14px;display:flex;flex-direction:column;gap:6px;min-width:0;}
+.rc-info b{font-size:.92rem;color:var(--dark);}
+.rc-info small{color:var(--muted);font-size:.78rem;}
+.rc-price{font-weight:800;color:var(--dark);margin-top:auto;}
+.rc-sold{display:inline-block;background:#C0392B;color:#fff;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:4px;margin-left:6px;}
+/* vehicles page */
+.page-hdr{max-width:1100px;margin:0 auto;padding:30px 16px 0;align-items:flex-end;justify-content:space-between;}
+.page-hdr h2{font-size:2rem;font-weight:700;color:var(--dark);}
+.pg-sub{color:var(--mid);font-size:.9rem;margin-top:6px;}
+.page-badge{background:#EDE7D8;color:var(--dark);border-radius:999px;}
+.search-row,.chips-row,.mini-stats,.p-section{max-width:1100px;margin-left:auto;margin-right:auto;}
+.mini-stats{display:none;}
+.search-row input{border:1px solid var(--line);border-radius:6px;background:#fff;}
+.chip{border-radius:6px;border:1px solid var(--line);font-weight:600;color:var(--dark);}
+.chip.active,.chip:hover{background:var(--dark);border-color:var(--dark);color:#fff;}
+@media (min-width:800px){.grid{grid-template-columns:repeat(3,1fr);gap:16px;}}
+.card{border-radius:6px;border:1px solid var(--line);box-shadow:none;}
+.card:hover{border-color:#C9A25C;transform:translateY(-2px);}
+.sl-wrap{height:190px;background:#EDE7D8;}
+.sl-slide img{object-fit:cover;background:#EDE7D8;}
+.c-title{font-size:.9rem;font-weight:700;}
+.c-price{font-size:1rem;}
+/* detail */
+.det-wrap{border-radius:10px;}
+.det-tags{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.det-tag{background:#fff;border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:.78rem;color:var(--dark);font-weight:600;}
+.cta-call{background:var(--dark);border-radius:999px;padding:12px;}
+.cta-wa{background:#C9A25C;color:#14392B;border-radius:999px;padding:12px;}
+/* service cards */
+.cat-grid{max-width:1100px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+.sec-block .cat-grid{padding:14px 0;}
+.cat-card{border-radius:10px;}
+/* contact */
+.ct-grid{max-width:1100px;margin:0 auto;padding:12px 16px 36px;display:grid;gap:14px;grid-template-columns:1fr;}
+@media (min-width:800px){.ct-grid{grid-template-columns:1fr 1.4fr;}}
+.ct-card{background:#fff;border:1px solid var(--line);padding:16px;margin-bottom:10px;}
+.ct-card b{display:block;margin-bottom:6px;color:var(--dark);}
+.ct-card a:not(.cta-wa){color:var(--dark);font-weight:700;text-decoration:none;}
+.ct-card span{color:var(--mid);}
+.ct-form{background:#fff;border:1px solid var(--line);padding:18px;}
+.ct-form input,.ct-form textarea{width:100%;padding:12px;border:1px solid var(--line);margin-bottom:10px;font-family:inherit;font-size:.92rem;background:#FAF9F5;box-sizing:border-box;}
+.ct-btn{width:100%;background:var(--dark);color:#fff;border:none;border-radius:999px;padding:14px;font-weight:800;cursor:pointer;font-family:inherit;}
+.rev-write{background:var(--dark);}
+.rev-card,.gal-item{border:1px solid var(--line);box-shadow:none;}
+.rev-all{white-space:nowrap;}
+@media (min-width:800px){.gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}.gal-grid .gal-item{margin-bottom:0;}.gal-grid .loading{grid-column:1/-1;}}
 </style>
 </head>
 <body>
 <nav>
   <div class="logo" onclick="goHomeFull()" style="cursor:pointer">Vignesh<span>eng</span></div>
+  <div class="nav-links-d" id="navLinksD">
+    <a data-p="home" onclick="goHomeFull()">Home</a>
+    <a data-p="products" onclick="goBuySell()">Vehicles for sale</a>
+    <a data-p="services" onclick="goServices()">Our work</a>
+    <a data-p="reviews" onclick="goReviews()">Reviews</a>
+    <a data-p="about" onclick="goAbout()">About</a>
+    <a data-p="contact" onclick="goContact()">Contact</a>
+  </div>
   <button class="back-btn" id="backBtn" style="display:none" onclick="goHome()">← Back</button>
   <div class="nav-right">
-    <a class="nav-cta" id="navCta" onclick="goBuySell()">🚛 Buy &amp; Sell</a>
-    <button class="icon-btn" aria-label="Search" onclick="openSearch()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
-    <button class="icon-btn" aria-label="Menu" onclick="openMenu()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="nav-cta" id="navCta" onclick="goBuySell()">🚛 Vehicles</a>
+    <button class="icon-btn" aria-label="Search" onclick="openSearch()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    <button class="icon-btn" id="menuBtn" aria-label="Menu" onclick="openMenu()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </nav>
+
+  <div id="revModal" class="rev-modal" onclick="if(event.target===this)closeReview()">
+  <div class="rev-box">
+    <h3>Write a review</h3>
+    <select id="rvTarget" aria-label="What are you reviewing" onchange="document.getElementById('rvMsg').textContent=''"></select>
+    <input id="rvName" type="text" maxlength="80" placeholder="Your name"/>
+    <div class="star-pick" id="starPick" aria-label="Rating"></div>
+    <textarea id="rvText" rows="4" maxlength="600" placeholder="Share your experience..."></textarea>
+    <input id="rvWeb" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0"/>
+    <div class="rv-msg" id="rvMsg"></div>
+    <div class="rv-btns"><button class="rv-cancel" onclick="closeReview()">Cancel</button><button class="rv-send" id="rvSend" onclick="sendReview()">Submit</button></div>
+  </div>
+</div>
 
 <div id="drawerBg" onclick="closeMenu()"></div>
 <div id="drawer" aria-label="Menu">
   <div class="drawer-top"><span>Menu</span><button class="icon-btn" aria-label="Close menu" onclick="closeMenu()" style="color:#fff;font-size:1.5rem">✕</button></div>
-  <a class="hl" onclick="closeMenu();goBuySell()">🚛 Buy &amp; Sell Vehicles</a>
+  <a class="hl" onclick="closeMenu();goBuySell()">🚛 Vehicles for sale</a>
   <a onclick="closeMenu();goHomeFull()">🏠 Home</a>
-  <a onclick="closeMenu();goServices()">🔧 Our Services</a>
-  <a onclick="closeMenu();goGallery()">📸 Gallery</a>
-  <a onclick="closeMenu();navGo('reviews')">⭐ Customer Reviews</a>
-  <a onclick="closeMenu();navGo('about')">ℹ️ About Us</a>
-  <a onclick="closeMenu();navGo('contact')">📞 Contact Us</a>
+  <a onclick="closeMenu();goServices()">🔧 Our work &amp; services</a>
+  <a onclick="closeMenu();goGallery()">📸 Before &amp; after</a>
+  <a onclick="closeMenu();goReviews()">⭐ Customer reviews</a>
+  <a onclick="closeMenu();goAbout()">ℹ️ About us</a>
+  <a onclick="closeMenu();goContact()">📞 Contact</a>
+  <a onclick="closeMenu();shareSite()">🔗 Share this site</a>
 </div>
 
 <div id="searchPanel" role="dialog" aria-label="Search">
@@ -307,7 +428,7 @@ body.menu-open #drawer{transform:none;}
     <div class="seam"></div>
     <p class="tagline">Ellam Oru Idathula!</p>
     <span class="spark" style="left:12%"></span><span class="spark" style="left:38%;animation-delay:1s"></span><span class="spark" style="left:66%;animation-delay:.5s"></span><span class="spark" style="left:88%;animation-delay:1.6s"></span>
-    <div class="road"><div class="lane"></div><div class="lorry"><svg width="170" height="86" viewBox="0 0 170 86" role="img" aria-label="Lorry driving"><rect x="4" y="14" width="90" height="46" rx="3" fill="#FFD500"/><rect x="94" y="28" width="46" height="32" rx="4" fill="#FF7A1F"/><rect x="112" y="33" width="22" height="14" rx="2" fill="#BFE3FF"/><rect x="4" y="56" width="136" height="8" fill="#3A3F47"/><g class="wheel"><circle cx="34" cy="68" r="14" fill="#0E0F11"/><path d="M34 56V80M22 68H46" stroke="#9AA0A8" stroke-width="3"/></g><g class="wheel"><circle cx="116" cy="68" r="14" fill="#0E0F11"/><path d="M116 56V80M104 68H128" stroke="#9AA0A8" stroke-width="3"/></g></svg><span class="puff"></span><span class="puff b"></span></div></div>
+    <div class="road"><div class="lane"></div><div class="lorry"><svg width="170" height="86" viewBox="0 0 170 86" role="img" aria-label="Lorry driving"><rect x="4" y="14" width="90" height="46" rx="3" fill="#FFD500"/><rect x="94" y="28" width="46" height="32" rx="4" fill="#C9A25C"/><rect x="112" y="33" width="22" height="14" rx="2" fill="#BFE3FF"/><rect x="4" y="56" width="136" height="8" fill="#3A3F47"/><g class="wheel"><circle cx="34" cy="68" r="14" fill="#0E0F11"/><path d="M34 56V80M22 68H46" stroke="#9AA0A8" stroke-width="3"/></g><g class="wheel"><circle cx="116" cy="68" r="14" fill="#0E0F11"/><path d="M116 56V80M104 68H128" stroke="#9AA0A8" stroke-width="3"/></g></svg><span class="puff"></span><span class="puff b"></span></div></div>
       </div>
       <div class="b-slide home-hero s2">
         <div class="hero-kick">BUY &amp; SELL</div>
@@ -327,8 +448,16 @@ body.menu-open #drawer{transform:none;}
     <div class="b-dots" id="bDots"><b class="on"></b><b></b><b></b></div>
   </div>
 
+  <div class="sec-block" id="recent">
+    <div class="sec-row">
+      <div><div class="eyebrow">JUST ADDED</div><h2 class="sec-h">Recently added vehicles</h2></div>
+      <a class="rev-all" style="margin:0" onclick="goBuySell()">Browse all →</a>
+    </div>
+    <div class="rc-grid" id="rcGrid"><div class="loading">Loading...</div></div>
+  </div>
+
   <div class="sec-block" id="workshop">
-    <h2 class="sec-h">Workshop in Action</h2>
+    <div class="eyebrow">OUR WORK</div><h2 class="sec-h">Workshop in action</h2>
     <div class="reel" id="reel" hidden>
       <video id="reelVid" muted loop playsinline autoplay preload="metadata"></video>
       <div id="reelSlides"></div>
@@ -337,72 +466,93 @@ body.menu-open #drawer{transform:none;}
     </div>
   </div>
 
-  <div class="sec-block" id="reviews" hidden>
-    <h2 class="sec-h">Customer Reviews</h2>
+  <div class="sec-block" id="reviews">
+    <div class="eyebrow">WHAT CUSTOMERS SAY</div><h2 class="sec-h">Customer reviews</h2>
     <div class="rev-sum" id="revSum"></div>
     <div class="rev-row" id="revRow"></div>
-    <div class="rev-empty" id="revEmpty" hidden>Be the first to share your experience with us!</div>
+    <div class="rev-empty" id="revEmpty">Be the first to share your experience with us!</div>
+    <a class="rev-all" id="revAll" onclick="goReviews()" hidden>See all reviews →</a>
     <button class="rev-write" onclick="openReview()">✍️ Write a review</button>
-  </div>
-
-  <div id="revModal" class="rev-modal" onclick="if(event.target===this)closeReview()">
-    <div class="rev-box">
-      <h3>Write a review</h3>
-      <input id="rvName" type="text" maxlength="80" placeholder="Your name"/>
-      <div class="star-pick" id="starPick" aria-label="Rating"></div>
-      <textarea id="rvText" rows="4" maxlength="600" placeholder="Share your experience..."></textarea>
-      <input id="rvWeb" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0"/>
-      <div class="rv-msg" id="rvMsg"></div>
-      <div class="rv-btns"><button class="rv-cancel" onclick="closeReview()">Cancel</button><button class="rv-send" id="rvSend" onclick="sendReview()">Submit</button></div>
-    </div>
-  </div>
-
-  <div class="sec-block" id="about">
-    <h2 class="sec-h">About Us</h2>
-    <p class="sec-text" id="aboutText">Vignesheng la naanga welding works, vehicle body building &amp; fabrication, vehicle repair / denting-painting seivom. Melum used vehicles buy &amp; sell um pannuvom. Quality work &amp; trust than enga specialty.</p>
-  </div>
-
-  <div class="sec-block" id="contact">
-    <h2 class="sec-h">Contact Us</h2>
-    <div class="contact-card">
-      <p>📍 <span id="cAddr">Unga Address inga varum</span></p>
-      <p>📞 <a id="cPhone" href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
-      <a id="cWa" class="cta-wa" style="display:inline-block;text-decoration:none;text-align:center;max-width:220px" href="https://wa.me/91XXXXXXXXXX" target="_blank">💬 WhatsApp Us</a>
-    </div>
   </div>
 </div>
 
 <div id="servicesPage">
-  <div class="home-hero">
-    <h1>🔧 Our Services</h1>
-    <p class="tagline">Welding · Body Building · Repair</p>
+  <div class="pg-head">
+    <div class="eyebrow">HOW WE WORK</div>
+    <h1>From enquiry to finished work.</h1>
+    <p class="pg-p">Clear steps show you the care behind every job we do.</p>
   </div>
-  <div class="cat-grid" id="serviceGrid"><div class="loading">Loading...</div></div>
-</div>
-
-<div id="buySellPage">
-  <div class="home-hero">
-    <h1>🚛 Buy &amp; Sell Vehicles</h1>
-    <p class="tagline">Used vehicles — buy &amp; sell</p>
+  <div class="steps"><div class="step"><b>01 · Enquire</b><span>Tell us the vehicle and the work you need.</span></div><div class="step"><b>02 · Inspect</b><span>We check the vehicle and give a clear quote.</span></div><div class="step"><b>03 · Fabricate / repair</b><span>Welding, cutting, grinding and repair by skilled workers.</span></div><div class="step"><b>04 · Finish</b><span>Body work, painting and detailing.</span></div><div class="step"><b>05 · Handover</b><span>Final check, then your vehicle is ready.</span></div></div>
+  <div class="sec-block">
+    <div class="eyebrow">WHAT WE DO</div>
+    <h2 class="sec-h">Our services</h2>
+    <div class="cat-grid" id="serviceGrid"><div class="loading">Loading...</div></div>
   </div>
-  <div class="bs-search" onclick="openSearch()">🔍 <span>Search vehicles...</span></div>
-  <div class="cat-grid" id="catGrid"><div class="loading">Loading...</div></div>
-</div>
-
-<div id="galleryPage">
-  <div class="home-hero">
-    <h1>📸 Gallery</h1>
-    <p class="tagline">Enga work photos</p>
-  </div>
-  <div class="gal-wrap">
+  <div class="sec-block" id="beforeafter">
+    <div class="eyebrow">OUR WORK</div>
+    <h2 class="sec-h">Before &amp; after</h2>
+    <p class="pg-p" style="margin-bottom:12px">Drag the line to compare.</p>
     <div class="gal-grid" id="galGrid"><div class="loading">Loading...</div></div>
     <button class="gal-more" id="galMore" style="display:none" onclick="renderGal()">Load more</button>
   </div>
 </div>
 
+<div id="reviewsPage">
+  <div class="pg-head">
+    <div class="eyebrow">WHAT CUSTOMERS SAY</div>
+    <h1>Customer reviews</h1>
+    <p class="pg-p" id="rpSum">What our customers say</p>
+  </div>
+  <div class="rp-wrap">
+    <div id="rpList"></div>
+    <button class="rev-write" onclick="openReview()">✍️ Write a review</button>
+  </div>
+</div>
+
+<div id="aboutPage">
+  <div class="pg-head">
+    <div class="eyebrow">ABOUT VIGNESHENG</div>
+    <h1>Built with care.<br>Finished with pride.</h1>
+    <p class="pg-p" id="aboutText">We do welding, cutting and grinding work, vehicle body building and fabrication, and repair and denting-painting. We also buy and sell used vehicles.</p>
+    <div class="tags"><span>Welding</span><span>Cutting &amp; grinding</span><span>Body building</span><span>Vehicle repair</span><span>Used vehicle sales</span></div>
+    <h3 class="pg-h3">What customers can expect</h3>
+    <p class="pg-p">Clear details on every vehicle, visible work, and a direct way to reach us.</p>
+    <a class="g-btn" onclick="goBuySell()">See available vehicles</a>
+  </div>
+</div>
+
+<div id="contactPage">
+  <div class="pg-head">
+    <div class="eyebrow">COME AND SEE US</div>
+    <h1>Contact us</h1>
+    <p class="pg-p">Ask about a vehicle or a job, or visit the workshop.</p>
+  </div>
+  <div class="ct-grid">
+    <div>
+      <div class="ct-card"><b>Call us</b><a id="cPhone" href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></div>
+      <div class="ct-card"><b>WhatsApp</b><a id="cWa" class="cta-wa" style="display:inline-block;text-decoration:none;padding:10px 18px" href="https://wa.me/91XXXXXXXXXX" target="_blank">💬 Chat on WhatsApp</a></div>
+      <div class="ct-card"><b>Visit the workshop</b><span id="cAddr">Our address will be shown here</span></div>
+    </div>
+    <div class="ct-form">
+      <h3 class="pg-h3" style="margin-top:0">Send an enquiry</h3>
+      <input id="enqName" type="text" placeholder="Your name" maxlength="80"/>
+      <input id="enqPhone" type="tel" placeholder="Phone number" maxlength="20"/>
+      <input id="enqVeh" type="text" placeholder="Which vehicle or service are you interested in?" list="vehList" maxlength="120"/>
+      <datalist id="vehList"></datalist>
+      <textarea id="enqMsg" rows="3" placeholder="Your message" maxlength="400"></textarea>
+      <div class="rv-msg" id="enqNote"></div>
+      <button class="ct-btn" onclick="sendEnquiry()">Send enquiry on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
 <div id="productsPage">
   <div class="page-hdr">
-    <h2 id="pageTitle">Products</h2>
+    <div>
+      <div class="eyebrow" id="pgEyebrow">OUR CURRENT STOCK</div>
+      <h2 id="pageTitle">Products</h2>
+      <p class="pg-sub" id="pgSub"></p>
+    </div>
     <span class="page-badge" id="pageCount">0</span>
   </div>
   <div class="search-row"><input type="text" id="searchQ" placeholder="Search..." oninput="filterProducts()"/></div>
@@ -445,8 +595,8 @@ async function loadCategories(){
     cats = await res.json();
     renderHome();
     loadIndex();
+    loadRecent();
   }catch(e){
-    document.getElementById('catGrid').innerHTML='<div class="loading">Server connection failed. Make sure server is running!</div>';
     document.getElementById('serviceGrid').innerHTML='<div class="loading">Server connection failed.</div>';
   }
 }
@@ -470,18 +620,19 @@ function renderHome(){
   var services=cats.filter(function(c){return c.type==='service';});
   var market=cats.filter(function(c){return c.type!=='service';});
   document.getElementById('serviceGrid').innerHTML=services.length?services.map(catCardHtml).join(''):'<div class="loading">Services soon varum</div>';
-  document.getElementById('catGrid').innerHTML=market.length?market.map(catCardHtml).join(''):'<div class="loading">No vehicles listed yet</div>';
 }
 
 // PAGES: home / buysell / gallery / products
-var PAGES={home:'homePage',services:'servicesPage',buysell:'buySellPage',gallery:'galleryPage',products:'productsPage'};
+var PAGES={home:'homePage',services:'servicesPage',about:'aboutPage',contact:'contactPage',reviews:'reviewsPage',products:'productsPage'};
 var curPage='home', cameFrom='home';
 function showPage(name){
   curPage=name;
   Object.keys(PAGES).forEach(function(k){document.getElementById(PAGES[k]).style.display=(k===name)?'block':'none';});
   document.getElementById('backBtn').style.display=(name==='home')?'none':'flex';
   document.getElementById('navCta').style.display=(name==='home')?'':'none';
+  [].forEach.call(document.querySelectorAll('#navLinksD a'),function(a){a.classList.toggle('on',a.dataset.p===name);});
   window.scrollTo(0,0);
+  if(name==='home')renderRecent();
 }
 function scrollToSec(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
 function goHomeFull(){cameFrom='home';showPage('home');}
@@ -501,6 +652,7 @@ async function loadIndex(){
     var res=await fetch(API+'/search-index');
     if(!res.ok)throw new Error('no index');
     searchIdx=await res.json();
+    fillVehList();
     catCount={};
     searchIdx.forEach(function(p){
       var c=cats.find(function(x){return x.id===p.category_id;});
@@ -510,6 +662,7 @@ async function loadIndex(){
     });
     renderHome();
     if(document.getElementById('searchPanel').classList.contains('open'))renderSearch(document.getElementById('spInput').value);
+    if(document.getElementById('revModal').classList.contains('open'))fillTargets();
   }catch(e){if(!searchIdx)searchIdx=[];}
 }
 function openSearch(){
@@ -586,8 +739,25 @@ function drawStars(){
     sp.onclick=function(){rvRating=n;drawStars();};box.appendChild(sp);
   })(i);}
 }
+function fillTargets(){
+  var sel=document.getElementById('rvTarget');if(!sel)return;
+  var keep=sel.value;sel.innerHTML='';
+  function opt(parent,val,label){var o=document.createElement('option');o.value=val;o.textContent=label;parent.appendChild(o);}
+  function group(label){var g=document.createElement('optgroup');g.label=label;sel.appendChild(g);return g;}
+  opt(sel,'','What are you reviewing? (select)');
+  var services=cats.filter(function(c){return c.type==='service';});
+  var gs=group('Our Services');services.forEach(function(c){opt(gs,'category:'+c.id,c.name);});
+  var idx=searchIdx||[];
+  var vehicles=idx.filter(function(p){var c=cats.find(function(x){return x.id===p.category_id;});return c&&c.type!=='service';});
+  var works=idx.filter(function(p){var c=cats.find(function(x){return x.id===p.category_id;});return c&&c.type==='service';});
+  if(vehicles.length){var gv=group('Vehicles');vehicles.forEach(function(p){opt(gv,'product:'+p.id,p.title+(p.sold?' (sold)':''));});}
+  if(works.length){var gw=group('Our Works');works.forEach(function(p){opt(gw,'product:'+p.id,p.title);});}
+  var gg=group('General');opt(gg,'general:0','Vignesheng (whole shop)');
+  if(keep)sel.value=keep;
+}
 function openReview(){
-  rvRating=5;drawStars();
+  rvRating=5;drawStars();fillTargets();
+  if(searchIdx===null)loadIndex().then(fillTargets);
   ['rvName','rvText','rvWeb'].forEach(function(id){document.getElementById(id).value='';});
   var m=document.getElementById('rvMsg');m.textContent='';m.className='rv-msg';
   document.getElementById('rvSend').disabled=false;
@@ -599,58 +769,176 @@ async function sendReview(){
   var text=document.getElementById('rvText').value.trim();
   var m=document.getElementById('rvMsg'),btn=document.getElementById('rvSend');
   function say(t,ok){m.textContent=t;m.className='rv-msg '+(ok?'ok':'err');}
+  var tv=document.getElementById('rvTarget').value;
+  if(!tv){say('Please select what you are reviewing',false);return;}
+  var tp=tv.split(':');
   if(!name){say('Please enter your name',false);return;}
   if(text.length<5){say('Please write a few words about your experience',false);return;}
   btn.disabled=true;say('Sending...',true);
   try{
     var res=await fetch(API+'/reviews/submit',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:name,review_text:text,rating:rvRating,website:document.getElementById('rvWeb').value})});
+      body:JSON.stringify({name:name,review_text:text,rating:rvRating,target_type:tp[0],target_id:Number(tp[1])||0,website:document.getElementById('rvWeb').value})});
     var data={};try{data=await res.json();}catch(e){}
     if(!res.ok){say(data.error||'Could not send. Please try again.',false);btn.disabled=false;return;}
     say('Thank you! Your review will appear after we approve it.',true);
     setTimeout(closeReview,2200);
   }catch(e){say('Network problem. Please try again.',false);btn.disabled=false;}
 }
+var allReviews=[];
+function revChipEmoji(t){return t==='product'?'🚛':(t==='category'?'🔧':'🏬');}
+function reviewCard(r){
+  var card=document.createElement('div');card.className='rev-card';
+  var st=document.createElement('div');st.className='stars';
+  var n=Math.max(1,Math.min(5,Number(r.rating)||5));st.textContent='★'.repeat(n)+'☆'.repeat(5-n);
+  var tx=document.createElement('div');tx.className='rev-text';tx.textContent=r.review_text||'';
+  card.appendChild(st);card.appendChild(tx);
+  if(r.target_title){
+    var chip=document.createElement('span');chip.className='rev-chip';
+    chip.textContent=revChipEmoji(r.target_type)+' Reviewed: '+r.target_title;
+    if(r.target_type==='product'&&r.product_category_id){chip.onclick=function(){openProduct(r.product_category_id,r.target_title);};}
+    else if(r.target_type==='category'&&cats.some(function(c){return c.id===r.target_id;})){chip.onclick=function(){goCategory(r.target_id);};}
+    else{chip.style.cursor='default';}
+    card.appendChild(chip);
+  }
+  var who=document.createElement('div');who.className='rev-who';
+  var av=document.createElement('span');av.className='rev-av';av.textContent=((r.name||'?').trim()[0]||'?').toUpperCase();
+  var nm=document.createElement('span');nm.textContent=r.name||'Customer';
+  who.appendChild(av);who.appendChild(nm);card.appendChild(who);
+  return card;
+}
+function revSummary(list){
+  var sum=0;list.forEach(function(r){sum+=Number(r.rating)||0;});
+  return '<b>'+(sum/list.length).toFixed(1)+'</b> ★ &nbsp;·&nbsp; '+list.length+(list.length===1?' review':' reviews');
+}
+function goReviews(){
+  showPage('reviews');
+  var box=document.getElementById('rpList');box.innerHTML='';
+  if(!allReviews.length){
+    var e=document.createElement('div');e.className='rev-empty';e.textContent='No reviews yet. Be the first to write one!';box.appendChild(e);
+    document.getElementById('rpSum').textContent='What our customers say';return;
+  }
+  document.getElementById('rpSum').innerHTML=revSummary(allReviews);
+  allReviews.forEach(function(r){box.appendChild(reviewCard(r));});
+}
 async function loadReviews(){
   try{
-    var res=await fetch(API+'/reviews');if(!res.ok)return;
+    var res=await fetch(API+'/reviews');
+    if(!res.ok)throw new Error('reviews api '+res.status);
     var list=await res.json();
-    if(!Array.isArray(list))return;
-    document.getElementById('reviews').hidden=false;
+    if(!Array.isArray(list))throw new Error('bad reviews data');
+    allReviews=list;
     if(!list.length){document.getElementById('revEmpty').hidden=false;return;}
+    document.getElementById('revEmpty').hidden=true;
+    document.getElementById('revAll').hidden=false;
     var row=document.getElementById('revRow');row.innerHTML='';
-    var sum=0;
-    list.forEach(function(r){
-      sum+=Number(r.rating)||0;
-      var card=document.createElement('div');card.className='rev-card';
-      var st=document.createElement('div');st.className='stars';
-      var n=Math.max(1,Math.min(5,Number(r.rating)||5));st.textContent='★'.repeat(n)+'☆'.repeat(5-n);
-      var tx=document.createElement('div');tx.className='rev-text';tx.textContent=r.review_text||'';
-      var who=document.createElement('div');who.className='rev-who';
-      var av=document.createElement('span');av.className='rev-av';av.textContent=((r.name||'?').trim()[0]||'?').toUpperCase();
-      var nm=document.createElement('span');nm.textContent=r.name||'Customer';
-      who.appendChild(av);who.appendChild(nm);
-      card.appendChild(st);card.appendChild(tx);card.appendChild(who);row.appendChild(card);
-    });
-    var avg=(sum/list.length).toFixed(1);
-    document.getElementById('revSum').innerHTML='<b>'+avg+'</b> ★ &nbsp;·&nbsp; '+list.length+(list.length===1?' review':' reviews');
+    list.slice(0,10).forEach(function(r){row.appendChild(reviewCard(r));});
+    document.getElementById('revSum').innerHTML=revSummary(list);
     ['touchstart','wheel','mousedown'].forEach(function(ev){row.addEventListener(ev,function(){revPause=Date.now();},{passive:true});});
-    if(!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)&&list.length>1){
+    if(!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)&&row.children.length>1){
       setInterval(function(){
         if(curPage!=='home'||Date.now()-revPause<9000)return;
         revIdx=(revIdx+1)%row.children.length;
         row.scrollTo({left:row.children[revIdx].offsetLeft-row.children[0].offsetLeft,behavior:'smooth'});
       },5000);
     }
-  }catch(e){}
+  }catch(e){var em=document.getElementById('revEmpty');em.hidden=false;em.textContent='Reviews will appear here soon. You can still write one below.';}
 }
-function goBuySell(){showPage('buysell');}
-function goServices(){showPage('services');}
+function goBuySell(){goVehicles();}
+function goServices(){showPage('services');loadGallery();}
+function goGallery(){goServices();setTimeout(function(){scrollToSec('beforeafter');},120);}
+function goAbout(){showPage('about');}
+function goContact(){showPage('contact');}
+function shareSite(){
+  var url=location.origin&&location.origin!=='null'?location.origin:location.href;
+  if(navigator.share){navigator.share({title:document.title,url:url}).catch(function(){});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){showToast('Link copied');});}
+}
+
+// ALL VEHICLES (marketplace categories) - used by Home "recently added" and the Vehicles page
+var allVehicles=null;
+async function loadAllVehicles(){
+  if(allVehicles)return allVehicles;
+  var mk=cats.filter(function(c){return c.type!=='service';});
+  var lists=await Promise.all(mk.map(function(c){
+    return fetch(API+'/products/'+c.id).then(function(r){return r.json();}).catch(function(){return [];});
+  }));
+  allVehicles=[].concat.apply([],lists).filter(function(p){return p&&p.id;});
+  allVehicles.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  return allVehicles;
+}
+async function loadRecent(){
+  try{await loadAllVehicles();}catch(e){allVehicles=[];}
+  renderRecent();
+}
+function vImgs(p){
+  var imgs=p.images||[];
+  if(typeof imgs==='string'){try{imgs=JSON.parse(imgs);}catch(e){imgs=[];}}
+  return Array.isArray(imgs)?imgs:[];
+}
+function renderRecent(){
+  var sec=document.getElementById('recent'),box=document.getElementById('rcGrid');
+  if(!sec||!box)return;
+  if(allVehicles===null){return;}
+  if(!allVehicles.length){sec.style.display='none';return;}
+  sec.style.display='';box.innerHTML='';
+  var avail=allVehicles.filter(function(p){return !p.sold;}),sold=allVehicles.filter(function(p){return p.sold;});
+  avail.concat(sold).slice(0,3).forEach(function(p){
+    var imgs=vImgs(p);productImagesMap[p.id]=imgs;
+    var card=document.createElement('div');card.className='rc-card';
+    card.onclick=function(){prods=allVehicles;openDet(p.id);};
+    var im=document.createElement('div');im.className='rc-img';
+    var f=imgs[0];
+    if(f&&(String(f).indexOf('data:')===0||String(f).indexOf('http')===0)){var i=document.createElement('img');i.src=f;i.alt=p.title;i.loading='lazy';im.appendChild(i);}
+    else{im.textContent='🚛';}
+    var info=document.createElement('div');info.className='rc-info';
+    var t=document.createElement('b');t.textContent=p.title;
+    var m=document.createElement('small');m.textContent=[cap(norm(p.sub_category)),p.location].filter(Boolean).join(' · ');
+    var pr=document.createElement('div');pr.className='rc-price';pr.textContent='₹'+Number(p.price).toLocaleString('en-IN');
+    if(p.sold){var sb=document.createElement('span');sb.className='rc-sold';sb.textContent='SOLD';pr.appendChild(sb);}
+    info.appendChild(t);info.appendChild(m);info.appendChild(pr);
+    card.appendChild(im);card.appendChild(info);box.appendChild(card);
+  });
+}
+function setPgHead(eyebrow,title,sub){
+  document.getElementById('pgEyebrow').textContent=eyebrow;
+  document.getElementById('pageTitle').textContent=title;
+  document.getElementById('pgSub').textContent=sub||'';
+}
+async function goVehicles(){
+  currentCatId=null;activeFilter='all';
+  document.getElementById('searchQ').value='';
+  cameFrom='home';
+  setPgHead('OUR CURRENT STOCK','Vehicles for sale','View vehicle details, then contact us to arrange a visit.');
+  showPage('products');
+  document.getElementById('grid').innerHTML='<div class="loading" style="grid-column:1/-1">Loading...</div>';
+  try{prods=await loadAllVehicles();renderChips();renderGrid();}
+  catch(e){showToast('Error loading vehicles');}
+}
+// enquiry form -> opens WhatsApp with the message ready
+var waNum='';
+function sendEnquiry(){
+  var n=document.getElementById('enqName').value.trim(),ph=document.getElementById('enqPhone').value.trim();
+  var v=document.getElementById('enqVeh').value.trim(),msg=document.getElementById('enqMsg').value.trim();
+  var note=document.getElementById('enqNote');
+  function say(t,ok){note.textContent=t;note.className='rv-msg '+(ok?'ok':'err');}
+  if(!n||!ph){say('Please enter your name and phone number',false);return;}
+  if(!waNum){say('WhatsApp number is not set yet. Please call us instead.',false);return;}
+  var text='Hello, I am '+n+' ('+ph+').'+(v?' I am interested in: '+v+'.':'')+(msg?' '+msg:'');
+  window.open('https://wa.me/'+waNum+'?text='+encodeURIComponent(text),'_blank');
+  say('Opening WhatsApp...',true);
+}
+function fillVehList(){
+  var dl=document.getElementById('vehList');if(!dl)return;dl.innerHTML='';
+  var names=[];
+  cats.forEach(function(c){names.push(c.name);});
+  (searchIdx||[]).forEach(function(p){names.push(p.title);});
+  names.forEach(function(n){var o=document.createElement('option');o.value=n;dl.appendChild(o);});
+}
 
 // GALLERY — Before / After photos added from admin (Gallery tab)
 var galItems=[], galShown=0;
-async function goGallery(){
-  showPage('gallery');
+async function loadGallery(){
+  if(galItems.length&&galShown>0)return;
   var g=document.getElementById('galGrid');
   g.innerHTML='<div class="loading">Loading...</div>';
   document.getElementById('galMore').style.display='none';
@@ -694,7 +982,7 @@ async function loadSettings(){
     if(st.address)document.getElementById('cAddr').textContent=st.address;
     if(st.phone){var p=document.getElementById('cPhone');p.textContent=st.phone;p.href='tel:'+st.phone.replace(/\s/g,'');}
     var wa=(st.whatsapp||st.phone||'').replace(/\D/g,'');
-    if(wa){if(wa.length===10)wa='91'+wa;document.getElementById('cWa').href='https://wa.me/'+wa;}
+    if(wa){if(wa.length===10)wa='91'+wa;document.getElementById('cWa').href='https://wa.me/'+wa;waNum=wa;}
   }catch(e){}
 }
 
@@ -703,8 +991,8 @@ async function goCategory(catId){
   currentCatId=catId; activeFilter='all';
   document.getElementById('searchQ').value='';
   var cat=cats.find(function(c){return c.id===catId;});
-  cameFrom=(cat.type==='service')?'services':'buysell';
-  document.getElementById('pageTitle').textContent=cat.emoji+' '+cat.name;
+  cameFrom=(curPage==='reviews')?'reviews':((cat.type==='service')?'services':'home');
+  setPgHead(cat.type==='service'?'OUR WORK':'VEHICLES',cat.name,cat.description||'');
   showPage('products');
   document.getElementById('grid').innerHTML='<div class="loading" style="grid-column:1/-1">Loading...</div>';
   try{
