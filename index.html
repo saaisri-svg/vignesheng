@@ -367,6 +367,38 @@ nav .back-btn{background:#EDE7D8;color:var(--dark);border:none;}
 .rev-card,.gal-item{border:1px solid var(--line);box-shadow:none;}
 .rev-all{white-space:nowrap;}
 @media (min-width:800px){.gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}.gal-grid .gal-item{margin-bottom:0;}.gal-grid .loading{grid-column:1/-1;}}
+/* ===== easy-to-understand: big icons, big buttons, Tamil toggle, bottom action bar ===== */
+body{font-size:16px;}
+.lang-btn{background:#EDE7D8;color:var(--dark);border:none;border-radius:999px;padding:8px 12px;font-weight:800;font-size:.8rem;cursor:pointer;margin-right:2px;font-family:inherit;}
+@media (max-width:420px){.logo{font-size:.92rem;letter-spacing:1.5px;}.nav-right .nav-cta{padding:7px 9px;font-size:.72rem;margin-right:2px;}.lang-btn{padding:7px 9px;font-size:.74rem;}nav{padding:0 10px;}}
+.qk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;}
+@media (min-width:800px){.qk-grid{grid-template-columns:repeat(3,1fr);}}
+.qk{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 10px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.qk:active,.qk:hover{border-color:#C9A25C;background:#FBF8F0;}
+.qk-i{font-size:2.6rem;line-height:1.1;}
+.qk b{font-size:1.02rem;color:var(--dark);}
+.qk small{font-size:.92rem;color:var(--mid);font-weight:700;}
+.hw-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px;}
+@media (min-width:800px){.hw-grid{grid-template-columns:repeat(4,1fr);}}
+.hw{background:#fff;border:1px solid var(--line);padding:16px 10px;text-align:center;}
+.hw-i{font-size:2.2rem;display:block;margin-bottom:6px;line-height:1.1;}
+.hw b{font-size:.92rem;color:var(--dark);line-height:1.4;display:block;}
+.c-ok{background:#DCFCE7;color:#166534;border-radius:6px;padding:2px 8px;font-weight:800;}
+.c-price{font-size:1.15rem;}
+.c-title{font-size:1rem;}
+.chip{padding:10px 16px;font-size:.95rem;}
+.cta-call,.cta-wa{font-size:1.05rem;padding:15px;}
+.pg-p{font-size:1.02rem;}
+#actBar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:90;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(0,0,0,.08);}
+body.has-bar #actBar{display:flex;}
+body.has-bar{padding-bottom:64px;}
+#actBar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px;text-decoration:none;color:var(--dark);font-size:.8rem;font-weight:800;min-height:60px;}
+#actBar a span{font-size:1.45rem;line-height:1;}
+#abCall{background:var(--dark);color:#fff !important;}
+#abWa{background:#C9A25C;}
+@media (min-width:900px){body.has-bar #actBar{display:none;}body.has-bar{padding-bottom:0;}}
+.toast{bottom:84px;}
+@media (max-width:340px){.nav-right .nav-cta{display:none !important;}}
 </style>
 </head>
 <body>
@@ -383,6 +415,7 @@ nav .back-btn{background:#EDE7D8;color:var(--dark);border:none;}
   <button class="back-btn" id="backBtn" style="display:none" onclick="goHome()">← Back</button>
   <div class="nav-right">
     <a class="nav-cta" id="navCta" onclick="goBuySell()">🚛 Vehicles</a>
+    <button class="lang-btn" id="langBtn" data-notr onclick="toggleLang()">தமிழ்</button>
     <button class="icon-btn" aria-label="Search" onclick="openSearch()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
     <button class="icon-btn" id="menuBtn" aria-label="Menu" onclick="openMenu()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
@@ -401,6 +434,12 @@ nav .back-btn{background:#EDE7D8;color:var(--dark);border:none;}
   </div>
 </div>
 
+<div id="actBar">
+  <a id="abCall" href="#"><span>📞</span><b data-notr>Call · அழை</b></a>
+  <a id="abWa" href="#" target="_blank" rel="noopener"><span>💬</span><b data-notr>WhatsApp</b></a>
+  <a id="abMap" href="#" target="_blank" rel="noopener"><span>📍</span><b data-notr>Map · வரைபடம்</b></a>
+</div>
+
 <div id="drawerBg" onclick="closeMenu()"></div>
 <div id="drawer" aria-label="Menu">
   <div class="drawer-top"><span>Menu</span><button class="icon-btn" aria-label="Close menu" onclick="closeMenu()" style="color:#fff;font-size:1.5rem">✕</button></div>
@@ -412,6 +451,7 @@ nav .back-btn{background:#EDE7D8;color:var(--dark);border:none;}
   <a onclick="closeMenu();goAbout()">ℹ️ About us</a>
   <a onclick="closeMenu();goContact()">📞 Contact</a>
   <a onclick="closeMenu();shareSite()">🔗 Share this site</a>
+  <a onclick="closeMenu();toggleLang()"><span data-notr>🌐 தமிழ் / English</span></a>
 </div>
 
 <div id="searchPanel" role="dialog" aria-label="Search">
@@ -448,12 +488,35 @@ nav .back-btn{background:#EDE7D8;color:var(--dark);border:none;}
     <div class="b-dots" id="bDots"><b class="on"></b><b></b><b></b></div>
   </div>
 
+  <div class="sec-block" id="quick">
+    <h2 class="sec-h">What would you like to do?</h2>
+    <div class="qk-grid">
+      <a class="qk" onclick="goBuySell()"><span class="qk-i">🚛</span><b data-notr>Buy a vehicle</b><small data-notr>வாகனம் வாங்க</small></a>
+      <a class="qk" onclick="goServices()"><span class="qk-i">🔧</span><b data-notr>Get work done</b><small data-notr>வேலை செய்ய</small></a>
+      <a class="qk" onclick="goGallery()"><span class="qk-i">📸</span><b data-notr>See our work</b><small data-notr>எங்கள் வேலை பார்க்க</small></a>
+      <a class="qk" onclick="goReviews()"><span class="qk-i">⭐</span><b data-notr>Reviews</b><small data-notr>வாடிக்கையாளர் கருத்து</small></a>
+      <a class="qk" onclick="goContact()"><span class="qk-i">📞</span><b data-notr>Contact us</b><small data-notr>தொடர்புக்கு</small></a>
+      <a class="qk" onclick="goAbout()"><span class="qk-i">ℹ️</span><b data-notr>About us</b><small data-notr>எங்களைப் பற்றி</small></a>
+    </div>
+  </div>
+
   <div class="sec-block" id="recent">
     <div class="sec-row">
       <div><div class="eyebrow">JUST ADDED</div><h2 class="sec-h">Recently added vehicles</h2></div>
       <a class="rev-all" style="margin:0" onclick="goBuySell()">Browse all →</a>
     </div>
     <div class="rc-grid" id="rcGrid"><div class="loading">Loading...</div></div>
+  </div>
+
+  <div class="sec-block" id="howto">
+    <div class="eyebrow">HOW TO BUY</div>
+    <h2 class="sec-h">4 easy steps</h2>
+    <div class="hw-grid">
+      <div class="hw"><span class="hw-i">🚛</span><b>1. Choose a vehicle</b></div>
+      <div class="hw"><span class="hw-i">📞</span><b>2. Call or WhatsApp us</b></div>
+      <div class="hw"><span class="hw-i">📍</span><b>3. Visit and see it</b></div>
+      <div class="hw"><span class="hw-i">🤝</span><b>4. Take your vehicle</b></div>
+    </div>
   </div>
 
   <div class="sec-block" id="workshop">
@@ -983,6 +1046,7 @@ async function loadSettings(){
     if(st.phone){var p=document.getElementById('cPhone');p.textContent=st.phone;p.href='tel:'+st.phone.replace(/\s/g,'');}
     var wa=(st.whatsapp||st.phone||'').replace(/\D/g,'');
     if(wa){if(wa.length===10)wa='91'+wa;document.getElementById('cWa').href='https://wa.me/'+wa;waNum=wa;}
+    updateActBar(st);
   }catch(e){}
 }
 
@@ -1104,7 +1168,7 @@ imgs = imgs.map(function(img) {
       +(p.sold?'<div class="sold-cover"><div class="sold-stamp">SOLD</div></div>':'')+'</div>'
       +'<div class="card-body"><div class="c-price">₹'+Number(p.price).toLocaleString('en-IN')+'</div>'
       +'<div class="c-title">'+p.title+'</div>'
-      +'<div class="c-meta">'+(p.location?'<span>📍'+p.location+'</span>':'')+'<span>✅'+p.condition_type+'</span>'+(p.sub_category?'<span>🏷️'+cap(p.sub_category)+'</span>':'')+'</div>'
+      +'<div class="c-meta">'+(p.location?'<span>📍'+p.location+'</span>':'')+'<span>🔖'+p.condition_type+'</span>'+(p.sub_category?'<span>🏷️'+cap(p.sub_category)+'</span>':'')+(p.sold?'':'<span class="c-ok">Available</span>')+'</div>'
       +'</div></div>';
   });
   grid.innerHTML=html;
@@ -1158,7 +1222,7 @@ imgs = imgs.map(function(img) {
     +'<div class="det-body"><div class="det-price">₹'+Number(p.price).toLocaleString('en-IN')+'</div>'
     +'<div class="det-title">'+p.title+'</div>'
     +'<div class="det-tags">'+(p.sub_category?'<span class="det-tag">🏷️ '+cap(p.sub_category)+'</span>':'')
-    +'<span class="det-tag">✅ '+p.condition_type+'</span>'+(p.location?'<span class="det-tag">📍 '+p.location+'</span>':'')
+    +'<span class="det-tag">🔖 '+p.condition_type+'</span>'+(p.location?'<span class="det-tag">📍 '+p.location+'</span>':'')
     +(p.sold?'<span class="det-tag" style="background:#fde8e8;color:#e53935">SOLD</span>':'')+'</div>'
     +'<div class="det-desc">'+(p.description||'No description.')+'</div>'
     +(!p.sold
@@ -1276,6 +1340,61 @@ function initReel(){
   v.onerror=function(){v.remove();};
   v.src='videos/reel.mp4';
 }
+// ===== Tamil / English (translation layer: swaps known English texts for Tamil, also for texts added later) =====
+var LANG='en';
+try{LANG=localStorage.getItem('lang')||(((navigator.language||'').toLowerCase().indexOf('ta')===0)?'ta':'en');}catch(e){}
+var TA={"Home": "முகப்பு", "Vehicles for sale": "விற்பனைக்கு வாகனங்கள்", "Our work": "எங்கள் வேலை", "Reviews": "மதிப்புரைகள்", "About": "எங்களைப் பற்றி", "Contact": "தொடர்புக்கு", "← Back": "← பின்", "🚛 Vehicles": "🚛 வாகனங்கள்", "Menu": "மெனு", "🚛 Vehicles for sale": "🚛 விற்பனைக்கு வாகனங்கள்", "🏠 Home": "🏠 முகப்பு", "🔧 Our work & services": "🔧 எங்கள் வேலை & சேவைகள்", "📸 Before & after": "📸 முன்பு & பின்பு", "⭐ Customer reviews": "⭐ வாடிக்கையாளர் மதிப்புரைகள்", "ℹ️ About us": "ℹ️ எங்களைப் பற்றி", "📞 Contact": "📞 தொடர்புக்கு", "🔗 Share this site": "🔗 இந்த தளத்தை பகிர்", "Search": "தேடு", "Close menu": "மெனுவை மூடு", "Close search": "தேடலை மூடு", "WELCOME TO VIGNESHENG": "விக்னேசெங்-க்கு வரவேற்கிறோம்", "Welding, Body Building,": "வெல்டிங், பாடி பில்டிங்,", "Repair &": "பழுது &", "Vehicle Sales": "வாகன விற்பனை", "Ellam Oru Idathula!": "எல்லாம் ஒரே இடத்தில்!", "BUY & SELL": "வாங்க & விற்க", "Trusted": "நம்பகமான", "Used Vehicles": "பயன்படுத்திய வாகனங்கள்", "Cars, bikes and lorries, checked and ready to drive.": "கார், பைக், லாரி — சரிபார்த்து ஓட்டத் தயார்.", "🚗 Cars": "🚗 கார்கள்", "🏍️ Bikes": "🏍️ பைக்குகள்", "🚛 Lorries": "🚛 லாரிகள்", "Browse Vehicles →": "வாகனங்களைப் பார் →", "OUR SERVICES": "எங்கள் சேவைகள்", "Welding · Cutting ·": "வெல்டிங் · கட்டிங் ·", "Grinding": "கிரைண்டிங்", "Body building, fabrication and repair by skilled workers.": "திறமையான தொழிலாளர்களால் பாடி பில்டிங், ஃபேப்ரிகேஷன், பழுது.", "🔥 Welding": "🔥 வெல்டிங்", "✂️ Cutting": "✂️ கட்டிங்", "⚙️ Grinding": "⚙️ கிரைண்டிங்", "See Our Services →": "எங்கள் சேவைகளைப் பார் →", "What would you like to do?": "நீங்கள் என்ன செய்ய விரும்புகிறீர்கள்?", "JUST ADDED": "புதிதாக சேர்க்கப்பட்டவை", "Recently added vehicles": "புதிய வாகனங்கள்", "Browse all →": "அனைத்தையும் பார் →", "HOW TO BUY": "எப்படி வாங்குவது", "4 easy steps": "4 எளிய படிகள்", "1. Choose a vehicle": "1. வாகனத்தைத் தேர்ந்தெடுங்கள்", "2. Call or WhatsApp us": "2. அழையுங்கள் அல்லது WhatsApp செய்யுங்கள்", "3. Visit and see it": "3. நேரில் வந்து பாருங்கள்", "4. Take your vehicle": "4. வாகனத்தை எடுத்துச் செல்லுங்கள்", "OUR WORK": "எங்கள் வேலை", "Workshop in action": "பட்டறையில் வேலை நடக்கிறது", "WHAT CUSTOMERS SAY": "வாடிக்கையாளர்கள் சொல்வது", "Customer reviews": "வாடிக்கையாளர் மதிப்புரைகள்", "See all reviews →": "அனைத்து மதிப்புரைகள் →", "✍️ Write a review": "✍️ மதிப்புரை எழுது", "Be the first to share your experience with us!": "உங்கள் அனுபவத்தை முதலில் நீங்கள் எழுதுங்கள்!", "Reviews will appear here soon. You can still write one below.": "மதிப்புரைகள் விரைவில் இங்கே தெரியும். நீங்கள் எழுதலாம்.", "What our customers say": "எங்கள் வாடிக்கையாளர்கள் சொல்வது", "No reviews yet. Be the first to write one!": "இன்னும் மதிப்புரை இல்லை. முதலில் நீங்கள் எழுதுங்கள்!", "Write a review": "மதிப்புரை எழுதுங்கள்", "What are you reviewing? (select)": "எதைப் பற்றி எழுதுகிறீர்கள்? (தேர்வு செய்க)", "Our Services": "எங்கள் சேவைகள்", "Our services": "எங்கள் சேவைகள்", "Vehicles": "வாகனங்கள்", "Our Works": "எங்கள் வேலைகள்", "General": "பொது", "Vignesheng (whole shop)": "விக்னேசெங் (முழு கடை)", "Your name": "உங்கள் பெயர்", "Share your experience...": "உங்கள் அனுபவத்தை எழுதுங்கள்...", "Cancel": "ரத்து", "Submit": "அனுப்பு", "Please select what you are reviewing": "எதைப் பற்றி என்று தேர்வு செய்யுங்கள்", "Please enter your name": "உங்கள் பெயரை உள்ளிடுங்கள்", "Please write a few words about your experience": "உங்கள் அனுபவத்தை சில வார்த்தைகளில் எழுதுங்கள்", "Sending...": "அனுப்புகிறது...", "Thank you! Your review will appear after we approve it.": "நன்றி! நாங்கள் ஒப்புதல் அளித்த பிறகு உங்கள் மதிப்புரை தெரியும்.", "Could not send. Please try again.": "அனுப்ப முடியவில்லை. மீண்டும் முயற்சிக்கவும்.", "Network problem. Please try again.": "இணைய பிரச்சனை. மீண்டும் முயற்சிக்கவும்.", "OUR CURRENT STOCK": "எங்களிடம் உள்ள வாகனங்கள்", "VEHICLES": "வாகனங்கள்", "View vehicle details, then contact us to arrange a visit.": "வாகன விவரங்களைப் பாருங்கள், பிறகு எங்களை தொடர்பு கொள்ளுங்கள்.", "Search...": "தேடுங்கள்...", "All": "அனைத்தும்", "Available": "கிடைக்கும்", "SOLD": "விற்பனையானது", "Item Sold": "விற்றுவிட்டது", "📞 Call": "📞 அழைக்க", "Loading...": "ஏற்றுகிறது...", "Lorry": "லாரி", "Bike": "பைக்", "Car": "கார்", "Auto": "ஆட்டோ", "Truck": "டிரக்", "Van": "வேன்", "Bus": "பேருந்து", "Tractor": "டிராக்டர்", "Search vehicles, services...": "வாகனம், சேவை தேடுங்கள்...", "Type to search vehicles and services": "வாகனம், சேவை தேட தட்டச்சு செய்யுங்கள்", "Vehicle": "வாகனம்", "Service": "சேவை", "Category": "பிரிவு", "Work": "வேலை", "HOW WE WORK": "நாங்கள் எப்படி வேலை செய்கிறோம்", "From enquiry to finished work.": "விசாரணை முதல் வேலை முடிவு வரை.", "Clear steps show you the care behind every job we do.": "ஒவ்வொரு வேலையிலும் எங்கள் அக்கறையை இந்த படிகள் காட்டுகின்றன.", "01 · Enquire": "01 · விசாரிக்கவும்", "Tell us the vehicle and the work you need.": "உங்கள் வாகனம் மற்றும் தேவையான வேலையை சொல்லுங்கள்.", "02 · Inspect": "02 · பரிசோதனை", "We check the vehicle and give a clear quote.": "வாகனத்தை பார்த்து தெளிவான விலை சொல்வோம்.", "03 · Fabricate / repair": "03 · செய்கை / பழுது", "Welding, cutting, grinding and repair by skilled workers.": "திறமையான தொழிலாளர்களால் வெல்டிங், கட்டிங், கிரைண்டிங், பழுது.", "04 · Finish": "04 · முடித்தல்", "Body work, painting and detailing.": "பாடி வேலை, பெயிண்டிங், இறுதி மெருகு.", "05 · Handover": "05 · ஒப்படைப்பு", "Final check, then your vehicle is ready.": "இறுதி சோதனை, பிறகு உங்கள் வாகனம் தயார்.", "WHAT WE DO": "நாங்கள் செய்வது", "Before & after": "முன்பு & பின்பு", "Drag the line to compare.": "கோட்டை நகர்த்தி ஒப்பிடுங்கள்.", "Before": "முன்பு", "After": "பின்பு", "Load more": "மேலும் காட்டு", "Photos soon varum": "படங்கள் விரைவில்", "Services soon varum": "சேவைகள் விரைவில்", "ABOUT VIGNESHENG": "விக்னேசெங் பற்றி", "Built with care.": "அக்கறையுடன் உருவாக்கி,", "Finished with pride.": "பெருமையுடன் முடிக்கிறோம்.", "Welding": "வெல்டிங்", "Cutting & grinding": "கட்டிங் & கிரைண்டிங்", "Body building": "பாடி பில்டிங்", "Vehicle repair": "வாகன பழுது", "Used vehicle sales": "பயன்படுத்திய வாகன விற்பனை", "What customers can expect": "வாடிக்கையாளர்கள் எதிர்பார்க்கலாம்", "Clear details on every vehicle, visible work, and a direct way to reach us.": "ஒவ்வொரு வாகனத்தின் தெளிவான விவரங்கள், கண்ணுக்குத் தெரியும் வேலை, எங்களை நேரடியாக தொடர்பு கொள்ளும் வழி.", "See available vehicles": "கிடைக்கும் வாகனங்களைப் பார்", "COME AND SEE US": "நேரில் வாருங்கள்", "Contact us": "தொடர்புக்கு", "Ask about a vehicle or a job, or visit the workshop.": "வாகனம் அல்லது வேலை பற்றி கேளுங்கள், அல்லது பட்டறைக்கு வாருங்கள்.", "Call us": "அழைக்க", "WhatsApp": "WhatsApp", "Visit the workshop": "பட்டறைக்கு வாருங்கள்", "💬 Chat on WhatsApp": "💬 WhatsApp-இல் பேசுங்கள்", "Our address will be shown here": "எங்கள் முகவரி இங்கே தெரியும்", "Send an enquiry": "விசாரணை அனுப்புங்கள்", "Phone number": "தொலைபேசி எண்", "Which vehicle or service are you interested in?": "எந்த வாகனம் அல்லது சேவை வேண்டும்?", "Your message": "உங்கள் செய்தி", "Send enquiry on WhatsApp": "WhatsApp-இல் அனுப்புங்கள்", "Please enter your name and phone number": "பெயர் மற்றும் தொலைபேசி எண்ணை உள்ளிடுங்கள்", "WhatsApp number is not set yet. Please call us instead.": "WhatsApp எண் இன்னும் இல்லை. தயவுசெய்து அழைக்கவும்.", "Opening WhatsApp...": "WhatsApp திறக்கிறது...", "Link copied": "இணைப்பு நகலெடுக்கப்பட்டது", "— All rights reserved": "— அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை", "Used": "பயன்படுத்தியது", "used": "பயன்படுத்தியது", "New": "புதியது", "new": "புதியது", "Good": "நல்லது"};
+var TA_RULES=[[/^(🏷️ ?)?Lorry(?= · |$)/,'$1லாரி'],[/^(🏷️ ?)?Bike(?= · |$)/,'$1பைக்'],[/^(🏷️ ?)?Car(?= · |$)/,'$1கார்'],[/^(🏷️ ?)?Auto(?= · |$)/,'$1ஆட்டோ'],[/^(🏷️ ?)?Truck(?= · |$)/,'$1டிரக்'],[/^(🏷️ ?)?Van(?= · |$)/,'$1வேன்'],[/^(🏷️ ?)?Bus(?= · |$)/,'$1பேருந்து'],[/^(🏷️ ?)?Tractor(?= · |$)/,'$1டிராக்டர்'],[/^(🔖 ?)used$/i,'$1பயன்படுத்தியது'],[/^(🔖 ?)new$/i,'$1புதியது'],[/ \(sold\)$/,' (விற்பனையானது)'],[/(\d+) items?$/,'$1 வாகனங்கள்'],[/(\d+) reviews?$/,'$1 மதிப்புரைகள்'],[/^(.*)Reviewed: /,'$1மதிப்புரை: '],[/^(\d+) vehicles? available$/,'$1 வாகனங்கள் உள்ளன'],[/^(\d+) works?$/,'$1 வேலைகள்'],[/^No results for /,'முடிவுகள் இல்லை: ']];
+function trText(s){
+  var k=s.trim();if(!k)return null;
+  if(Object.prototype.hasOwnProperty.call(TA,k))return s.replace(k,TA[k]);
+  var out=s,ch=false;
+  TA_RULES.forEach(function(r){var n=out.replace(r[0],r[1]);if(n!==out){out=n;ch=true;}});
+  return ch?out:null;
+}
+function trNode(n){
+  var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.nodeName==='TEXTAREA')return;
+  if(p.closest&&p.closest('[data-notr]'))return;
+  var t=trText(n.nodeValue);if(t!==null&&t!==n.nodeValue)n.nodeValue=t;
+}
+function trAttrs(el){
+  ['placeholder','label','aria-label','title'].forEach(function(a){
+    var v=el.getAttribute&&el.getAttribute(a);if(!v)return;
+    var t=trText(v);if(t!==null)el.setAttribute(a,t);
+  });
+}
+function trTree(root){
+  if(root.nodeType===3){trNode(root);return;}
+  if(root.nodeType!==1)return;
+  trAttrs(root);
+  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n,list=[];
+  while((n=w.nextNode()))list.push(n);
+  list.forEach(trNode);
+  [].forEach.call(root.querySelectorAll('[placeholder],[label],[aria-label],[title]'),trAttrs);
+}
+function initLang(){
+  document.documentElement.lang=(LANG==='ta')?'ta':'en';
+  var b=document.getElementById('langBtn');if(b)b.textContent=(LANG==='ta')?'EN':'தமிழ்';
+  if(LANG!=='ta')return;
+  trTree(document.body);
+  new MutationObserver(function(ms){ms.forEach(function(m){
+    if(m.type==='characterData'){trNode(m.target);}
+    else{[].forEach.call(m.addedNodes,function(n){trTree(n);});}
+  });}).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+function toggleLang(){try{localStorage.setItem('lang',LANG==='ta'?'en':'ta');}catch(e){}location.reload();}
+// bottom bar: Call / WhatsApp / Map (shown on phones once the shop numbers are known)
+function updateActBar(st){
+  var ph=(st.phone||'').replace(/[^\d+]/g,''),wa=(st.whatsapp||st.phone||'').replace(/\D/g,'');
+  if(wa&&wa.length===10)wa='91'+wa;
+  var c=document.getElementById('abCall'),w=document.getElementById('abWa'),m=document.getElementById('abMap');
+  c.style.display=ph?'':'none';if(ph)c.href='tel:'+ph;
+  w.style.display=wa?'':'none';if(wa)w.href='https://wa.me/'+wa;
+  m.style.display=st.address?'':'none';if(st.address)m.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(st.address);
+  if(ph||wa||st.address)document.body.classList.add('has-bar');
+}
+
+initLang();
 loadCategories();
 loadSettings();
 initReel();
